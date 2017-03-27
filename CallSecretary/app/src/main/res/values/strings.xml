@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CallSecretary</string>
+    <string name="app_name">电话秘书</string>
     <string name="if_pickup_call_auto">是否自动接听</string>
     <string name="setting_done">完成</string>
     <string name="add_call_filter">添加语音拦截情景</string>
