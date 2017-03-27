@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#FFC"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <CheckBox
+        android:id="@+id/auto_pickup_phone"
+        android:text="@string/if_pickup_call_auto"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:background="#FFCDCD"
+        android:layout_width="match_parent"
+        android:layout_height="60dp" />
+    <LinearLayout
+        android:layout_below="@id/auto_pickup_phone"
+        android:id="@+id/editor_lyt"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <EditText
+            android:id="@+id/editor"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:background="#FFCDCDCD"
+            android:hint="@string/add_call_filter"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="60dp" />
+        <TextView
+            android:text="@string/add"
+            android:id="@+id/add_filter"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_weight="3"
+            android:background="#FF3CB371"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <Button
+        android:id="@+id/set_done"
+        android:background="#FF3CB371"
+        android:textSize="24sp"
+        android:textColor="#FFFFFF"
+        android:layout_alignParentBottom="true"
+        android:text="@string/setting_done"
+        android:layout_width="match_parent"
+        android:layout_height="60dp" />
+    <ListView
+        android:id="@+id/filter_content_listview"
+        android:layout_below="@id/editor_lyt"
+        android:layout_above="@id/set_done"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</RelativeLayout>
