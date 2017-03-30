@@ -3,6 +3,7 @@ package call.ai.com.callsecretary;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,7 +36,7 @@ public class FloatingWindowsService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new FloatingWindowsBinder();
     }
 
     @Override
@@ -43,8 +44,6 @@ public class FloatingWindowsService extends Service {
         super.onCreate();
         mWindowManager = (WindowManager) getApplication().getSystemService(getApplication().WINDOW_SERVICE);
         initLayoutParams();
-
-        showFloatingWindows("纯粹测试");
     }
 
     private void initLayoutParams() {
@@ -123,4 +122,11 @@ public class FloatingWindowsService extends Service {
         super.onDestroy();
         hideFloatingWindows();
     }
+
+    public class FloatingWindowsBinder extends Binder {
+        public FloatingWindowsService getFloatingService() {
+            return FloatingWindowsService.this;
+        }
+    }
+
 }
