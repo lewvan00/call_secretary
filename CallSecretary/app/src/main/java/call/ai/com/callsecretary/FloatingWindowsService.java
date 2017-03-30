@@ -32,7 +32,6 @@ public class FloatingWindowsService extends Service {
     float mOffsetX;
     float mOffsetY;
 
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -44,6 +43,24 @@ public class FloatingWindowsService extends Service {
         super.onCreate();
         mWindowManager = (WindowManager) getApplication().getSystemService(getApplication().WINDOW_SERVICE);
         initLayoutParams();
+    }
+
+    public void showFloatingWindows(@NonNull String detail) {
+        initFloatingView();
+        if (!hasFloatingShowing) {
+            hasFloatingShowing = true;
+            mDetailTv.setText(detail);
+            mWindowManager.addView(mFloatingView, mLayoutParams);
+        }
+    }
+
+    public void hideFloatingWindows() {
+        if (mFloatingView != null && mWindowManager != null && hasFloatingShowing) {
+            mWindowManager.removeView(mFloatingView);
+            hasFloatingShowing = false;
+            CommonSharedPref.getInstance(this).setFloatingWindowsLocationX(mLayoutParams.x);
+            CommonSharedPref.getInstance(this).setFloatingWindowsLocationY(mLayoutParams.y);
+        }
     }
 
     private void initLayoutParams() {
@@ -66,7 +83,7 @@ public class FloatingWindowsService extends Service {
         mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
     }
 
-    public void showFloatingWindows(@NonNull String detail) {
+    private void initFloatingView() {
         if (mFloatingView == null) {
             mFloatingView = (LinearLayout) LayoutInflater.from(getApplication()).inflate(R.layout.layout_floating_view, null);
             mTitleTv = (TextView) mFloatingView.findViewById(R.id.title);
@@ -100,20 +117,6 @@ public class FloatingWindowsService extends Service {
                     return true;
                 }
             });
-        }
-        if (!hasFloatingShowing) {
-            hasFloatingShowing = true;
-            mDetailTv.setText(detail);
-            mWindowManager.addView(mFloatingView, mLayoutParams);
-        }
-    }
-
-    public void hideFloatingWindows() {
-        if (mFloatingView != null && mWindowManager != null && hasFloatingShowing) {
-            mWindowManager.removeView(mFloatingView);
-            hasFloatingShowing = false;
-            CommonSharedPref.getInstance(this).setFloatingWindowsLocationX(mLayoutParams.x);
-            CommonSharedPref.getInstance(this).setFloatingWindowsLocationY(mLayoutParams.y);
         }
     }
 
