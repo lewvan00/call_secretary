@@ -23,7 +23,6 @@ import android.widget.TextView;
 public class FloatingWindowsService extends Service {
     WindowManager mWindowManager;
     WindowManager.LayoutParams mLayoutParams;
-    LayoutInflater mInfalte;
     LinearLayout mFloatingView;
     TextView mTitleTv;
     TextView mDetailTv;
@@ -43,7 +42,6 @@ public class FloatingWindowsService extends Service {
     public void onCreate() {
         super.onCreate();
         mWindowManager = (WindowManager) getApplication().getSystemService(getApplication().WINDOW_SERVICE);
-        mInfalte = LayoutInflater.from(getApplication());
         initLayoutParams();
 
         showFloatingWindows("纯粹测试");
@@ -71,7 +69,7 @@ public class FloatingWindowsService extends Service {
 
     public void showFloatingWindows(@NonNull String detail) {
         if (mFloatingView == null) {
-            mFloatingView = (LinearLayout) mInfalte.inflate(R.layout.layout_floating_view, null);
+            mFloatingView = (LinearLayout) LayoutInflater.from(getApplication()).inflate(R.layout.layout_floating_view, null);
             mTitleTv = (TextView) mFloatingView.findViewById(R.id.title);
             mCloseBtn = (Button) mFloatingView.findViewById(R.id.close_btn);
             mDetailTv = (TextView) mFloatingView.findViewById(R.id.detail);
