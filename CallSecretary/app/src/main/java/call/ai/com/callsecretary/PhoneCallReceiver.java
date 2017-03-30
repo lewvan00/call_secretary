@@ -7,11 +7,20 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import call.ai.com.callsecretary.recorder.CallRecorder;
+
 /**
  * Created by lewvan on 2017/3/27.
  */
 
-public class PhoneCallReceiver extends BroadcastReceiver{
+public class PhoneCallReceiver extends BroadcastReceiver {
+
+    private CallRecorder mCallRecorder;
+
+    public PhoneCallReceiver() {
+        mCallRecorder = new CallRecorder();
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent != null && intent.getAction().equals("android.intent.action.PHONE_STATE")) {
@@ -20,8 +29,10 @@ public class PhoneCallReceiver extends BroadcastReceiver{
             Toast.makeText(context, "action = " + intent.getAction() + ", state = " + telephonyManager.getCallState(), Toast.LENGTH_LONG).show();
             if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_RINGING) {
                 //来电
+//                mCallRecorder.startRecording();
             } else if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
                 //挂断
+//                mCallRecorder.stopRecoding();
             }
         }
     }

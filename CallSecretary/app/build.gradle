@@ -28,4 +28,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.amazonaws:aws-android-sdk-polly:2.4.0'
     compile 'com.amazonaws:aws-android-sdk-lex:2.4.0'
+    compile 'com.kailashdabhi:om-recorder:1.1.1'
 }
