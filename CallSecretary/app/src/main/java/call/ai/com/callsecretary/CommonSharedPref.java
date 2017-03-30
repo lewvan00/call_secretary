@@ -33,4 +33,20 @@ public class CommonSharedPref {
     public boolean getAutoPickupPhone() {
         return mSharedPreferences.getBoolean("auto_pickup_phone", false);
     }
+
+    public int getFloatingWindowsLocationX() {
+        return mSharedPreferences.getInt("floating_windows_location_x", -1);
+    }
+
+    public int getFloatingWindowsLocationY() {
+        return mSharedPreferences.getInt("floating_windows_location_y", -1);
+    }
+
+    public void setFloatingWindowsLocationX(int locationX) {
+        mSharedPreferences.edit().putInt("floating_windows_location_x", locationX).apply();
+    }
+
+    public void setFloatingWindowsLocationY(int locationY) {
+        mSharedPreferences.edit().putInt("floating_windows_location_y", locationY).apply();
+    }
 }

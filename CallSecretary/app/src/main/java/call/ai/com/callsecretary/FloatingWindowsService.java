@@ -56,8 +56,13 @@ public class FloatingWindowsService extends Service {
         mLayoutParams.format = PixelFormat.RGBA_8888;
         mLayoutParams.gravity = Gravity.TOP | Gravity.LEFT;
 
-        mLayoutParams.x=mWindowManager.getDefaultDisplay().getWidth()/6;
-        mLayoutParams.y=mWindowManager.getDefaultDisplay().getHeight()/3;
+        if (CommonSharedPref.getInstance(this).getFloatingWindowsLocationX() == -1) {
+            mLayoutParams.x = mWindowManager.getDefaultDisplay().getWidth() / 6;
+            mLayoutParams.y = mWindowManager.getDefaultDisplay().getHeight() / 3;
+        } else {
+            mLayoutParams.x = CommonSharedPref.getInstance(this).getFloatingWindowsLocationX();
+            mLayoutParams.y = CommonSharedPref.getInstance(this).getFloatingWindowsLocationY();
+        }
 
         mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         mLayoutParams.width = mWindowManager.getDefaultDisplay().getWidth() * 2 / 3;
@@ -110,6 +115,8 @@ public class FloatingWindowsService extends Service {
         if (mFloatingView != null && mWindowManager != null && hasFloatingShowing) {
             mWindowManager.removeView(mFloatingView);
             hasFloatingShowing = false;
+            CommonSharedPref.getInstance(this).setFloatingWindowsLocationX(mLayoutParams.x);
+            CommonSharedPref.getInstance(this).setFloatingWindowsLocationY(mLayoutParams.y);
         }
     }
 
