@@ -1,0 +1,94 @@
+package call.ai.com.callsecretary;
+
+import android.app.Service;
+import android.content.Intent;
+import android.graphics.PixelFormat;
+import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+/**
+ * Created by Administrator on 2017/3/28.
+ */
+
+public class FloatingWindowsService extends Service {
+    WindowManager mWindowManager;
+    WindowManager.LayoutParams mLayoutParams;
+    LayoutInflater mInfalte;
+    LinearLayout mFloatingView;
+    TextView mTitleTv;
+    TextView mDetailTv;
+    Button mCloseBtn;
+    boolean hasFloatingShowing = false;
+
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mWindowManager = (WindowManager) getApplication().getSystemService(getApplication().WINDOW_SERVICE);
+        mInfalte = LayoutInflater.from(getApplication());
+        initLayoutParams();
+
+        showFloatingWindows("纯粹测试");
+    }
+
+    private void initLayoutParams() {
+        mLayoutParams = new WindowManager.LayoutParams();
+
+        mLayoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+        mLayoutParams.format = PixelFormat.RGBA_8888;
+        mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        mLayoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+
+        mLayoutParams.width = mWindowManager.getDefaultDisplay().getWidth() * 2 / 3;
+        mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+    }
+
+    public void showFloatingWindows(@NonNull String detail) {
+        if (mFloatingView == null) {
+            mFloatingView = (LinearLayout) mInfalte.inflate(R.layout.layout_floating_view, null);
+            mTitleTv = (TextView) mFloatingView.findViewById(R.id.title);
+            mCloseBtn = (Button) mFloatingView.findViewById(R.id.close_btn);
+            mDetailTv = (TextView) mFloatingView.findViewById(R.id.detail);
+            mCloseBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    hideFloatingWindows();
+                }
+            });
+        }
+        if (!hasFloatingShowing) {
+            hasFloatingShowing = true;
+            mDetailTv.setText(detail);
+            mWindowManager.addView(mFloatingView, mLayoutParams);
+        }
+    }
+
+    public void hideFloatingWindows() {
+        if (mFloatingView != null && mWindowManager != null && hasFloatingShowing) {
+            mWindowManager.removeView(mFloatingView);
+            hasFloatingShowing = false;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        hideFloatingWindows();
+    }
+}

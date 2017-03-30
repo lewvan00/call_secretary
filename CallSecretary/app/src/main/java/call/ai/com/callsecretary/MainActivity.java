@@ -1,6 +1,7 @@
 package call.ai.com.callsecretary;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -73,7 +74,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 CommonSharedPref.getInstance(this).setAutoPickupPhone(mCheckBox.isChecked());
                 break;
             case R.id.set_done:
-                finish();
+//                finish();
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, TestActivity.class);
+                startActivity(intent);
                 break;
             case R.id.add_filter:
                 String filterItem = mFilterEditText.getText().toString();
