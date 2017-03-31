@@ -63,6 +63,8 @@ public class PostContentResult implements Serializable {
      */
     private String message;
 
+    private String inputTranscript;
+
     /**
      * <p>
      * Represents the message type to be conveyed to the user. For example:
@@ -402,6 +404,10 @@ public class PostContentResult implements Serializable {
         return message;
     }
 
+    public String getInputTranscript() {
+        return inputTranscript;
+    }
+
     /**
      * <p>
      * Based on the build-time application configuration, Amazon Lex determines
@@ -422,6 +428,10 @@ public class PostContentResult implements Serializable {
      */
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setInputTranscript(String inputTranscript) {
+        this.inputTranscript = inputTranscript;
     }
 
     /**

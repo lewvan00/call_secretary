@@ -63,6 +63,9 @@ public class PostContentResultJsonUnmarshaller implements
         if (context.getHeader("x-amz-lex-message") != null) {
             postContentResult.setMessage(context.getHeader("x-amz-lex-message"));
         }
+        if (context.getHeader("x-amz-lex-input-transcript") != null) {
+            postContentResult.setInputTranscript(context.getHeader("x-amz-lex-input-transcript"));
+        }
         if (context.getHeader("x-amz-lex-dialog-state") != null) {
             postContentResult.setDialogState(context.getHeader("x-amz-lex-dialog-state"));
         }
