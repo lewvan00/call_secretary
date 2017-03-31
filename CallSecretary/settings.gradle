@@ -1,1 +1,1 @@
-include ':app', ':aws_lex'
+include ':app'
