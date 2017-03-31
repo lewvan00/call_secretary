@@ -1,9 +1,9 @@
 package call.ai.com.callsecretary.floating;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -44,18 +44,21 @@ public class ChatHistoryAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ChatMessageViewHolder viewHolder = null;
         if (convertView == null) {
-            viewHolder = new ChatMessageViewHolder();
-            convertView = View.inflate(mContext, R.layout.layout_chat_history_item, null);
-            viewHolder.mName = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.mMessage = (TextView) convertView.findViewById(R.id.message);
-            convertView.setTag(viewHolder);
+//            convertView = View.inflate(mContext, R.layout.layout_chat_history_item, null);
         } else {
-            viewHolder = (ChatMessageViewHolder) convertView.getTag();
+
         }
+        if (position < mChatMessageList.size()) {
+            ChatMessage chatMessage = mChatMessageList.get(position);
+            if (chatMessage != null) {
+                if (chatMessage.getUserType() == ChatMessage.TYPE_CALLER) {
 
+                } else {
 
+                }
+            }
+        }
         return convertView;
     }
 
@@ -72,9 +75,10 @@ public class ChatHistoryAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    static class ChatMessageViewHolder {
-        TextView mName;
-        TextView mMessage;
+    public void clearMessages() {
+        if (mChatMessageList == null || mChatMessageList.isEmpty()) return;
+        mChatMessageList.clear();
+        notifyDataSetChanged();
     }
 
 }

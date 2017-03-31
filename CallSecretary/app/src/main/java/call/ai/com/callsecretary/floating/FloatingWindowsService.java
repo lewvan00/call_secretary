@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -49,11 +48,11 @@ public class FloatingWindowsService extends Service {
         initLayoutParams();
     }
 
-    public void showFloatingWindows(@NonNull String detail) {
+    public void showFloatingWindows(String chatName) {
         initFloatingView();
         if (!hasFloatingShowing) {
             hasFloatingShowing = true;
-//            mDetailTv.setText(detail);
+            mTitleTv.setText(chatName);
             mWindowManager.addView(mFloatingView, mLayoutParams);
         }
     }
@@ -61,6 +60,9 @@ public class FloatingWindowsService extends Service {
     public void hideFloatingWindows() {
         if (mFloatingView != null && mWindowManager != null && hasFloatingShowing) {
             mWindowManager.removeView(mFloatingView);
+            if (mAdapter != null) {
+                mAdapter.clearMessages();
+            }
             hasFloatingShowing = false;
             CommonSharedPref.getInstance(this).setFloatingWindowsLocationX(mLayoutParams.x);
             CommonSharedPref.getInstance(this).setFloatingWindowsLocationY(mLayoutParams.y);
@@ -84,7 +86,7 @@ public class FloatingWindowsService extends Service {
 
         mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         mLayoutParams.width = mWindowManager.getDefaultDisplay().getWidth() * 2 / 3;
-        mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        mLayoutParams.height = mWindowManager.getDefaultDisplay().getHeight() / 3;
     }
 
     private void initFloatingView() {

@@ -4,4 +4,5 @@
     <string name="setting_done">完成</string>
     <string name="add_call_filter">添加语音拦截情景</string>
     <string name="add">添加</string>
+    <string name="chat_secretary">secretary</string>
 </resources>
