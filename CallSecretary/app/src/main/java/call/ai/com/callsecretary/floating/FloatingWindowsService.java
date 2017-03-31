@@ -29,9 +29,9 @@ public class FloatingWindowsService extends Service {
     WindowManager.LayoutParams mLayoutParams;
     LinearLayout mFloatingView;
     TextView mTitleTv;
-//    TextView mDetailTv;
     ListView mDetailListView;
     Button mCloseBtn;
+    private ChatHistoryAdapter mAdapter;
     boolean hasFloatingShowing = false;
     float mOffsetX;
     float mOffsetY;
@@ -92,8 +92,15 @@ public class FloatingWindowsService extends Service {
             mFloatingView = (LinearLayout) LayoutInflater.from(getApplication()).inflate(R.layout.layout_floating_view, null);
             mTitleTv = (TextView) mFloatingView.findViewById(R.id.title);
             mCloseBtn = (Button) mFloatingView.findViewById(R.id.close_btn);
-//            mDetailTv = (TextView) mFloatingView.findViewById(R.id.detail);
+
+            TextView emptyTv = (TextView) mFloatingView.findViewById(R.id.empty_tv);
             mDetailListView = (ListView) mFloatingView.findViewById(R.id.chat_list);
+            mDetailListView.setEmptyView(emptyTv);
+
+            mAdapter = new ChatHistoryAdapter(getBaseContext());
+            mDetailListView.setAdapter(mAdapter);
+
+
             mCloseBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
