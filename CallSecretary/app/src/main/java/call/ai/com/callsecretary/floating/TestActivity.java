@@ -1,17 +1,16 @@
-package call.ai.com.callsecretary;
+package call.ai.com.callsecretary.floating;
 
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PersistableBundle;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+
+import call.ai.com.callsecretary.R;
 
 /**
  * Created by Administrator on 2017/3/28.

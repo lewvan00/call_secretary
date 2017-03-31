@@ -16,14 +16,14 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".TestActivity" />
+        <activity android:name=".floating.TestActivity" />
 
         <receiver android:name=".PhoneCallReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
-        <service android:name=".FloatingWindowsService" />
+        <service android:name=".floating.FloatingWindowsService" />
     </application>
 
 </manifest>
