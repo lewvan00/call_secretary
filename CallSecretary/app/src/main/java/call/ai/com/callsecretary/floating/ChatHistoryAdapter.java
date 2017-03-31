@@ -45,9 +45,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-//            convertView = View.inflate(mContext, R.layout.layout_chat_history_item, null);
-        } else {
-
+            convertView = View.inflate(mContext, R.layout.layout_chat_item, null);
         }
         if (position < mChatMessageList.size()) {
             ChatMessage chatMessage = mChatMessageList.get(position);
