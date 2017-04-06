@@ -2,9 +2,11 @@ package call.ai.com.callsecretary.floating;
 
 import android.content.Context;
 import android.view.Gravity;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,6 +27,16 @@ public class ChatHistoryAdapter extends BaseAdapter {
 
     public ChatHistoryAdapter(Context context) {
         mContext = context;
+        mChatMessageList.add(ChatMessage.createCallerMessage("suiagfildsgfladfklasjd"));
+        mChatMessageList.add(ChatMessage.createSecretaryMessage("asudigfhlahdflo;asdhf;a"));
+        mChatMessageList.add(ChatMessage.createCallerMessage("suiagfildsgfladfklasjd"));
+        mChatMessageList.add(ChatMessage.createSecretaryMessage("asudigfhlahdflo;asdhf;a"));
+        mChatMessageList.add(ChatMessage.createCallerMessage("suiagfildsgfladfklasjd"));
+        mChatMessageList.add(ChatMessage.createSecretaryMessage("asudigfhlahdflo;asdhf;a"));
+        mChatMessageList.add(ChatMessage.createCallerMessage("suiagfildsgfladfklasjd"));
+        mChatMessageList.add(ChatMessage.createSecretaryMessage("asudigfhlahdflo;asdhf;a"));
+        mChatMessageList.add(ChatMessage.createCallerMessage("suiagfildsgfladfklasjd"));
+        mChatMessageList.add(ChatMessage.createSecretaryMessage("asudigfhlahdflo;asdhf;a"));
     }
 
     @Override
@@ -44,16 +56,27 @@ public class ChatHistoryAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder = null;
         if (convertView == null) {
             convertView = View.inflate(mContext, R.layout.layout_chat_item, null);
+            viewHolder = new ViewHolder();
+            viewHolder.leftMessage = (TextView) convertView.findViewById(R.id.message_left);
+            viewHolder.rightMessage = (TextView) convertView.findViewById(R.id.message_right);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
         if (position < mChatMessageList.size()) {
             ChatMessage chatMessage = mChatMessageList.get(position);
             if (chatMessage != null) {
                 if (chatMessage.getUserType() == ChatMessage.TYPE_CALLER) {
-
+                    viewHolder.leftMessage.setVisibility(View.VISIBLE);
+                    viewHolder.leftMessage.setText(chatMessage.getMessage());
+                    viewHolder.rightMessage.setVisibility(View.GONE);
                 } else {
-
+                    viewHolder.leftMessage.setVisibility(View.GONE);
+                    viewHolder.rightMessage.setText(chatMessage.getMessage());
+                    viewHolder.rightMessage.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -77,6 +100,11 @@ public class ChatHistoryAdapter extends BaseAdapter {
         if (mChatMessageList == null || mChatMessageList.isEmpty()) return;
         mChatMessageList.clear();
         notifyDataSetChanged();
+    }
+
+    static class ViewHolder {
+        TextView leftMessage;
+        TextView rightMessage;
     }
 
 }
