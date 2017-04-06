@@ -32,6 +32,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
             Toast.makeText(context, "action = " + intent.getAction() + ", state = " + telephonyManager.getCallState(), Toast.LENGTH_LONG).show();
             if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_RINGING) {
                 //来电
+                PhoneUtils.autoAnswer();
 //                PhoneUtils.setSpeekModle(true);   //开启外放
 //                mCallRecorder.startRecording();
             } else if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
