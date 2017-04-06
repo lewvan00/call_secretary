@@ -134,6 +134,11 @@ public class FloatingWindowsService extends Service {
         }
     }
 
+    public void addChatMessage(ChatMessage message) {
+        if (mAdapter == null || message == null) return;
+        mAdapter.addChatMessage(message);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
