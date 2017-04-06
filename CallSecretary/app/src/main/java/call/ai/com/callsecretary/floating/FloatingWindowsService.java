@@ -13,17 +13,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.amazonaws.auth.CognitoCredentialsProvider;
+import com.amazonaws.mobileconnectors.lex.interactionkit.InteractionClient;
+import com.amazonaws.mobileconnectors.lex.interactionkit.Response;
+import com.amazonaws.mobileconnectors.lex.interactionkit.config.InteractionConfig;
+import com.amazonaws.mobileconnectors.lex.interactionkit.continuations.LexServiceContinuation;
+import com.amazonaws.mobileconnectors.lex.interactionkit.listeners.AudioPlaybackListener;
+import com.amazonaws.mobileconnectors.lex.interactionkit.listeners.InteractionListener;
+import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
 import com.amazonaws.regions.Regions;
 
 import java.util.Map;
 
-import amazonaws.mobileconnectors.lex.interactionkit.InteractionClient;
-import amazonaws.mobileconnectors.lex.interactionkit.Response;
-import amazonaws.mobileconnectors.lex.interactionkit.config.InteractionConfig;
-import amazonaws.mobileconnectors.lex.interactionkit.continuations.LexServiceContinuation;
-import amazonaws.mobileconnectors.lex.interactionkit.listeners.AudioPlaybackListener;
-import amazonaws.mobileconnectors.lex.interactionkit.listeners.InteractionListener;
-import amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
+
 import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 import call.ai.com.callsecretary.utils.CommonSharedPref;
@@ -216,11 +217,4 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     public void onError(String responseText, Exception e) {
 
     }
-
-    public class FloatingWindowsBinder extends Binder {
-        public FloatingWindowsService getFloatingService() {
-            return FloatingWindowsService.this;
-        }
-    }
-
 }

@@ -48,7 +48,7 @@
         android:gravity="center"
         android:text="Empty message"
         android:visibility="gone" />
-    <amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView
+    <com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView
         android:id="@+id/interactive_voice_view"
         android:layout_width="1dp"
         android:layout_height="1dp" />
