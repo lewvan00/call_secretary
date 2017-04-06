@@ -1,11 +1,8 @@
 package call.ai.com.callsecretary.floating;
 
-import android.app.Service;
-import android.content.Intent;
+import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Binder;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,20 +15,25 @@ import android.widget.TextView;
 import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.amazonaws.regions.Regions;
 
+import java.util.Map;
+
 import amazonaws.mobileconnectors.lex.interactionkit.InteractionClient;
 import amazonaws.mobileconnectors.lex.interactionkit.Response;
+import amazonaws.mobileconnectors.lex.interactionkit.config.InteractionConfig;
 import amazonaws.mobileconnectors.lex.interactionkit.continuations.LexServiceContinuation;
 import amazonaws.mobileconnectors.lex.interactionkit.listeners.AudioPlaybackListener;
 import amazonaws.mobileconnectors.lex.interactionkit.listeners.InteractionListener;
-import call.ai.com.callsecretary.utils.CommonSharedPref;
+import amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
 import call.ai.com.callsecretary.R;
+import call.ai.com.callsecretary.utils.CallSecretaryApplication;
+import call.ai.com.callsecretary.utils.CommonSharedPref;
 import call.ai.com.callsecretary.utils.PhoneUtils;
 
 /**
  * Created by Administrator on 2017/3/28.
  */
 
-public class FloatingWindowsService extends Service implements AudioPlaybackListener, InteractionListener {
+public class FloatingWindowsService implements AudioPlaybackListener, InteractionListener, InteractiveVoiceView.InteractiveVoiceListener {
     WindowManager mWindowManager;
     WindowManager.LayoutParams mLayoutParams;
     LinearLayout mFloatingView;
@@ -42,28 +44,34 @@ public class FloatingWindowsService extends Service implements AudioPlaybackList
     boolean hasFloatingShowing = false;
     float mOffsetX;
     float mOffsetY;
+    InteractiveVoiceView mInteractiveVoiceView;
+    CognitoCredentialsProvider credentialsProvider;
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return new FloatingWindowsBinder();
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mWindowManager = (WindowManager) getApplication().getSystemService(getApplication().WINDOW_SERVICE);
+    public FloatingWindowsService() {
+        Context context = CallSecretaryApplication.getContext();
+        mWindowManager = (WindowManager) CallSecretaryApplication.getContext().getSystemService(CallSecretaryApplication.getContext().WINDOW_SERVICE);
         initLayoutParams();
-        CognitoCredentialsProvider credentialsProvider = new CognitoCredentialsProvider(
-                getResources().getString(R.string.identity_id_test),
-                Regions.fromName(getResources().getString(R.string.aws_region)));
-        InteractionClient lexInteractionClient = new InteractionClient(getApplicationContext(),
+        credentialsProvider = new CognitoCredentialsProvider(
+                context.getResources().getString(R.string.identity_id_test),
+                Regions.fromName(context.getResources().getString(R.string.aws_region)));
+        InteractionClient lexInteractionClient = new InteractionClient(context,
                 credentialsProvider,
                 Regions.US_EAST_1,
-                getResources().getString(R.string.bot_name),
-                getResources().getString(R.string.bot_alias));
+                context.getResources().getString(R.string.bot_name),
+                context.getResources().getString(R.string.bot_alias));
         lexInteractionClient.setAudioPlaybackListener(this);
         lexInteractionClient.setInteractionListener(this);
+    }
+
+    public void startBot() {
+        Context context = CallSecretaryApplication.getContext();
+        mInteractiveVoiceView.setInteractiveVoiceListener(this);
+        mInteractiveVoiceView.getViewAdapter().setCredentialProvider(credentialsProvider);
+        mInteractiveVoiceView.getViewAdapter().setInteractionConfig(
+                new InteractionConfig(context.getResources().getString(R.string.bot_name),
+                context.getResources().getString(R.string.bot_alias)));
+        mInteractiveVoiceView.getViewAdapter().setAwsRegion(context.getResources().getString(R.string.aws_region));
+        mInteractiveVoiceView.performClick();
     }
 
     public void showFloatingWindows(String chatName) {
@@ -82,8 +90,8 @@ public class FloatingWindowsService extends Service implements AudioPlaybackList
                 mAdapter.clearMessages();
             }
             hasFloatingShowing = false;
-            CommonSharedPref.getInstance(this).setFloatingWindowsLocationX(mLayoutParams.x);
-            CommonSharedPref.getInstance(this).setFloatingWindowsLocationY(mLayoutParams.y);
+            CommonSharedPref.getInstance(CallSecretaryApplication.getContext()).setFloatingWindowsLocationX(mLayoutParams.x);
+            CommonSharedPref.getInstance(CallSecretaryApplication.getContext()).setFloatingWindowsLocationY(mLayoutParams.y);
         }
     }
 
@@ -94,12 +102,13 @@ public class FloatingWindowsService extends Service implements AudioPlaybackList
         mLayoutParams.format = PixelFormat.RGBA_8888;
         mLayoutParams.gravity = Gravity.TOP | Gravity.LEFT;
 
-        if (CommonSharedPref.getInstance(this).getFloatingWindowsLocationX() == -1) {
+        Context context = CallSecretaryApplication.getContext();
+        if (CommonSharedPref.getInstance(CallSecretaryApplication.getContext()).getFloatingWindowsLocationX() == -1) {
             mLayoutParams.x = mWindowManager.getDefaultDisplay().getWidth() / 6;
             mLayoutParams.y = mWindowManager.getDefaultDisplay().getHeight() / 3;
         } else {
-            mLayoutParams.x = CommonSharedPref.getInstance(this).getFloatingWindowsLocationX();
-            mLayoutParams.y = CommonSharedPref.getInstance(this).getFloatingWindowsLocationY();
+            mLayoutParams.x = CommonSharedPref.getInstance(context).getFloatingWindowsLocationX();
+            mLayoutParams.y = CommonSharedPref.getInstance(context).getFloatingWindowsLocationY();
         }
 
         mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
@@ -109,7 +118,7 @@ public class FloatingWindowsService extends Service implements AudioPlaybackList
 
     private void initFloatingView() {
         if (mFloatingView == null) {
-            mFloatingView = (LinearLayout) LayoutInflater.from(getApplication()).inflate(R.layout.layout_floating_view, null);
+            mFloatingView = (LinearLayout) LayoutInflater.from(CallSecretaryApplication.getContext()).inflate(R.layout.layout_floating_view, null);
             mTitleTv = (TextView) mFloatingView.findViewById(R.id.title);
             mCloseBtn = (TextView) mFloatingView.findViewById(R.id.close_btn);
 
@@ -117,7 +126,7 @@ public class FloatingWindowsService extends Service implements AudioPlaybackList
             mDetailListView = (ListView) mFloatingView.findViewById(R.id.chat_list);
             mDetailListView.setEmptyView(emptyTv);
 
-            mAdapter = new ChatHistoryAdapter(getBaseContext());
+            mAdapter = new ChatHistoryAdapter(CallSecretaryApplication.getContext());
             mDetailListView.setAdapter(mAdapter);
 
 
@@ -149,6 +158,7 @@ public class FloatingWindowsService extends Service implements AudioPlaybackList
                     return true;
                 }
             });
+            mInteractiveVoiceView = (InteractiveVoiceView) mFloatingView.findViewById(R.id.interactive_voice_view);
         }
     }
 
@@ -157,9 +167,7 @@ public class FloatingWindowsService extends Service implements AudioPlaybackList
         mAdapter.addChatMessage(message);
     }
 
-    @Override
     public void onDestroy() {
-        super.onDestroy();
         hideFloatingWindows();
     }
 
@@ -185,11 +193,27 @@ public class FloatingWindowsService extends Service implements AudioPlaybackList
 
     @Override
     public void promptUserToRespond(Response response, LexServiceContinuation continuation) {
-
+        addChatMessage(ChatMessage.createCallerMessage(response.getResult().getInputTranscript()));
+        addChatMessage(ChatMessage.createSecretaryMessage(response.getResult().getMessage()));
     }
 
     @Override
     public void onInteractionError(Response response, Exception e) {
+
+    }
+
+    @Override
+    public void dialogReadyForFulfillment(Map<String, String> slots, String intent) {
+
+    }
+
+    @Override
+    public void onResponse(Response response) {
+
+    }
+
+    @Override
+    public void onError(String responseText, Exception e) {
 
     }
 

@@ -132,4 +132,8 @@ public class Response {
     public Map<String, String> getSlots() {
         return result.getSlots();
     }
+
+    public PostContentResult getResult() {
+        return result;
+    }
 }

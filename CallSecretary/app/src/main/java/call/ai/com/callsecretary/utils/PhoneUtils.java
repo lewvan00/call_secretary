@@ -1,8 +1,10 @@
 package call.ai.com.callsecretary.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.IBinder;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.android.internal.telephony.ITelephony;
@@ -16,6 +18,35 @@ import java.lang.reflect.Method;
 public class PhoneUtils {
 
     public static int currVolume;
+
+    public static void autoAnswer(){
+        try {
+            Method method = Class.forName("android.os.ServiceManager")
+                    .getMethod("getService", String.class);
+
+            IBinder binder = (IBinder) method.invoke(null, new Object[]{"phone"});
+            ITelephony telephony = ITelephony.Stub.asInterface(binder);
+            telephony.answerRingingCall();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
+            e.printStackTrace();
+            try{
+                Intent intent = new Intent("android.intent.action.MEDIA_BUTTON");
+                KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK);
+                intent.putExtra("android.intent.extra.KEY_EVENT",keyEvent);
+
+                CallSecretaryApplication.getContext().sendOrderedBroadcast(intent,"android.permission.CALL_PRIVILEGED");
+            } catch (Exception e2) {
+                Intent meidaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+                KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK);
+                meidaButtonIntent.putExtra(Intent.EXTRA_KEY_EVENT,keyEvent);
+                CallSecretaryApplication.getContext().sendOrderedBroadcast(meidaButtonIntent, null);
+            }
+        }
+    }
 
     //挂断电话
     public static void endCall(){
