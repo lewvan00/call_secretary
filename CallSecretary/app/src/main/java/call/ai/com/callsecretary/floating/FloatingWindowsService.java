@@ -1,4 +1,4 @@
-package call.ai.com.callsecretary;
+package call.ai.com.callsecretary.floating;
 
 import android.app.Service;
 import android.content.Intent;
@@ -7,7 +7,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,7 +14,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import call.ai.com.callsecretary.CommonSharedPref;
+import call.ai.com.callsecretary.R;
 
 /**
  * Created by Administrator on 2017/3/28.
@@ -26,8 +29,9 @@ public class FloatingWindowsService extends Service {
     WindowManager.LayoutParams mLayoutParams;
     LinearLayout mFloatingView;
     TextView mTitleTv;
-    TextView mDetailTv;
+    ListView mDetailListView;
     Button mCloseBtn;
+    private ChatHistoryAdapter mAdapter;
     boolean hasFloatingShowing = false;
     float mOffsetX;
     float mOffsetY;
@@ -49,7 +53,7 @@ public class FloatingWindowsService extends Service {
         initFloatingView();
         if (!hasFloatingShowing) {
             hasFloatingShowing = true;
-            mDetailTv.setText(detail);
+//            mDetailTv.setText(detail);
             mWindowManager.addView(mFloatingView, mLayoutParams);
         }
     }
@@ -88,7 +92,15 @@ public class FloatingWindowsService extends Service {
             mFloatingView = (LinearLayout) LayoutInflater.from(getApplication()).inflate(R.layout.layout_floating_view, null);
             mTitleTv = (TextView) mFloatingView.findViewById(R.id.title);
             mCloseBtn = (Button) mFloatingView.findViewById(R.id.close_btn);
-            mDetailTv = (TextView) mFloatingView.findViewById(R.id.detail);
+
+            TextView emptyTv = (TextView) mFloatingView.findViewById(R.id.empty_tv);
+            mDetailListView = (ListView) mFloatingView.findViewById(R.id.chat_list);
+            mDetailListView.setEmptyView(emptyTv);
+
+            mAdapter = new ChatHistoryAdapter(getBaseContext());
+            mDetailListView.setAdapter(mAdapter);
+
+
             mCloseBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
