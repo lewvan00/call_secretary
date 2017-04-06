@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
@@ -69,7 +70,6 @@ public class PhoneUtils {
 
         if (!audioManager.isSpeakerphoneOn() && open) {
             audioManager.setSpeakerphoneOn(true);//开启免提
-            Toast.makeText(CallSecretaryApplication.getContext(), "免提模式", Toast.LENGTH_LONG).show();
             audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL,
                     audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL),
                     AudioManager.STREAM_VOICE_CALL);
