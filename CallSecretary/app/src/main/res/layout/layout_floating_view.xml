@@ -3,39 +3,53 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="#7f7f7f"
-    android:paddingRight="5dp"
-    android:paddingLeft="5dp"
-    android:paddingBottom="5dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
         <TextView
+            android:paddingLeft="5dp"
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="chatText" />
 
-        <Button
+        <TextView
+
             android:id="@+id/close_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingRight="5dp"
             android:text="close" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff" />
 
     <ListView
         android:id="@+id/chat_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:padding="5dp" />
 
     <TextView
         android:id="@+id/empty_tv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Empty message" />
+        android:text="Empty message"
+        android:visibility="gone" />
+    <amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView
+        android:id="@+id/interactive_voice_view"
+        android:layout_width="1dp"
+        android:layout_height="1dp" />
 </LinearLayout>

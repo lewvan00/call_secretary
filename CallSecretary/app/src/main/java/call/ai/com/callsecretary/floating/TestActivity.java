@@ -45,7 +45,7 @@ public class TestActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (mFloatingService != null) {
-                    mFloatingService.showFloatingWindows("测试测试");
+                    mFloatingService.showFloatingWindows("test");
                 }
             }
         });
