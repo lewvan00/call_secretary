@@ -1,4 +1,4 @@
-package call.ai.com.callsecretary;
+package call.ai.com.callsecretary.utils;
 
 import android.content.Context;
 import android.media.AudioManager;

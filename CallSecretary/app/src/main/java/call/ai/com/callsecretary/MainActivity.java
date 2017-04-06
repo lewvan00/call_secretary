@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import call.ai.com.callsecretary.floating.TestActivity;
+import call.ai.com.callsecretary.utils.CommonSharedPref;
 
 /**
  * Created by lewvan on 2017/3/27.

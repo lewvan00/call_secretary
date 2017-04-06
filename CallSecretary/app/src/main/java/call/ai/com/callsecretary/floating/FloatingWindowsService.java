@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import call.ai.com.callsecretary.CommonSharedPref;
+import call.ai.com.callsecretary.utils.CommonSharedPref;
 import call.ai.com.callsecretary.R;
 
 /**
