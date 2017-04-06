@@ -27,16 +27,6 @@ public class ChatHistoryAdapter extends BaseAdapter {
 
     public ChatHistoryAdapter(Context context) {
         mContext = context;
-        mChatMessageList.add(ChatMessage.createCallerMessage("suiagfildsgfladfklasjd"));
-        mChatMessageList.add(ChatMessage.createSecretaryMessage("asudigfhlahdflo;asdhf;a"));
-        mChatMessageList.add(ChatMessage.createCallerMessage("suiagfildsgfladfklasjd"));
-        mChatMessageList.add(ChatMessage.createSecretaryMessage("asudigfhlahdflo;asdhf;a"));
-        mChatMessageList.add(ChatMessage.createCallerMessage("suiagfildsgfladfklasjd"));
-        mChatMessageList.add(ChatMessage.createSecretaryMessage("asudigfhlahdflo;asdhf;a"));
-        mChatMessageList.add(ChatMessage.createCallerMessage("suiagfildsgfladfklasjd"));
-        mChatMessageList.add(ChatMessage.createSecretaryMessage("asudigfhlahdflo;asdhf;a"));
-        mChatMessageList.add(ChatMessage.createCallerMessage("suiagfildsgfladfklasjd"));
-        mChatMessageList.add(ChatMessage.createSecretaryMessage("asudigfhlahdflo;asdhf;a"));
     }
 
     @Override
