@@ -1,16 +1,16 @@
 package call.ai.com.callsecretary.chat;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import call.ai.com.callsecretary.BaseActivity;
 import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.adapter.MessageAdapter;
 import call.ai.com.callsecretary.bean.Chat;
 import call.ai.com.callsecretary.utils.ChatUtils;
 
-public class ChatActivity extends Activity {
+public class ChatActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
     private MessageAdapter adapter;

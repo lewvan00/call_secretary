@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.amazonaws.mobileconnectors.lex.interactionkit.InteractionClient;
@@ -103,37 +101,37 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     }
 
     private void initFloatingView() {
-        if (mFloatingView == null) {
-            mFloatingView = new FloatingWindow(CallSecretaryApplication.getContext());
-            mFloatingView.setUiInterface(new FloatingWindow.UiInterface() {
-                @Override
-                public void onClose() {
-                    hideFloatingWindows();
-                }
-            });
+        if (mFloatingView != null) return;
 
-            mFloatingView.setOnTitleTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    int action = motionEvent.getAction();
-                    switch (action) {
-                        case MotionEvent.ACTION_DOWN:
-                            mOffsetX = motionEvent.getRawX() - mLayoutParams.x;
-                            mOffsetY = motionEvent.getRawY() - mLayoutParams.y;
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            mLayoutParams.x = (int) (motionEvent.getRawX() - mOffsetX);
-                            mLayoutParams.y = (int) (motionEvent.getRawY() - mOffsetY);
-                            mWindowManager.updateViewLayout(mFloatingView, mLayoutParams);
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            break;
-                    }
+        mFloatingView = new FloatingWindow(CallSecretaryApplication.getContext());
+        mFloatingView.setUiInterface(new FloatingWindow.UiInterface() {
+            @Override
+            public void onClose() {
+                hideFloatingWindows();
+            }
+        });
 
-                    return true;
+        mFloatingView.setOnTitleTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                int action = motionEvent.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        mOffsetX = motionEvent.getRawX() - mLayoutParams.x;
+                        mOffsetY = motionEvent.getRawY() - mLayoutParams.y;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        mLayoutParams.x = (int) (motionEvent.getRawX() - mOffsetX);
+                        mLayoutParams.y = (int) (motionEvent.getRawY() - mOffsetY);
+                        mWindowManager.updateViewLayout(mFloatingView, mLayoutParams);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
                 }
-            });
-        }
+
+                return true;
+            }
+        });
     }
 
     public void hideFloatingWindows() {

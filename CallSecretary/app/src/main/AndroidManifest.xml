@@ -32,7 +32,10 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".chat.ChatActivity"></activity>
+        <activity android:name=".chat.ChatActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".SettingActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>
