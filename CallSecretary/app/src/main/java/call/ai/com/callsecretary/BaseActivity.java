@@ -13,8 +13,7 @@ import call.ai.com.callsecretary.widget.AppBar;
 
 public abstract class BaseActivity extends AppCompatActivity {
     private AppBar appBar;
-    private  int ye ;
-    
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
