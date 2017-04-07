@@ -1,18 +1,16 @@
 package call.ai.com.callsecretary.floating;
 
 import android.content.Context;
-import android.view.Gravity;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import call.ai.com.callsecretary.R;
+import call.ai.com.callsecretary.bean.ChatMessage;
 
 /**
  * Created by Administrator on 2017/3/31.

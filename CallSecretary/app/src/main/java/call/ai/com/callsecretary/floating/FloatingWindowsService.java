@@ -2,7 +2,6 @@ package call.ai.com.callsecretary.floating;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.os.Binder;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,6 +25,8 @@ import java.util.Map;
 
 
 import call.ai.com.callsecretary.R;
+import call.ai.com.callsecretary.bean.Chat;
+import call.ai.com.callsecretary.bean.ChatMessage;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 import call.ai.com.callsecretary.utils.CommonSharedPref;
 import call.ai.com.callsecretary.utils.PhoneUtils;
@@ -194,8 +195,8 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
 
     @Override
     public void promptUserToRespond(Response response, LexServiceContinuation continuation) {
-        addChatMessage(ChatMessage.createCallerMessage(response.getResult().getInputTranscript()));
-        addChatMessage(ChatMessage.createSecretaryMessage(response.getResult().getMessage()));
+        addChatMessage(ChatMessage.createCallerMessage(response.getResult().getInputTranscript(), new Chat()));
+        addChatMessage(ChatMessage.createSecretaryMessage(response.getResult().getMessage(), new Chat()));
     }
 
     @Override

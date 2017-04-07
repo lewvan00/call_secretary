@@ -46,5 +46,7 @@ dependencies {
     compile 'com.kailashdabhi:om-recorder:1.1.1'
     compile 'com.amazonaws:aws-android-sdk-core:2.4.0'
     compile 'com.google.guava:guava:20.0'
+    compile 'com.j256.ormlite:ormlite-android:5.0'
+    compile 'com.j256.ormlite:ormlite-core:5.0'
 //    compile 'org.easymock:easymock:3.1'
 }
