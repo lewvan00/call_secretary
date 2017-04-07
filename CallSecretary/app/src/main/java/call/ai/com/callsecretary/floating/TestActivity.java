@@ -15,7 +15,7 @@ import call.ai.com.callsecretary.chat.ChatActivity;
 
 public class TestActivity extends Activity {
 
-//    FloatingWindowsService mFloatingService;
+    FloatingWindowsService mFloatingService;
 //
 //    ServiceConnection mServiceConnection = new ServiceConnection() {
 //        @Override
@@ -35,7 +35,7 @@ public class TestActivity extends Activity {
         setContentView(R.layout.layout_test);
 
         Button start = (Button) findViewById(R.id.btn1);
-//        Button remove = (Button) findViewById(R.id.btn2);
+        Button remove = (Button) findViewById(R.id.btn2);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,15 +43,14 @@ public class TestActivity extends Activity {
                 startActivity(intent);
             }
         });
-//
-//        remove.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (mFloatingService != null) {
-//                    mFloatingService.hideFloatingWindows();
-//                }
-//            }
-//        });
+
+        remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFloatingService = new FloatingWindowsService();
+                mFloatingService.showFloatingWindows("hhhh");
+            }
+        });
 
     }
 

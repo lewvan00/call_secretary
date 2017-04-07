@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.adapter.MessageAdapter;
 import call.ai.com.callsecretary.bean.Chat;
+import call.ai.com.callsecretary.utils.ChatUtils;
 
 public class ChatActivity extends Activity {
 
@@ -32,12 +33,6 @@ public class ChatActivity extends Activity {
     }
 
     private void initData() {
-        chat = new Chat();
-        chat.addCallerMessage("ddewdd");
-        chat.addCallerMessage("dddefed");
-        chat.addSecretaryMessage("dddefd");
-        chat.addCallerMessage("aaewsss");
-        chat.addSecretaryMessage("ddsedd");
-        chat.addCallerMessage("aasss");
+        chat = ChatUtils.createTestChat();
     }
 }

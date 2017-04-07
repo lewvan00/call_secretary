@@ -51,6 +51,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return chat.getMessages().size();
     }
 
+    public void addCallerMessage(String text) {
+        chat.addCallerMessage(text);
+    }
+
+    public void addSecretaryMessage(String text) {
+        chat.addSecretaryMessage(text);
+    }
+
     public void setChat(Chat chat) {
         this.chat = chat;
         notifyDataSetChanged();
