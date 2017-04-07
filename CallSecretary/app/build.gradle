@@ -10,15 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//        jackOptions {
-//            enabled true
-//        }
     }
-
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
 
     buildTypes {
         release {
@@ -38,15 +30,14 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.2.0'
     testCompile 'junit:junit:4.12'
-    //    compile ('com.amazonaws:aws-android-sdk-lex:2.4.0@aar'){
-    //        transitive=true
-    //    }
+
     compile 'com.kailashdabhi:om-recorder:1.1.1'
     compile 'com.amazonaws:aws-android-sdk-core:2.4.0'
     compile 'com.google.guava:guava:20.0'
     compile 'com.j256.ormlite:ormlite-android:5.0'
     compile 'com.j256.ormlite:ormlite-core:5.0'
-//    compile 'org.easymock:easymock:3.1'
+
+    compile 'com.android.support:recyclerview-v7:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.2.0'
 }

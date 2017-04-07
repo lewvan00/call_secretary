@@ -4,8 +4,9 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/4/7.
@@ -20,17 +21,21 @@ public class Chat {
     private String phone;
 
     @DatabaseField
-    private Date date;
+    private long time;
 
     @ForeignCollectionField
-    private Collection<ChatMessage> messages;
+    private Collection<ChatMessage> messages = new ArrayList<>();;
+
+    private List<ChatMessage> messageList = new ArrayList<>();
 
     public Chat() {
+        time = System.currentTimeMillis();
+        phone = "";
     }
 
-    public Chat(String phone, Date date, Collection<ChatMessage> messages) {
+    public Chat(String phone, long time, Collection<ChatMessage> messages) {
         this.phone = phone;
-        this.date = date;
+        this.time = time;
         this.messages = messages;
     }
 
@@ -50,19 +55,31 @@ public class Chat {
         this.phone = phone;
     }
 
-    public Date getDate() {
-        return date;
+    public long getTime() {
+        return time;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setTime(long time) {
+        this.time = time;
     }
 
-    public Collection<ChatMessage> getMessages() {
-        return messages;
+    public List<ChatMessage> getMessages() {
+        if (!messages.isEmpty() && messageList.isEmpty()) {
+            messageList = new ArrayList<>(messages);
+        }
+        return messageList;
     }
 
-    public void setMessages(Collection<ChatMessage> messages) {
-        this.messages = messages;
+    public void addMessage(ChatMessage message) {
+        messages.add(message);
+        messageList.add(message);
+    }
+
+    public void addCallerMessage(String text) {
+        addMessage(ChatMessage.createCallerMessage(text, this));
+    }
+
+    public void addSecretaryMessage(String text) {
+        addMessage(ChatMessage.createSecretaryMessage(text, this));
     }
 }

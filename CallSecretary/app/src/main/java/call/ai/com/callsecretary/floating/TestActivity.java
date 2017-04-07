@@ -1,9 +1,13 @@
 package call.ai.com.callsecretary.floating;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import call.ai.com.callsecretary.R;
+import call.ai.com.callsecretary.chat.ChatActivity;
 
 /**
  * Created by Administrator on 2017/3/28.
@@ -29,19 +33,16 @@ public class TestActivity extends Activity {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.layout_test);
-//        Intent intent = new Intent(TestActivity.this, FloatingWindowsService.class);
-//        startService(intent);
-//        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-//        Button start = (Button) findViewById(R.id.btn1);
+
+        Button start = (Button) findViewById(R.id.btn1);
 //        Button remove = (Button) findViewById(R.id.btn2);
-//        start.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (mFloatingService != null) {
-//                    mFloatingService.showFloatingWindows("test");
-//                }
-//            }
-//        });
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(TestActivity.this, ChatActivity.class);
+                startActivity(intent);
+            }
+        });
 //
 //        remove.setOnClickListener(new View.OnClickListener() {
 //            @Override
