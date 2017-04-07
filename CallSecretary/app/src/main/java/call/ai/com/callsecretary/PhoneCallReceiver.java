@@ -23,9 +23,6 @@ public class PhoneCallReceiver extends BroadcastReceiver {
     private FloatingWindowsService mFloatingService;
 
     public PhoneCallReceiver() {
-        TelephonyManager telManager = (TelephonyManager) CallSecretaryApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
-        TelListner listener = new TelListner();
-        telManager.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
 //        mCallRecorder = new CallRecorder();
     }
 
@@ -46,33 +43,12 @@ public class PhoneCallReceiver extends BroadcastReceiver {
 //                mCallRecorder.startRecording();
             } else if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
                 //挂断
-//                PhoneUtils.setSpeekModle(false);   //关闭外放
+                PhoneUtils.setSpeekModle(false);   //关闭外放
 //                mCallRecorder.stopRecoding();
+            }else if (telephonyManager.getCallState()==TelephonyManager.CALL_STATE_OFFHOOK){
+                PhoneUtils.setSpeekModle(true);
             }
         }
     }
 
-
-    private class TelListner extends PhoneStateListener {
-        boolean comingPhone=false;//标识
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-            switch (state) {
-                case TelephonyManager.CALL_STATE_IDLE:/* 无任何状态 */
-                    if(this.comingPhone){
-                        this.comingPhone=false;
-                        PhoneUtils.setSpeekModle(false);
-                    }
-                    break;
-                case TelephonyManager.CALL_STATE_OFFHOOK:/* 接起电话 */
-                    this.comingPhone=true;
-                    PhoneUtils.setSpeekModle(true);
-                    break;
-                case TelephonyManager.CALL_STATE_RINGING:/* 电话进来 */
-                    this.comingPhone=true;
-                    PhoneUtils.setSpeekModle(true);
-                    break;
-            }
-        }
-    }
 }
