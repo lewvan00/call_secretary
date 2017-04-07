@@ -19,10 +19,16 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        enableBackButton(true);
+        setBackClickFinish();
 
         initData();
         initViews();
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_chat;
     }
 
     private void initViews() {

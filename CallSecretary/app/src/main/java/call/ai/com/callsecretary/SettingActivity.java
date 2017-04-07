@@ -1,6 +1,5 @@
 package call.ai.com.callsecretary;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -27,7 +26,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(R.layout.activity_setting);
+        enableBackButton(true);
+        setBackClickFinish();
+        setBarTitle(R.string.setting_title);
 
         mCheckBox = (CheckBox) findViewById(R.id.auto_pickup_phone);
         Button setDone = (Button) findViewById(R.id.set_done);
@@ -64,6 +65,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 return textView;
             }
         });
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_setting;
     }
 
     @Override

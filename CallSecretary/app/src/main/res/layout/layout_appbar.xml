@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="47dp"
+    android:background="#FF28A4FF">
+
+    <LinearLayout
+        android:id="@+id/layout_left"
+        android:layout_alignParentLeft="true"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/topbar_btn"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="12.5dp"
+        android:layout_marginBottom="0.5dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/left_btn"
+            android:layout_width="25dp"
+            android:layout_height="22dp"
+            android:layout_gravity="left|center_vertical"
+            android:background="@drawable/icon_top_bar_back"
+            android:textColor="@color/white"
+            android:clickable="false" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="hhhhh"
+        android:textSize="20sp" />
+
+    <FrameLayout
+        android:id="@+id/menu_layout"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+</RelativeLayout>

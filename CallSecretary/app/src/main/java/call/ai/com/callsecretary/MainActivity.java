@@ -12,7 +12,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setBarTitle(R.string.app_name);
+        enableBackButton(false);
+
         findViewById(R.id.setting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -34,6 +36,11 @@ public class MainActivity extends BaseActivity {
                 floatingWindowsService.showFloatingWindows("hhhh");
             }
         });
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
     }
 
     private void goToSetting() {

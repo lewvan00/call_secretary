@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:background="#FFC"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <call.ai.com.callsecretary.widget.AppBar
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <CheckBox
         android:id="@+id/auto_pickup_phone"
         android:text="@string/if_pickup_call_auto"
@@ -53,4 +58,4 @@
         android:layout_above="@id/set_done"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-</RelativeLayout>
+</LinearLayout>
