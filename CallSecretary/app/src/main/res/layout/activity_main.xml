@@ -5,11 +5,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/setting"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="setting"/>
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="setting"/>
+        <Button
+            android:id="@+id/chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="chat"/>
+        <Button
+            android:id="@+id/floatwindow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="floatwindow"/>
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recylerview"
         android:layout_width="match_parent"

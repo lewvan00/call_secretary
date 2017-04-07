@@ -15,7 +15,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import call.ai.com.callsecretary.floating.TestActivity;
 import call.ai.com.callsecretary.utils.CommonSharedPref;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
@@ -74,10 +73,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 CommonSharedPref.getInstance(this).setAutoPickupPhone(mCheckBox.isChecked());
                 break;
             case R.id.set_done:
-//                finish();
-                Intent intent = new Intent();
-                intent.setClass(SettingActivity.this, TestActivity.class);
-                startActivity(intent);
+                finish();
                 break;
             case R.id.add_filter:
                 String filterItem = mFilterEditText.getText().toString();
