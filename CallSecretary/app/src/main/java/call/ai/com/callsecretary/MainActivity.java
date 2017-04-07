@@ -14,8 +14,10 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setBarTitle(R.string.app_name);
         enableBackButton(false);
+        View setting = View.inflate(this, R.layout.layout_setting, null);
+        addMenuLayout(setting);
 
-        findViewById(R.id.setting).setOnClickListener(new View.OnClickListener() {
+        setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToSetting();
