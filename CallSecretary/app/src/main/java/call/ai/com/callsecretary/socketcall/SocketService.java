@@ -121,7 +121,7 @@ public class SocketService extends Service {
                                             handleHandUpStatus(contentResult);
                                             break;
                                         case SerializablePostContentResult.STATE_RINGOFF:
-                                            handleRingoff();
+                                            handleRingoff(socket);
                                             break;
                                     }
                                 }
@@ -164,7 +164,11 @@ public class SocketService extends Service {
         }, 1500);
     }
 
-    private void handleRingoff() {
+    private void handleRingoff(Socket socket) {
+        try {
+            socket.close();
+        } catch (IOException e) {
+        }
         clientSocket = null;
         mMainHandler.post(new Runnable() {
             @Override
