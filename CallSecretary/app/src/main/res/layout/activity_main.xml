@@ -10,31 +10,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
-        <!--test按钮，需要时显示-->
-        <Button
-            android:id="@+id/test"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="test"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recylerview"
+            android:paddingTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <Button
+            android:layout_gravity="bottom|right"
             android:id="@+id/floatwindow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:text="floatwindow"/>
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recylerview"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    </FrameLayout>
 
 </LinearLayout>

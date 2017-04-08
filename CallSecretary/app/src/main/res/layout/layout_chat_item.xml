@@ -7,14 +7,16 @@
     <ImageView
         android:layout_centerVertical="true"
         android:id="@+id/image"
-        android:layout_width="30dp"
-        android:layout_height="70dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"/>
+        android:layout_width="43dp"
+        android:layout_height="65dp"
+        android:paddingTop="10dp"
+        android:src="@drawable/contacts"
+        android:layout_marginRight="15dp"
+        android:paddingBottom="10dp"/>
     <LinearLayout
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/image"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
@@ -29,10 +31,16 @@
 
         <TextView
             android:id="@+id/time"
+            android:layout_marginBottom="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#ffaaaaaa"
             android:text="ihodasifjsdasdofijasdio"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"/>
     </LinearLayout>
 
 </RelativeLayout>

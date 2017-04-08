@@ -76,7 +76,6 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         ChatAdapter adapter = new ChatAdapter();
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         ChatService.getInstance().addListener(adapter);
     }
 
