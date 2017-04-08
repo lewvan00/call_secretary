@@ -581,6 +581,8 @@ public class InteractiveVoiceView extends View {
          */
         void onResponse(Response response);
 
+        void onHangUp(Response response);
+
         /**
          * Called on encountering errors during a dialog.
          *

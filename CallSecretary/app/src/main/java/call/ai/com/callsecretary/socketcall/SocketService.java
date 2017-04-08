@@ -2,6 +2,9 @@ package call.ai.com.callsecretary.socketcall;
 
 import android.app.Service;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -15,7 +18,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -72,8 +74,15 @@ public class SocketService extends Service {
                                     case SerializablePostContentResult.STATE_CALL:
                                         handleCall(socket);
                                         break;
+                                    case SerializablePostContentResult.STATE_FINAL:
+                                        handleFinalStatus();
+                                        break;
+                                    case SerializablePostContentResult.STATE_HANGUP:
+                                        handleFinalHandleUp(contentResult);
+                                        break;
                                 }
                             }
+
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                             Log.d("liufan", "receive result = ClassNotFoundException ---- " + e);
@@ -94,6 +103,27 @@ public class SocketService extends Service {
                 }
             }
         }.start();
+    }
+
+    private void handleFinalStatus() {
+        startAlarm();
+    }
+
+    private void handleFinalHandleUp(SerializablePostContentResult contentResult) {
+        PostContentResult postContentResult = new PostContentResult();
+        postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
+        postContentResult.setMessage(contentResult.getMessage());
+        postContentResult.setInputTranscript(contentResult.getInputTranscript());
+
+        InteractionClient client = InteractiveVoiceUtils.getInstance().getClient();
+        client.setNeedPlayback(true);
+        client.processSocketResponse(postContentResult);
+        mMainHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startAlarm();
+            }
+        }, 1500);
     }
 
     private void handleVoiceResponse(SerializablePostContentResult contentResult) {
@@ -153,6 +183,24 @@ public class SocketService extends Service {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void startAlarm() {
+        MediaPlayer mMediaPlayer = MediaPlayer.create(this, getSystemDefultRingtoneUri());
+        mMediaPlayer.setLooping(false);
+        try {
+            mMediaPlayer.prepare();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mMediaPlayer.start();
+    }
+
+    private Uri getSystemDefultRingtoneUri() {
+        return RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE);
     }
 
     @Override
