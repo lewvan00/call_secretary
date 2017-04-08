@@ -61,7 +61,7 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
             public void run() {
                 Toast.makeText(MainActivity.this, "response = " + result, Toast.LENGTH_LONG).show();
             }
-});
+        });
         SocketHelper.getInstance().sendMsgToSocket(result);
         InputStream audioStream = realResult.getAudioStream();
         final byte buffer[] = new byte[16384];
@@ -78,6 +78,7 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
             } catch (IOException e) {
                 e.printStackTrace();
 
+            }
         }
     }
 
