@@ -215,6 +215,11 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     }
 
     @Override
+    public void onHangUp(Response response) {
+
+    }
+
+    @Override
     public void onError(String responseText, Exception e) {
 
     }

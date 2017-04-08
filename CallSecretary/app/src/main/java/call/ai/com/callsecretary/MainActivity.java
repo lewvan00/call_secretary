@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -265,6 +264,36 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
             }
         });
         final SerializablePostContentResult result = new SerializablePostContentResult();
+        PostContentResult realResult = response.getResult();
+        result.setRealResult(realResult);
+        Log.d("liufan", "response = " + result);
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "response = " + result, Toast.LENGTH_LONG).show();
+            }
+        });
+        SocketClient.getInstance().sendMsgToSocket(result);
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mVoiceUtils.onAudioPlayBackCompleted();
+            }
+        });
+        mVoiceUtils.getClient().setAudioPlaybackState(InteractionClient.NOT_BUSY);
+    }
+
+    @Override
+    public void onHangUp(Response response) {
+        mVoiceUtils.getClient().setAudioPlaybackState(InteractionClient.BUSY);
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mVoiceUtils.onAudioPlaybackStarted();
+            }
+        });
+        final SerializablePostContentResult result = new SerializablePostContentResult();
+        result.setState(SerializablePostContentResult.STATE_HANGUP);
         PostContentResult realResult = response.getResult();
         result.setRealResult(realResult);
         Log.d("liufan", "response = " + result);

@@ -57,51 +57,48 @@ public class SocketService extends Service {
             public void run() {
                 try {
                     serverSocket = new ServerSocket(1989);
-                    mMainHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(SocketService.this, "socket listening", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    Socket socket = serverSocket.accept();
-                    InputStream inputStream = socket.getInputStream();
-                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                    while (true) {
-                        try {
-                            SerializablePostContentResult contentResult = (SerializablePostContentResult) objectInputStream.readObject();
-                            if (contentResult != null) {
-                                switch (contentResult.getState()) {
-                                    case SerializablePostContentResult.STATE_RESPONSE:
-                                        handleVoiceResponse(contentResult);
-                                        break;
-                                    case SerializablePostContentResult.STATE_CALL:
-                                        handleCall(socket);
-                                        break;
-                                    case SerializablePostContentResult.STATE_FINAL:
-                                        handleFinalStatus();
-                                        break;
-                                    case SerializablePostContentResult.STATE_HANGUP:
-                                        handleFinalHandleUp(contentResult);
-                                        break;
-                                }
-                            }
-
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                            Log.d("liufan", "receive result = ClassNotFoundException ---- " + e);
-                        }
-                    }
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.d("liufan", "socket service exception : " + e);
-                } finally {
-                    Log.d("liufan", "finally");
+                }
+                mMainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(SocketService.this, "socket listening", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                while (true) {
                     try {
-                        if (serverSocket != null) {
-                            serverSocket.close();
+                        Socket socket = serverSocket.accept();
+                        InputStream inputStream = socket.getInputStream();
+                        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                        while (true) {
+                            try {
+                                SerializablePostContentResult contentResult = (SerializablePostContentResult) objectInputStream.readObject();
+                                if (contentResult != null) {
+                                    switch (contentResult.getState()) {
+                                        case SerializablePostContentResult.STATE_RESPONSE:
+                                            handleVoiceResponse(contentResult);
+                                            break;
+                                        case SerializablePostContentResult.STATE_CALL:
+                                            handleCall(socket);
+                                            break;
+                                        case SerializablePostContentResult.STATE_FINAL:
+                                            handleFinalStatus();
+                                            break;
+                                        case SerializablePostContentResult.STATE_HANGUP:
+                                            handleFinalHandleUp(contentResult);
+                                            break;
+                                    }
+                                }
+
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                                Log.d("liufan", "receive result = ClassNotFoundException ---- " + e);
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Log.d("liufan", "socket service exception : " + e);
                     }
                 }
             }
