@@ -1,4 +1,4 @@
-package call.ai.com.callsecretary;
+package call.ai.com.callsecretary.socketcall;
 
 import android.app.Service;
 import android.content.Intent;

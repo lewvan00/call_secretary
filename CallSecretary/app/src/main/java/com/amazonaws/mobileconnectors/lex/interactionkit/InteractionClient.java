@@ -155,8 +155,8 @@ public class InteractionClient {
     /**
      * Client states.
      */
-    private final boolean BUSY = true;
-    private final boolean NOT_BUSY = false;
+    public static final boolean BUSY = true;
+    public static final boolean NOT_BUSY = false;
 
     /**
      * Indicates if the client is busy with a request.
@@ -737,7 +737,9 @@ public class InteractionClient {
         } finally {
             setBusyState(NOT_BUSY);
         }
-        handler.post(response);
+//        handler.post(response);
+        // // FIXME: 2017/4/8 0008 方便线程同步
+        response.run();
     }
 
     /**
@@ -951,7 +953,7 @@ public class InteractionClient {
      * Sets the current state of the client.
      * @param playbackState the audio playback state.
      */
-    private void setAudioPlaybackState(boolean playbackState) {
+    public void setAudioPlaybackState(boolean playbackState) {
         this.audioPlayBackInProgress = playbackState;
     }
 

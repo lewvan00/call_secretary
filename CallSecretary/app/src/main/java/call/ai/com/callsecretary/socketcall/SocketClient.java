@@ -1,4 +1,4 @@
-package call.ai.com.callsecretary;
+package call.ai.com.callsecretary.socketcall;
 
 import android.content.Context;
 import android.os.Handler;
@@ -10,27 +10,31 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import lex.InteractiveVoiceUtils;
+import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
+import call.ai.com.callsecretary.utils.CallSecretaryApplication;
+import call.ai.com.callsecretary.utils.CommonSharedPref;
 
 /**
  * Created by lewvan on 2017/4/8.
  */
 
-public class SocketHelper {
-    private static SocketHelper sInstance = new SocketHelper();
+public class SocketClient {
+    private static SocketClient sInstance = new SocketClient();
     ObjectOutputStream outputStream;
     Handler mMainHandler;
+    InteractiveVoiceUtils mVoiceUtil;
 
-    public static SocketHelper getInstance() {
+    public static SocketClient getInstance() {
         return sInstance;
     }
 
-    private SocketHelper(){
+    private SocketClient(){
 
     }
 
-    public void init(Context context, Handler mainHandler) {
+    public void init(Context context, Handler mainHandler, InteractiveVoiceUtils voiceUtil) {
         mMainHandler = mainHandler;
+        mVoiceUtil = voiceUtil;
         connectServerWithTCPSocket(context, mainHandler);
     }
 
@@ -79,7 +83,7 @@ public class SocketHelper {
                     } catch (IOException e) {
                         e.printStackTrace();
                         showToast("send IOException : " + e);
-                        InteractiveVoiceUtils.getInstance().onAudioPlaybackError(e);
+                        mVoiceUtil.onAudioPlaybackError(e);
                     }
                 }
             }.start();

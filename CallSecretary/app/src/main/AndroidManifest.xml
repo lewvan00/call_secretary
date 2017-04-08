@@ -30,7 +30,7 @@
 
         <activity android:name=".chat.ChatActivity" />
         <activity android:name=".SettingActivity" />
-        <service android:name=".SocketService"/>
+        <service android:name=".socketcall.SocketService"/>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
