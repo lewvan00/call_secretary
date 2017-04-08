@@ -59,10 +59,10 @@ public class SocketService extends Service {
                         }
                     });
                     Socket socket = serverSocket.accept();
+                    InputStream inputStream = socket.getInputStream();
+                    // 从Socket当中得到InputStream对象
+                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                     while (true) {
-                        // 从Socket当中得到InputStream对象
-                        InputStream inputStream = socket.getInputStream();
-                        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                         try {
                             SerializablePostContentResult contentResult = (SerializablePostContentResult) objectInputStream.readObject();
                             if (contentResult != null && contentResult.getState() == SerializablePostContentResult.STATE_RESPONSE) {
