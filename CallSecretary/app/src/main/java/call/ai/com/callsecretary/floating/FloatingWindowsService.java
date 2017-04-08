@@ -57,6 +57,8 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
                 context.getResources().getString(R.string.bot_alias));
         lexInteractionClient.setAudioPlaybackListener(this);
         lexInteractionClient.setInteractionListener(this);
+
+        initFloatingView();
     }
 
     public void startBot() {
