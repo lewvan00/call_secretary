@@ -75,12 +75,6 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
 
     public void startNativeBot(){
         InteractiveVoiceUtils interactiveVoiceUtils=InteractiveVoiceUtils.getInstance();
-//        interactiveVoiceUtils.setVoiceListener(this);
-//        interactiveVoiceUtils.setCredentialProvider(credentialsProvider);
-//        interactiveVoiceUtils.setInteractionConfig(
-//                new InteractionConfig(context.getResources().getString(R.string.bot_name),
-//                        context.getResources().getString(R.string.bot_alias)));
-//        interactiveVoiceUtils.setAwsRegion(context.getResources().getString(R.string.aws_region));
         interactiveVoiceUtils.start(this,this,this);
     }
 

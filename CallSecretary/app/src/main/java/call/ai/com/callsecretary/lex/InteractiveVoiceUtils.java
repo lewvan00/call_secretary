@@ -33,6 +33,7 @@ import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 
 public class InteractiveVoiceUtils implements InteractionListener, AudioPlaybackListener, MicrophoneListener {
 
+    CognitoCredentialsProvider cognitoCredentialsProvider;
     private final static String TAG = "InteractiveVoiceUtils";
     private static final String INTERACTION_VOICE_VIEW_USER_AGENT = "VOICE_BUTTON";
     private final Context context;
@@ -55,6 +56,9 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
 
     private InteractiveVoiceUtils() {
         this.context = CallSecretaryApplication.getContext();
+        cognitoCredentialsProvider = new CognitoCredentialsProvider(
+                context.getResources().getString(R.string.identity_id_test),
+                Regions.fromName(context.getResources().getString(R.string.aws_region)));
         this.shouldInitialize = true;
         this.voiceListener = null;
         this.state = STATE_READY;
@@ -115,16 +119,6 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
     }
 
     private void init(InteractiveVoiceView.InteractiveVoiceListener voiceListener,AudioPlaybackListener audioPlaybackListener,InteractionListener interactionListener) {
-        CognitoCredentialsProvider cognitoCredentialsProvider= new CognitoCredentialsProvider(
-                context.getResources().getString(R.string.identity_id_test),
-                Regions.fromName(context.getResources().getString(R.string.aws_region)));
-        InteractionClient lexInteractionClient = new InteractionClient(context,
-                cognitoCredentialsProvider,
-                Regions.US_EAST_1,
-                context.getResources().getString(R.string.bot_name),
-                context.getResources().getString(R.string.bot_alias));
-        lexInteractionClient.setAudioPlaybackListener(audioPlaybackListener);
-        lexInteractionClient.setInteractionListener(interactionListener);
         setVoiceListener(voiceListener);
         setCredentialProvider(cognitoCredentialsProvider);
         setInteractionConfig(
