@@ -129,10 +129,6 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         shouldInitialize = false;
     }
 
-    public void processAudioResponse(PostContentResult result) {
-        lexInteractionClient.processSocketResponse(result);
-    }
-
     protected void validateAppData() {
         if (interactionConfig == null) {
             throw new InvalidParameterException(
