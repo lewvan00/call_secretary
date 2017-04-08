@@ -1,8 +1,12 @@
 package call.ai.com.callsecretary;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import call.ai.com.callsecretary.chat.ChatActivity;
 import call.ai.com.callsecretary.floating.FloatingWindowsService;
@@ -38,6 +42,19 @@ public class MainActivity extends BaseActivity {
                 floatingWindowsService.showFloatingWindows("hhhh");
             }
         });
+
+        //获取wifi服务
+        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        //判断wifi是否开启
+        if (!wifiManager.isWifiEnabled()) {
+            wifiManager.setWifiEnabled(true);
+        }
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int ipAddress = wifiInfo.getIpAddress();
+        String ip = intToIp(ipAddress);
+        Toast.makeText(this, "ip : " + ip, Toast.LENGTH_LONG).show();
+        Intent i = new Intent(this, SocketService.class);
+        startService(i);
     }
 
     @Override
@@ -48,5 +65,13 @@ public class MainActivity extends BaseActivity {
     private void goToSetting() {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
+    }
+
+    private String intToIp(int i) {
+
+        return (i & 0xFF ) + "." +
+                ((i >> 8 ) & 0xFF) + "." +
+                ((i >> 16 ) & 0xFF) + "." +
+                ( i >> 24 & 0xFF) ;
     }
 }
