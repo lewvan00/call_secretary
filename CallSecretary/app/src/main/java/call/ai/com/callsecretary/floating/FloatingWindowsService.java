@@ -25,6 +25,8 @@ import java.util.Map;
 
 import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.chat.ChatActivity;
+import call.ai.com.callsecretary.socketcall.SocketClient;
+import call.ai.com.callsecretary.socketcall.SocketService;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 import call.ai.com.callsecretary.utils.PhoneUtils;
 
@@ -38,6 +40,7 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     private FloatingWindow mFloatingView;
 
     private boolean hasFloatingShowing = false;
+    private boolean isServer;
 
     CognitoCredentialsProvider credentialsProvider;
 
@@ -103,6 +106,10 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         }
     }
 
+    public void setClientSocket(boolean isServer) {
+        this.isServer = isServer;
+    }
+
     private void initLayoutParams() {
         mLayoutParams = new WindowManager.LayoutParams();
 
@@ -125,6 +132,11 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         mFloatingView.setUiInterface(new FloatingWindow.UiInterface() {
             @Override
             public void onClose() {
+                if (isServer) {
+                    SocketService.callRingOff();
+                } else {
+                    SocketClient.getInstance().ringoffFromSocket();
+                }
                 hideFloatingWindows();
             }
         });

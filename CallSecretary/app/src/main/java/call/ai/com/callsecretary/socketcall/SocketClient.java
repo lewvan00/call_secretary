@@ -102,6 +102,10 @@ public class SocketClient {
                                 bytes[2] == 'k' - 'a') {
 
                             onPhoneReceived();
+                        } else if (bytes[0] == 'o' - 'a' &&
+                                bytes[1] == 'f' - 'a' &&
+                                bytes[2] == 'f' - 'a') {
+                            onPhoneROff();
                         }
                     }
                 }
@@ -122,9 +126,42 @@ public class SocketClient {
             public void run() {
                 Context context = CallSecretaryApplication.getContext();
                 FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
+                floatingWindowsService.setClientSocket(false);
                 floatingWindowsService.showFloatingWindows(context.getString(R.string.float_title_call));
             }
         });
+    }
+
+    private void onPhoneROff() {
+        showToast("remote off");
+        Log.d("liufan", "remote off!");
+
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
+                floatingWindowsService.hideFloatingWindows();
+            }
+        });
+    }
+
+    public void ringoffFromSocket() {
+        if (outputStream != null) {
+            try {
+                SerializablePostContentResult result = new SerializablePostContentResult();
+                result.setState(SerializablePostContentResult.STATE_RINGOFF);
+
+                outputStream.writeObject(result);
+                outputStream.flush();
+
+                showToast("ringoff success");
+                Log.d("liufan", "ringoff success!");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                showToast("ringoff IOException : " + e);
+            }
+        }
     }
 
     public void sendMsgToSocket (final Object object) {

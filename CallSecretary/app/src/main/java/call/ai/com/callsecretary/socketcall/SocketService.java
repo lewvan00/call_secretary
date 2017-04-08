@@ -1,6 +1,7 @@
 package call.ai.com.callsecretary.socketcall;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -12,7 +13,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.lex.interactionkit.InteractionClient;
-import com.amazonaws.mobileconnectors.lex.interactionkit.Response;
 import com.amazonaws.services.lexrts.model.PostContentResult;
 
 import java.io.ByteArrayInputStream;
@@ -27,6 +27,7 @@ import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.floating.FloatingWindowsService;
 import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
 import call.ai.com.callsecretary.polley.PolleyUtils;
+import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 import lex.SerializablePostContentResult;
 
 
@@ -35,8 +36,12 @@ import lex.SerializablePostContentResult;
  */
 
 public class SocketService extends Service {
+    public static final String INTENT_RINGOFF = "ringoff";
+
     Handler mMainHandler;
     ServerSocket serverSocket = null;
+    Socket clientSocket = null;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -49,6 +54,30 @@ public class SocketService extends Service {
         //启动socket
         mMainHandler = new Handler();
         startSocketService();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null) {
+            boolean ringoff = intent.getBooleanExtra(INTENT_RINGOFF, false);
+            if (ringoff && clientSocket != null) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        callbackRingoff(clientSocket);
+                    }
+                }.start();
+            }
+        }
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    public static void callRingOff() {
+        Context context = CallSecretaryApplication.getContext();
+        Intent intent = new Intent(context, SocketService.class);
+        intent.putExtra(INTENT_RINGOFF, true);
+        context.startService(intent);
     }
 
     public void startSocketService() {
@@ -88,6 +117,9 @@ public class SocketService extends Service {
                                         case SerializablePostContentResult.STATE_HANGUP:
                                             handleFinalHandleUp(contentResult);
                                             break;
+                                        case SerializablePostContentResult.STATE_RINGOFF:
+                                            handleRingoff();
+                                            break;
                                     }
                                 }
 
@@ -126,6 +158,16 @@ public class SocketService extends Service {
         }, 1500);
     }
 
+    private void handleRingoff() {
+        clientSocket = null;
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                FloatingWindowsService.getServiceInstance().hideFloatingWindows();
+            }
+        });
+    }
+
     private void handleVoiceResponse(SerializablePostContentResult contentResult) {
         //get audio stream;
         Log.d("liufan", "receive audio result = " + contentResult);
@@ -158,10 +200,12 @@ public class SocketService extends Service {
         if (isAutoAnswer()) {
             callbackAck(socket);
 
+            clientSocket = socket;
             mMainHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
+                    floatingWindowsService.setClientSocket(true);
                     floatingWindowsService.showFloatingWindows(getString(R.string.float_title_answer));
                 }
             });
@@ -200,6 +244,20 @@ public class SocketService extends Service {
         }
     }
 
+    private void callbackRingoff(Socket socket) {
+        try {
+            OutputStream outputStream = socket.getOutputStream();
+            byte[] ackData = new byte[3];
+            ackData[0] = 'o' - 'a';
+            ackData[1] = 'f' - 'a';
+            ackData[2] = 'f' - 'a';
+            outputStream.write(ackData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        clientSocket = null;
+    }
 
     private void startAlarm() {
         MediaPlayer mMediaPlayer = MediaPlayer.create(this, getSystemDefultRingtoneUri());
