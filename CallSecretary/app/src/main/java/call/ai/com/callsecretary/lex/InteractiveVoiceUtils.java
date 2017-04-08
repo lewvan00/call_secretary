@@ -22,6 +22,8 @@ import com.amazonaws.services.lexrts.model.DialogState;
 import java.util.HashMap;
 import java.util.Map;
 
+import call.ai.com.callsecretary.R;
+
 /**
  * Created by 李东 on 2017/4/8.
  */
@@ -86,9 +88,9 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         this.awsRegion = Regions.fromName(awsRegion) ;
     }
 
-    public void start() {
+    public void start(InteractiveVoiceView.InteractiveVoiceListener listener) {
         if (shouldInitialize) {
-            init();
+            init(listener);
         }
 
         if (sessionAttributes == null) {
@@ -109,7 +111,14 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         lexInteractionClient.audioInForAudioOut(sessionParameters);
     }
 
-    private void init() {
+    private void init(InteractiveVoiceView.InteractiveVoiceListener voiceListener) {
+        setVoiceListener(voiceListener);
+        setCredentialProvider(credentialsProvider);
+        setInteractionConfig(
+                new InteractionConfig(context.getResources().getString(R.string.bot_name),
+                        context.getResources().getString(R.string.bot_alias)));
+        setAwsRegion(context.getResources().getString(R.string.aws_region));
+
         state = STATE_READY;
         validateAppData();
         createInteractionClient();
