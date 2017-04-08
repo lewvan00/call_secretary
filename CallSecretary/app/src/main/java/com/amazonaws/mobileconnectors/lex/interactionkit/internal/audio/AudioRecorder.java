@@ -31,6 +31,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.net.MediaType;
 import com.singun.media.audio.AudioConfig;
 import com.singun.media.audio.AudioFileWriter;
+import com.singun.wrapper.WebRTC.WebRTCWrapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +44,7 @@ public class AudioRecorder implements AudioSource {
 
     private final MediaType mContentType;
     private AudioSourceListener mListener;
+    private WebRTCWrapper webRTCWrapper;
 
     /**
      * Flag to indicate whether mRecord refers to an object passed in.
@@ -130,6 +132,11 @@ public class AudioRecorder implements AudioSource {
                         format,
                         AudioRecord.getMinBufferSize(sampleRate, channels, format)),
                 false);
+
+        webRTCWrapper = new WebRTCWrapper();
+        if (!webRTCWrapper.isInit()) {
+            webRTCWrapper.init(sampleRate);
+        }
     }
 
     /**
@@ -259,7 +266,7 @@ public class AudioRecorder implements AudioSource {
         audioConfig.audioDirPath = Environment.getExternalStorageDirectory().getPath();
         audioConfig.audioName = "call_secretary";
         AudioFileWriter fileWriter = new AudioFileWriter(audioConfig);
-        final short[] buffer = new short[mNumSamplesPerRead];
+        short[] buffer = new short[mNumSamplesPerRead];
         audioConfig.audioDataIn = buffer;
         audioConfig.audioDataOut = buffer;
         audioConfig.audioDataSize = mNumSamplesPerRead;
@@ -281,6 +288,11 @@ public class AudioRecorder implements AudioSource {
                 // Buffer bytes to be sent to callback.
                 synchronized (mRecord) {
                     numSamplesRead = mRecord.read(buffer, 0, mNumSamplesPerRead);
+                    Log.e("zhang", "startRecording: mRecord.read buffer.length = " + buffer.length);
+                    buffer = webRTCWrapper.processGainControl(buffer, numSamplesRead);
+                    Log.e("zhang", "startRecording: processGainControl buffer.length = " + buffer.length);
+                    buffer = webRTCWrapper.processNoiseSuppress(buffer, numSamplesRead);
+                    Log.e("zhang", "startRecording: processNoiseSuppress buffer.length = " + buffer.length);
                 }
 
                 final int invalidOperation = AudioRecord.ERROR_INVALID_OPERATION;
