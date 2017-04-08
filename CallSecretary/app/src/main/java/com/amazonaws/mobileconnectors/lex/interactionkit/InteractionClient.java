@@ -85,6 +85,8 @@ public class InteractionClient {
     private final String TAG = "Lex";
     private static final String INTERACTION_CLIENT_USER_AGENT = "INTERACTION_CLIENT";
 
+    private boolean mPlayback = true;
+
     /**
      * Application context.
      */
@@ -236,6 +238,10 @@ public class InteractionClient {
 
         amazonlex = new AmazonLexRuntimeClient(credentialsProvider, clientConfiguration);
         amazonlex.setRegion(Region.getRegion(region));
+    }
+
+    public void setNeedPlayback(boolean playback) {
+        mPlayback = false;
     }
 
     /**
@@ -400,7 +406,11 @@ public class InteractionClient {
             public void run() {
                 try {
                     final PostContentResult result = amazonlex.postContent(request);
-                    processResponseAudioPlayback(handler, result, client, mode, ResponseType.AUDIO_MPEG);
+                    if (mPlayback) {
+                        processResponseAudioPlayback(handler, result, client, mode, ResponseType.AUDIO_MPEG);
+                    } else {
+                        processResponse(handler, result, client, mode, ResponseType.AUDIO_MPEG);
+                    }
                 } catch (final Exception e) {
                     final Runnable returnCallBack = new Runnable() {
                         @Override
@@ -737,9 +747,13 @@ public class InteractionClient {
         } finally {
             setBusyState(NOT_BUSY);
         }
-//        handler.post(response);
-        // // FIXME: 2017/4/8 0008 方便线程同步
-        response.run();
+
+        if (mPlayback) {
+            handler.post(response);
+        } else {
+            // // FIXME: 2017/4/8 0008 方便线程同步
+            response.run();
+        }
     }
 
     /**

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.lex.interactionkit.InteractionClient;
 import com.amazonaws.services.lexrts.model.PostContentResult;
 
 import java.io.ByteArrayInputStream;
@@ -67,7 +68,10 @@ public class SocketService extends Service {
                                 postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
                                 postContentResult.setMessage(contentResult.getMessage());
                                 postContentResult.setInputTranscript(contentResult.getInputTranscript());
-                                InteractiveVoiceUtils.getInstance().processAudioResponse(postContentResult);
+
+                                InteractionClient client = InteractiveVoiceUtils.getInstance().getClient();
+                                client.setNeedPlayback(true);
+                                client.processSocketResponse(postContentResult);
                             }
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();

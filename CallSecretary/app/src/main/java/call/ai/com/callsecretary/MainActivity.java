@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -41,6 +45,9 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
     Handler mMainHandler;
     InteractiveVoiceUtils mVoiceUtils;
 
+    RecyclerView recyclerView;
+    View dialView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +55,60 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         initAppBar();
         initSocketClient();
         initTestButton();
+
+        initDialView();
         initChatListView();
+        initViewPager();
+    }
+
+    private void initDialView() {
+        dialView = View.inflate(this, R.layout.layout_dial, null);
+    }
+
+    private void initViewPager() {
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new PagerAdapter() {
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                if (position == 0) {
+                    container.addView(dialView);
+                    return dialView;
+                }
+                if (position == 1) {
+                    container.addView(recyclerView);
+                    return recyclerView;
+                }
+                return null;
+            }
+
+            @Override
+            public int getCount() {
+                return 2;
+            }
+
+            @Override
+            public boolean isViewFromObject(View view, Object object) {
+                return view == object;
+            }
+        });
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    setBarTitle(R.string.app_name);
+                } else {
+                    setBarTitle(R.string.record);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     private void initAppBar() {
@@ -85,7 +145,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
                 CommonSharedPref.getInstance(MainActivity.this).setServiceIp(editText.getText().toString());
                 mVoiceUtils =  InteractiveVoiceUtils.getInstance();
                 SocketClient.getInstance().init(MainActivity.this.getApplicationContext(), mMainHandler, mVoiceUtils);
-                mVoiceUtils.start(MainActivity.this, null, null);
+                mVoiceUtils.start(MainActivity.this);
             }
         });
     }
@@ -116,7 +176,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
     }
 
     private void initChatListView() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recylerview);
+        recyclerView = (RecyclerView) View.inflate(this, R.layout.layout_recyclerview, null);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ChatAdapter adapter = new ChatAdapter();
         adapter.setOnItemClickListener(this);

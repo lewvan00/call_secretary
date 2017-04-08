@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="KeyPadView">
+        <attr name="alph" format="string" />
+        <attr name="number" format="string" />
+        <attr name="text_size" format="integer" />
+        <attr name="tone">
+            <enum name="tone_dtmf_0" value="0" />
+            <enum name="tone_dtmf_1" value="1" />
+            <enum name="tone_dtmf_2" value="2" />
+            <enum name="tone_dtmf_3" value="3" />
+            <enum name="tone_dtmf_4" value="4" />
+            <enum name="tone_dtmf_5" value="5" />
+            <enum name="tone_dtmf_6" value="6" />
+            <enum name="tone_dtmf_7" value="7" />
+            <enum name="tone_dtmf_8" value="8" />
+            <enum name="tone_dtmf_9" value="9" />
+            <enum name="tone_dtmf_x" value="10" />
+            <enum name="tone_dtmf_j" value="11" />
+        </attr>
+    </declare-styleable>
+</resources>

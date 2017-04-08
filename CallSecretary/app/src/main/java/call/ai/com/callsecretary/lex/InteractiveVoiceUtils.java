@@ -24,7 +24,6 @@ import com.amazonaws.services.lexrts.model.PostContentResult;
 import java.util.HashMap;
 import java.util.Map;
 
-import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 
 /**
@@ -55,6 +54,11 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
 
     private InteractiveVoiceUtils() {
         this.context = CallSecretaryApplication.getContext();
+        awsRegion = Regions.fromName("us-east-1");
+        credentialsProvider = new CognitoCredentialsProvider(
+                "us-east-1:a16c3d73-380e-4a04-b1a7-1dda5077674e",
+                awsRegion);
+        interactionConfig = new InteractionConfig("CallSecretary", "CallSecretary");
         this.shouldInitialize = true;
         this.voiceListener = null;
         this.state = STATE_READY;
@@ -62,6 +66,7 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         // for setting the user agent
         clientConfiguration = new ClientConfiguration();
         clientConfiguration.setUserAgent(INTERACTION_VOICE_VIEW_USER_AGENT);
+        createInteractionClient();
     }
 
     public static InteractiveVoiceUtils getInstance() {
@@ -94,11 +99,10 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         this.awsRegion = Regions.fromName(awsRegion) ;
     }
 
-    public void start(InteractiveVoiceView.InteractiveVoiceListener voiceListener,
-                      AudioPlaybackListener audioPlaybackListener,
-                      InteractionListener interactionListener) {
+    public void start(InteractiveVoiceView.InteractiveVoiceListener voiceListener) {
+        setVoiceListener(voiceListener);
         if (shouldInitialize) {
-            init(voiceListener, audioPlaybackListener, interactionListener);
+            init();
         }
 
         if (sessionAttributes == null) {
@@ -110,7 +114,6 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
     public void finish() {
         if (lexInteractionClient != null) {
             lexInteractionClient.cancel();
-            sessionAttributes.clear();
         }
         state = STATE_READY;
     }
@@ -120,34 +123,10 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         lexInteractionClient.audioInForAudioOut(sessionParameters);
     }
 
-    private void init(InteractiveVoiceView.InteractiveVoiceListener voiceListener,
-                      AudioPlaybackListener audioPlaybackListener,
-                      InteractionListener interactionListener) {
-        CognitoCredentialsProvider cognitoCredentialsProvider= new CognitoCredentialsProvider(
-                context.getResources().getString(R.string.identity_id_test),
-                Regions.fromName(context.getResources().getString(R.string.aws_region)));
-        InteractionClient lexInteractionClient = new InteractionClient(context,
-                cognitoCredentialsProvider,
-                Regions.US_EAST_1,
-                context.getResources().getString(R.string.bot_name),
-                context.getResources().getString(R.string.bot_alias));
-        lexInteractionClient.setAudioPlaybackListener(audioPlaybackListener);
-        lexInteractionClient.setInteractionListener(interactionListener);
-        setVoiceListener(voiceListener);
-        setCredentialProvider(cognitoCredentialsProvider);
-        setInteractionConfig(
-                new InteractionConfig(context.getResources().getString(R.string.bot_name),
-                        context.getResources().getString(R.string.bot_alias)));
-        setAwsRegion(context.getResources().getString(R.string.aws_region));
-
+    private void init() {
         state = STATE_READY;
         validateAppData();
-        createInteractionClient();
         shouldInitialize = false;
-    }
-
-    public void processAudioResponse(PostContentResult result) {
-        lexInteractionClient.processSocketResponse(result);
     }
 
     protected void validateAppData() {
@@ -188,6 +167,7 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         lexInteractionClient.setAudioPlaybackListener(this);
         lexInteractionClient.setInteractionListener(this);
         lexInteractionClient.setMicrophoneListener(this);
+        lexInteractionClient.setNeedPlayback(false);
     }
 
     protected void reset() {
