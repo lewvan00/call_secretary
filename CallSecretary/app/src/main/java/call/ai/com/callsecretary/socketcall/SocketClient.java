@@ -22,6 +22,7 @@ public class SocketClient {
     private static SocketClient sInstance = new SocketClient();
     ObjectOutputStream outputStream;
     Handler mMainHandler;
+    InteractiveVoiceUtils mVoiceUtil;
 
     public static SocketClient getInstance() {
         return sInstance;
@@ -31,8 +32,9 @@ public class SocketClient {
 
     }
 
-    public void init(Context context, Handler mainHandler) {
+    public void init(Context context, Handler mainHandler, InteractiveVoiceUtils voiceUtil) {
         mMainHandler = mainHandler;
+        mVoiceUtil = voiceUtil;
         connectServerWithTCPSocket(context, mainHandler);
     }
 
@@ -81,7 +83,7 @@ public class SocketClient {
                     } catch (IOException e) {
                         e.printStackTrace();
                         showToast("send IOException : " + e);
-                        InteractiveVoiceUtils.getInstance().onAudioPlaybackError(e);
+                        mVoiceUtil.onAudioPlaybackError(e);
                     }
                 }
             }.start();
