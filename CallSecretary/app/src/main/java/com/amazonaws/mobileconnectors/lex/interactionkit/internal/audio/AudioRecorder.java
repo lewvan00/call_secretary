@@ -33,6 +33,7 @@ import com.singun.media.audio.AudioConfig;
 import com.singun.media.audio.AudioFileWriter;
 import com.singun.wrapper.WebRTC.WebRTCWrapper;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -263,8 +264,9 @@ public class AudioRecorder implements AudioSource {
     public void startRecording() throws Exception {
         startAudioRecorder();
         AudioConfig audioConfig = new AudioConfig();
-        audioConfig.audioDirPath = Environment.getExternalStorageDirectory().getPath();
-        audioConfig.audioName = "call_secretary";
+        File dataDir = new File(Environment.getExternalStorageDirectory(), "call_secretary");
+        audioConfig.audioDirPath = dataDir.getPath();
+        audioConfig.audioName = "record_" + System.currentTimeMillis();
         AudioFileWriter fileWriter = new AudioFileWriter(audioConfig);
         short[] buffer = new short[mNumSamplesPerRead];
         audioConfig.audioDataIn = buffer;
@@ -293,6 +295,7 @@ public class AudioRecorder implements AudioSource {
                     Log.e("zhang", "startRecording: processGainControl buffer.length = " + buffer.length);
                     buffer = webRTCWrapper.processNoiseSuppress(buffer, numSamplesRead);
                     Log.e("zhang", "startRecording: processNoiseSuppress buffer.length = " + buffer.length);
+                    audioConfig.audioDataOut = buffer;
                 }
 
                 final int invalidOperation = AudioRecord.ERROR_INVALID_OPERATION;
