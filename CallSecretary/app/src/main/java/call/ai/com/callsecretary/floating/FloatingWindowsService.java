@@ -110,18 +110,20 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         mLayoutParams.format = PixelFormat.RGBA_8888;
         mLayoutParams.gravity = Gravity.TOP | Gravity.LEFT;
 
-        Context context = CallSecretaryApplication.getContext();
-        if (CommonSharedPref.getInstance(CallSecretaryApplication.getContext()).getFloatingWindowsLocationX() == -1) {
-            mLayoutParams.x = mWindowManager.getDefaultDisplay().getWidth() / 6;
-            mLayoutParams.y = mWindowManager.getDefaultDisplay().getHeight() / 3;
-        } else {
-            mLayoutParams.x = CommonSharedPref.getInstance(context).getFloatingWindowsLocationX();
-            mLayoutParams.y = CommonSharedPref.getInstance(context).getFloatingWindowsLocationY();
-        }
+//        Context context = CallSecretaryApplication.getContext();
+//        if (CommonSharedPref.getInstance(CallSecretaryApplication.getContext()).getFloatingWindowsLocationX() == -1) {
+//            mLayoutParams.x = mWindowManager.getDefaultDisplay().getWidth() / 6;
+//            mLayoutParams.y = mWindowManager.getDefaultDisplay().getHeight() / 3;
+//        } else {
+//            mLayoutParams.x = CommonSharedPref.getInstance(context).getFloatingWindowsLocationX();
+//            mLayoutParams.y = CommonSharedPref.getInstance(context).getFloatingWindowsLocationY();
+//        }
+        mLayoutParams.x = 0;
+        mLayoutParams.y = 0;
 
         mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        mLayoutParams.width = mWindowManager.getDefaultDisplay().getWidth() * 2 / 3;
-        mLayoutParams.height = mWindowManager.getDefaultDisplay().getHeight() / 3;
+        mLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        mLayoutParams.height = mWindowManager.getDefaultDisplay().getHeight() * 2 / 3;
     }
 
     private void initFloatingView() {

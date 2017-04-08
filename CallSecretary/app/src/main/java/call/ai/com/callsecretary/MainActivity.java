@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
             public void onClick(View view) {
                 FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
                 floatingWindowsService.showFloatingWindows("hhhh");
-                floatingWindowsService.startBot();
+//                floatingWindowsService.startBot();
 //                floatingWindowsService.startNativeBot();
             }
         });
@@ -131,8 +131,10 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
     }
 
     @Override
-    public void onItemClick(Chat chat) {
+    public void onItemClick(Chat chat, int resId) {
         Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+        intent.putExtra(ChatActivity.EXTRA_CHAT, chat);
+        intent.putExtra(ChatActivity.EXTRA_RES_ID, resId);
         startActivity(intent);
     }
 

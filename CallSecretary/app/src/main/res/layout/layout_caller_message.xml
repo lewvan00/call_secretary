@@ -7,8 +7,8 @@
     android:paddingRight="40dp">
 
     <ImageView
-        android:src="@drawable/chat_poeple"
-        android:layout_marginRight="15dp"
+        android:id="@+id/image"
+        android:layout_marginRight="10dp"
         android:layout_width="40dp"
         android:layout_height="40dp" />
 

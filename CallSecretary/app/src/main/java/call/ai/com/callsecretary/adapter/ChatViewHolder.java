@@ -20,6 +20,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
     private TextView time;
     private ImageView image;
     private Chat data;
+    private int imageResId;
 
     private ChatViewHolder(View itemView) {
         super(itemView);
@@ -43,6 +44,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
         data = chat;
     }
 
+
     public Chat getData() {
         return data;
     }
@@ -53,5 +55,14 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
 
     public static Context getContext() {
         return CallSecretaryApplication.getContext();
+    }
+
+    public int getImageResId() {
+        return imageResId;
+    }
+
+    public void setImageResId(int imageResId) {
+        this.imageResId = imageResId;
+        image.setImageResource(imageResId);
     }
 }
