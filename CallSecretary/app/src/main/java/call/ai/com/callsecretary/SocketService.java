@@ -58,8 +58,8 @@ public class SocketService extends Service {
                             Toast.makeText(SocketService.this, "socket listening", Toast.LENGTH_SHORT).show();
                         }
                     });
+                    Socket socket = serverSocket.accept();
                     while (true) {
-                        Socket socket = serverSocket.accept();
                         // 从Socket当中得到InputStream对象
                         InputStream inputStream = socket.getInputStream();
                         ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
@@ -79,28 +79,12 @@ public class SocketService extends Service {
                             e.printStackTrace();
                             Log.d("liufan", "receive result = ClassNotFoundException ---- " + e);
                         }
-//                        final byte buffer[] = new byte[1024 * 4];
-//                        int temp = 0;
-//                        // 从InputStream当中读取客户端所发送的数据
-//                        while ((temp = inputStream.read(buffer)) != -1) {
-//                            final int finalTemp = temp;
-//                            mMainHandler.post(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    Toast.makeText(SocketService.this, new String(buffer, 0, finalTemp), Toast.LENGTH_LONG).show();
-//                                }
-//                            });
-//                        }
-                        try {
-                            Thread.sleep(300);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                     Log.d("liufan", "socket service exception : " + e);
                 } finally {
+                    Log.d("liufan", "finally");
                     try {
                         if (serverSocket != null) {
                             serverSocket.close();
