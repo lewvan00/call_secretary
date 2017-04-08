@@ -1,7 +1,6 @@
 package lex;
 
 import com.amazonaws.services.lexrts.model.PostContentResult;
-import com.amazonaws.util.Base64;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +26,7 @@ public class SerializablePostContentResult implements Serializable {
     private byte[] audioBytes;
 
     public byte[] getAudioBytes() {
-        return Base64.decode(audioBytes);
+        return audioBytes;
     }
 
     public void setAudioBytes(byte[] audioBytes) {
@@ -59,7 +58,6 @@ public class SerializablePostContentResult implements Serializable {
                     System.arraycopy(buffer, 0, audioBytes, desPos, length);
                     desPos = length;
                 }
-                Base64.decode(audioBytes);
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
