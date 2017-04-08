@@ -5,7 +5,7 @@
     android:layout_gravity="center"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:background="@drawable/popup_background" >
+    android:background="@drawable/bg_dialog" >
 
     <LinearLayout
         android:id="@+id/ll_content"
@@ -61,20 +61,25 @@
             android:textSize="12sp"
             android:checked="false"
             android:visibility="gone"/>
+        <View
+            android:layout_width="match_parent"
+            android:background="@color/list_div_color"
+            android:layout_height="1dp"/>
 
         <LinearLayout
             android:id="@+id/Layout_btn_alert"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_negative"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/btn_confrim"
+                android:padding="10dp"
                 android:textColor="@color/alert_btn_blue"
+                android:background="@null"
                 android:textSize="20dp"/>
 
             <View
@@ -86,9 +91,10 @@
             <Button
                 android:id="@+id/btn_positive"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/btn_confrim"
+                android:padding="10dp"
+                android:background="@null"
                 android:textColor="@color/alert_btn_blue"
                 android:textSize="20dp" />
         </LinearLayout>
