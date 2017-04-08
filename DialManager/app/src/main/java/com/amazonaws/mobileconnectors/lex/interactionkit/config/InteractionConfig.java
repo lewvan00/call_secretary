@@ -79,7 +79,7 @@ public class InteractionConfig {
      */
     private String userId;
 
-    public static final int DEFAULT_NO_SPEECH_TIMEOUT_INTERVAL = 5000;
+    public static final int DEFAULT_NO_SPEECH_TIMEOUT_INTERVAL = 15000;
     public static final int DEFAULT_MAX_SPEECH_TIMEOUT_INTERVAL = 15000;
     public static final int DEFAULT_START_POINTING_THRESHOLD = 8;
     public static final int DEFAULT_END_POINTING_THRESHOLD = 80;
