@@ -11,11 +11,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import call.ai.com.callsecretary.adapter.ChatAdapter;
+import call.ai.com.callsecretary.bean.Chat;
 import call.ai.com.callsecretary.chat.ChatActivity;
 import call.ai.com.callsecretary.chat.ChatService;
 import call.ai.com.callsecretary.floating.FloatingWindowsService;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +42,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initTestButton() {
-        findViewById(R.id.chat).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                startActivity(intent);
-            }
-        });
-
         findViewById(R.id.floatwindow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,6 +70,7 @@ public class MainActivity extends BaseActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recylerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ChatAdapter adapter = new ChatAdapter();
+        adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
         ChatService.getInstance().addListener(adapter);
     }
@@ -93,9 +87,15 @@ public class MainActivity extends BaseActivity {
 
     private String intToIp(int i) {
 
-        return (i & 0xFF ) + "." +
-                ((i >> 8 ) & 0xFF) + "." +
-                ((i >> 16 ) & 0xFF) + "." +
-                ( i >> 24 & 0xFF) ;
+        return (i & 0xFF) + "." +
+                ((i >> 8) & 0xFF) + "." +
+                ((i >> 16) & 0xFF) + "." +
+                (i >> 24 & 0xFF);
+    }
+
+    @Override
+    public void onItemClick(Chat chat) {
+        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+        startActivity(intent);
     }
 }

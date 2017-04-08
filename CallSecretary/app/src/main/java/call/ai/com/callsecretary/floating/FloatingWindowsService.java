@@ -76,13 +76,13 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     public void startNativeBot(){
         Context context = CallSecretaryApplication.getContext();
         InteractiveVoiceUtils interactiveVoiceUtils=InteractiveVoiceUtils.getInstance(context);
-        interactiveVoiceUtils.setVoiceListener(this);
-        interactiveVoiceUtils.setCredentialProvider(credentialsProvider);
-        interactiveVoiceUtils.setInteractionConfig(
-                new InteractionConfig(context.getResources().getString(R.string.bot_name),
-                        context.getResources().getString(R.string.bot_alias)));
-        interactiveVoiceUtils.setAwsRegion(context.getResources().getString(R.string.aws_region));
-        interactiveVoiceUtils.start();
+//        interactiveVoiceUtils.setVoiceListener(this);
+//        interactiveVoiceUtils.setCredentialProvider(credentialsProvider);
+//        interactiveVoiceUtils.setInteractionConfig(
+//                new InteractionConfig(context.getResources().getString(R.string.bot_name),
+//                        context.getResources().getString(R.string.bot_alias)));
+//        interactiveVoiceUtils.setAwsRegion(context.getResources().getString(R.string.aws_region));
+        interactiveVoiceUtils.start(this);
     }
 
     public void showFloatingWindows(String chatName) {

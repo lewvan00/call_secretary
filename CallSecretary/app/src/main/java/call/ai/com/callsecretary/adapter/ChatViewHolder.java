@@ -16,9 +16,10 @@ import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 
 public class ChatViewHolder extends RecyclerView.ViewHolder {
 
-    TextView phone;
-    TextView time;
-    ImageView image;
+    private TextView phone;
+    private TextView time;
+    private ImageView image;
+    private Chat data;
 
     private ChatViewHolder(View itemView) {
         super(itemView);
@@ -39,6 +40,11 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
     public void setData(Chat chat) {
         phone.setText(chat.getPhone());
         time.setText(String.valueOf(chat.getTime()));
+        data = chat;
+    }
+
+    public Chat getData() {
+        return data;
     }
 
     public static ChatViewHolder create() {

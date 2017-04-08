@@ -19,6 +19,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.amazon.blueshift.bluefront.android.audio.encoder.OpusEncoder;
@@ -65,6 +66,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -353,6 +355,18 @@ public class InteractionClient {
         }).start();
     }
 
+    public void sendAudioRequestCustom(InputStream audioInputStream) {
+        final Handler handler = new Handler(context.getMainLooper());
+        Map<String, String> sessionAttributes = new HashMap<>();
+        PostContentRequest request = CreateLexServiceRequest.generatePostContentRequest(sessionAttributes,
+                interactionConfig,
+                credentialsProvider,
+                ResponseType.AUDIO_MPEG,
+                audioInputStream,
+                audioEncoder.getMediaType().toString());
+        sendAudioRequest(handler, request, this, ResponseType.AUDIO_MPEG);
+    }
+
     /**
      * This method will be invoked when speech frames are detected in the audio
      * input over the microphone.
@@ -387,6 +401,11 @@ public class InteractionClient {
                 }
             }
         }).start();
+    }
+
+    public void processSocketResponse(final PostContentResult response) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        processResponseAudioPlayback(handler, response, this, ResponseType.AUDIO_MPEG, ResponseType.AUDIO_MPEG);
     }
 
     /**
