@@ -41,7 +41,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         findViewById(R.id.floatwindow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FloatingWindowsService floatingWindowsService = new FloatingWindowsService();
+                FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
                 floatingWindowsService.showFloatingWindows("hhhh");
                 floatingWindowsService.startBot();
 //                floatingWindowsService.startNativeBot();
