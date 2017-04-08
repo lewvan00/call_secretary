@@ -2,23 +2,16 @@ package call.ai.com.callsecretary;
 
 import android.content.Context;
 import android.content.Intent;
-<<<<<<< HEAD
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-=======
-import android.graphics.Rect;
->>>>>>> d54067f56bf808b8ebfdf3976a4bc64a4d4aab89
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
-<<<<<<< HEAD
 import android.widget.Toast;
-=======
 import android.widget.LinearLayout;
->>>>>>> d54067f56bf808b8ebfdf3976a4bc64a4d4aab89
 
 import call.ai.com.callsecretary.adapter.ChatAdapter;
 import call.ai.com.callsecretary.bean.Chat;
