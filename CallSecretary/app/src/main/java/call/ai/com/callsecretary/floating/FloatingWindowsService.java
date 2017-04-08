@@ -18,13 +18,18 @@ import com.amazonaws.mobileconnectors.lex.interactionkit.listeners.InteractionLi
 import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
 import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceViewAdapter;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.lexrts.model.PostContentResult;
 
 import java.util.Map;
 
 import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.chat.ChatActivity;
+import call.ai.com.callsecretary.socketcall.SocketClient;
+import call.ai.com.callsecretary.socketcall.SocketService;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 import call.ai.com.callsecretary.utils.PhoneUtils;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by Administrator on 2017/3/28.
@@ -36,6 +41,7 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     private FloatingWindow mFloatingView;
 
     private boolean hasFloatingShowing = false;
+    private boolean isServer;
 
     CognitoCredentialsProvider credentialsProvider;
 
@@ -101,6 +107,10 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         }
     }
 
+    public void setClientSocket(boolean isServer) {
+        this.isServer = isServer;
+    }
+
     private void initLayoutParams() {
         mLayoutParams = new WindowManager.LayoutParams();
 
@@ -125,45 +135,22 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         mFloatingView.setUiInterface(new FloatingWindow.UiInterface() {
             @Override
             public void onClose() {
+                if (isServer) {
+                    SocketService.callRingOff();
+                } else {
+                    SocketClient.getInstance().ringoffFromSocket();
+                }
                 hideFloatingWindows();
             }
-        });
 
-        mFloatingView.setLongClickable(true);
-        mFloatingView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public void onTitleClick() {
                 Intent intent = new Intent(mFloatingView.getContext(), ChatActivity.class);
+                intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(ChatActivity.EXTRA_CHAT, mFloatingView.getChat());
+                intent.putExtra(ChatActivity.EXTRA_RES_ID, mFloatingView.getResImageId());
                 mFloatingView.getContext().startActivity(intent);
                 hideFloatingWindows();
-                return true;
-            }
-        });
-
-        mFloatingView.setOnArrowTouchListener(new View.OnTouchListener() {
-            float mOffsetY;
-            float mLastY = mFloatingView.getHeight();
-
-            @Override
-            public boolean onTouch(View v, MotionEvent motionEvent) {
-                int action = motionEvent.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        mOffsetY = motionEvent.getRawY() - mLastY;
-                        if (mOffsetY < 0) {
-                            mLastY = motionEvent.getRawY();
-                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (mOffsetY < 0) {
-                            mLayoutParams.height = (int)(mFloatingView.getHeight() + mLastY - motionEvent.getRawY());
-                            mWindowManager.updateViewLayout(mFloatingView, mLayoutParams);
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        break;
-                }
-                return true;
             }
         });
     }
@@ -211,8 +198,7 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
 
     @Override
     public void onResponse(Response response) {
-        mFloatingView.getMessageAdapter().addCallerMessage(response.getResult().getInputTranscript());
-        mFloatingView.getMessageAdapter().addSecretaryMessage(response.getResult().getMessage());
+        onResult(response.getResult());
     }
 
     @Override
@@ -223,5 +209,9 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     @Override
     public void onError(String responseText, Exception e) {
 
+    }
+
+    public void onResult(PostContentResult result) {
+        mFloatingView.addMessage(result);
     }
 }

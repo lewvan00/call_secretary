@@ -1,6 +1,7 @@
 package call.ai.com.callsecretary.socketcall;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -26,6 +27,7 @@ import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.floating.FloatingWindowsService;
 import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
 import call.ai.com.callsecretary.polley.PolleyUtils;
+import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 import lex.SerializablePostContentResult;
 
 
@@ -34,8 +36,13 @@ import lex.SerializablePostContentResult;
  */
 
 public class SocketService extends Service {
+    public static final String INTENT_RINGOFF = "ringoff";
+
     Handler mMainHandler;
     ServerSocket serverSocket = null;
+    Socket clientSocket = null;
+    private MediaPlayer mMediaPlayer;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -48,6 +55,31 @@ public class SocketService extends Service {
         //启动socket
         mMainHandler = new Handler();
         startSocketService();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null) {
+            boolean ringoff = intent.getBooleanExtra(INTENT_RINGOFF, false);
+            if (ringoff && clientSocket != null) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        callbackRingoff(clientSocket);
+                        clientSocket = null;
+                    }
+                }.start();
+            }
+        }
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    public static void callRingOff() {
+        Context context = CallSecretaryApplication.getContext();
+        Intent intent = new Intent(context, SocketService.class);
+        intent.putExtra(INTENT_RINGOFF, true);
+        context.startService(intent);
     }
 
     public void startSocketService() {
@@ -66,8 +98,9 @@ public class SocketService extends Service {
                     }
                 });
                 while (true) {
+                    Socket socket = null;
                     try {
-                        Socket socket = serverSocket.accept();
+                        socket = serverSocket.accept();
                         InputStream inputStream = socket.getInputStream();
                         ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                         while (true) {
@@ -82,10 +115,13 @@ public class SocketService extends Service {
                                             handleCall(socket);
                                             break;
                                         case SerializablePostContentResult.STATE_FINAL:
-                                            handleFinalStatus();
+                                            startRingTone();
                                             break;
                                         case SerializablePostContentResult.STATE_HANGUP:
-                                            handleFinalHandleUp(contentResult);
+                                            handleHandUpStatus(contentResult);
+                                            break;
+                                        case SerializablePostContentResult.STATE_RINGOFF:
+                                            handleRingoff();
                                             break;
                                     }
                                 }
@@ -98,17 +134,20 @@ public class SocketService extends Service {
                     } catch (IOException e) {
                         e.printStackTrace();
                         Log.d("liufan", "socket service exception : " + e);
+                    } finally {
+                        try {
+                            if (socket != null) {
+                                socket.close();
+                            }
+                        } catch (Exception e) {
+                        }
                     }
                 }
             }
         }.start();
     }
 
-    private void handleFinalStatus() {
-        startAlarm();
-    }
-
-    private void handleFinalHandleUp(SerializablePostContentResult contentResult) {
+    private void handleHandUpStatus(SerializablePostContentResult contentResult) {
         PostContentResult postContentResult = new PostContentResult();
         postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
         postContentResult.setMessage(contentResult.getMessage());
@@ -120,15 +159,25 @@ public class SocketService extends Service {
         mMainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startAlarm();
+                startRingTone();
             }
         }, 1500);
+    }
+
+    private void handleRingoff() {
+        clientSocket = null;
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                FloatingWindowsService.getServiceInstance().hideFloatingWindows();
+            }
+        });
     }
 
     private void handleVoiceResponse(SerializablePostContentResult contentResult) {
         //get audio stream;
         Log.d("liufan", "receive audio result = " + contentResult);
-        PostContentResult postContentResult = new PostContentResult();
+        final PostContentResult postContentResult = new PostContentResult();
         postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
         postContentResult.setMessage(contentResult.getMessage());
         postContentResult.setInputTranscript(contentResult.getInputTranscript());
@@ -136,6 +185,13 @@ public class SocketService extends Service {
         InteractionClient client = InteractiveVoiceUtils.getInstance().getClient();
         client.setNeedPlayback(true);
         client.processSocketResponse(postContentResult);
+
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                FloatingWindowsService.getServiceInstance().onResult(postContentResult);
+            }
+        });
     }
 
     private void handleCall(final Socket socket) throws IOException {
@@ -150,10 +206,12 @@ public class SocketService extends Service {
         if (isAutoAnswer()) {
             callbackAck(socket);
 
+            clientSocket = socket;
             mMainHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
+                    floatingWindowsService.setClientSocket(true);
                     floatingWindowsService.showFloatingWindows(getString(R.string.float_title_answer));
                 }
             });
@@ -192,8 +250,20 @@ public class SocketService extends Service {
         }
     }
 
+    private void callbackRingoff(Socket socket) {
+        try {
+            OutputStream outputStream = socket.getOutputStream();
+            byte[] ackData = new byte[3];
+            ackData[0] = 'o' - 'a';
+            ackData[1] = 'f' - 'a';
+            ackData[2] = 'f' - 'a';
+            outputStream.write(ackData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-    private void startAlarm() {
+    private void startRingTone() {
         MediaPlayer mMediaPlayer = MediaPlayer.create(this, getSystemDefultRingtoneUri());
         mMediaPlayer.setLooping(false);
         try {
@@ -204,6 +274,12 @@ public class SocketService extends Service {
             e.printStackTrace();
         }
         mMediaPlayer.start();
+    }
+
+    public void stopRingTone() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+        }
     }
 
     private Uri getSystemDefultRingtoneUri() {

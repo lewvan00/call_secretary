@@ -263,17 +263,17 @@ public class AudioRecorder implements AudioSource {
      */
     public void startRecording() throws Exception {
         startAudioRecorder();
-        AudioConfig audioConfig = new AudioConfig();
-        File dataDir = new File(Environment.getExternalStorageDirectory(), "call_secretary");
-        audioConfig.audioDirPath = dataDir.getPath();
-        audioConfig.audioName = "record_" + System.currentTimeMillis();
-        AudioFileWriter fileWriter = new AudioFileWriter(audioConfig);
+//        AudioConfig audioConfig = new AudioConfig();
+//        File dataDir = new File(Environment.getExternalStorageDirectory(), "call_secretary");
+//        audioConfig.audioDirPath = dataDir.getPath();
+//        audioConfig.audioName = "record_" + System.currentTimeMillis();
+//        AudioFileWriter fileWriter = new AudioFileWriter(audioConfig);
         short[] buffer = new short[mNumSamplesPerRead];
-        audioConfig.audioDataIn = buffer;
-        audioConfig.audioDataOut = buffer;
-        audioConfig.audioDataSize = mNumSamplesPerRead;
-
-        fileWriter.createAudioFile(true);
+//        audioConfig.audioDataIn = buffer;
+//        audioConfig.audioDataOut = buffer;
+//        audioConfig.audioDataSize = mNumSamplesPerRead;
+//
+//        fileWriter.createAudioFile(true);
         int numSamplesRead;
 
         final AudioSourceListener listener = getAudioSourceListener();
@@ -295,14 +295,14 @@ public class AudioRecorder implements AudioSource {
                     Log.e("zhang", "startRecording: processNoiseSuppress buffer.length = " + buffer.length);
                     buffer = webRTCWrapper.processGainControl(buffer, numSamplesRead);
                     Log.e("zhang", "startRecording: processGainControl buffer.length = " + buffer.length);
-                    audioConfig.audioDataOut = buffer;
+//                    audioConfig.audioDataOut = buffer;
                 }
 
                 final int invalidOperation = AudioRecord.ERROR_INVALID_OPERATION;
                 if (invalidOperation != numSamplesRead) {
                     setPostRecordingFields();
                     if (numSamplesRead > 0) {
-                        fileWriter.saveRecordData(numSamplesRead);
+//                        fileWriter.saveRecordData(numSamplesRead);
 
                         // Prepare samples for the callback.
                         final byte[] callbackBuffer = pcmEncoder.encode(buffer, numSamplesRead);
@@ -318,7 +318,7 @@ public class AudioRecorder implements AudioSource {
             }
             Log.v(TAG, "Finished record loop");
         } finally {
-            fileWriter.saveAudioFormat(mRecord.getSampleRate(), mRecord.getChannelCount());
+//            fileWriter.saveAudioFormat(mRecord.getSampleRate(), mRecord.getChannelCount());
             cleanUpAfterRecording();
         }
     }

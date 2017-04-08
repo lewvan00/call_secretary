@@ -86,11 +86,27 @@ public final class T9PanelView extends LinearLayout implements TextWatcher, OnCl
 
         // 清除键
         mClearBtn = (TextView) findViewById(R.id.tv_t9panel_clear_btn);
+        mClearBtn.setOnClickListener(this);
         // 删除键
         mDeleteBtn = (ImageButton) findViewById(R.id.ib_t9panel_delete_btn);
         mDeleteBtn.setOnClickListener(this);
 
+        findViewById(R.id.ib_t9panel_dial_btn).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialListener != null) {
+                    dialListener.onClick(v);
+                }
+            }
+        });
+
         initToneGenerator();
+    }
+
+    View.OnClickListener dialListener;
+
+    public void setOnDialClickListener(View.OnClickListener listener) {
+        dialListener = listener;
     }
 
     private String getCurrentInput() {
@@ -209,10 +225,21 @@ public final class T9PanelView extends LinearLayout implements TextWatcher, OnCl
                 playTone(kv.getToneId());
                 break;
             case R.id.ib_t9panel_delete_btn:
+                deleteAChar();
+                break;
+            case R.id.tv_t9panel_clear_btn:
                 clearInput();
                 break;
             default:
                 break;
+        }
+    }
+
+    private void deleteAChar() {
+        if (mPhoneNumEt != null) {
+            String text = mPhoneNumEt.getText().toString().substring(0, mPhoneNumEt.getText().toString().length() - 1);
+            mPhoneNumEt.setText(text);
+            mPhoneNumEt.setSelection(text.length());
         }
     }
 

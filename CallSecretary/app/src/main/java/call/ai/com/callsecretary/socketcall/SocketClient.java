@@ -24,6 +24,7 @@ import lex.SerializablePostContentResult;
 
 public class SocketClient {
     private static SocketClient sInstance = new SocketClient();
+    Socket socket;
     ObjectOutputStream outputStream;
     InputStream inputStream;
     Handler mMainHandler;
@@ -47,7 +48,6 @@ public class SocketClient {
         new Thread(){
             @Override
             public void run() {
-                Socket socket;
                 try {
                     String serviceIp = CommonSharedPref.getInstance(context).getServiceIp();
                     Log.d("liufan", "service ip = " + serviceIp);
@@ -102,6 +102,12 @@ public class SocketClient {
                                 bytes[2] == 'k' - 'a') {
 
                             onPhoneReceived();
+                        } else if (bytes[0] == 'o' - 'a' &&
+                                bytes[1] == 'f' - 'a' &&
+                                bytes[2] == 'f' - 'a') {
+                            onPhoneROff();
+                            closeSocket();
+                            break;
                         }
                     }
                 }
@@ -122,10 +128,49 @@ public class SocketClient {
             public void run() {
                 Context context = CallSecretaryApplication.getContext();
                 FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
+                floatingWindowsService.setClientSocket(false);
                 floatingWindowsService.showFloatingWindows(context.getString(R.string.float_title_call));
-
             }
         });
+    }
+
+    private void onPhoneROff() {
+        showToast("remote off");
+        Log.d("liufan", "remote off!");
+
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
+                floatingWindowsService.hideFloatingWindows();
+            }
+        });
+    }
+
+    private void closeSocket() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+        }
+    }
+
+    public void ringoffFromSocket() {
+        if (outputStream != null) {
+            try {
+                SerializablePostContentResult result = new SerializablePostContentResult();
+                result.setState(SerializablePostContentResult.STATE_RINGOFF);
+
+                outputStream.writeObject(result);
+                outputStream.flush();
+
+                showToast("ringoff success");
+                Log.d("liufan", "ringoff success!");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                showToast("ringoff IOException : " + e);
+            }
+        }
     }
 
     public void sendMsgToSocket (final Object object) {

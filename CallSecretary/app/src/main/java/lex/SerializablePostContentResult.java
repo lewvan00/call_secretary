@@ -15,6 +15,7 @@ public class SerializablePostContentResult implements Serializable {
     public static final int STATE_CALL = 2;
     public static final int STATE_FINAL = 3;
     public static final int STATE_HANGUP = 4;
+    public static final int STATE_RINGOFF = 5;
 
     private String contentType;
 
