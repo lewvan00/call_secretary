@@ -44,6 +44,12 @@ public class PcmReader {
         init(primePlaySize);
         mAudioEncoder = audioEncoder;
         mVAD = new DnnVAD(AudioRecorder.DEFAULT_SAMPLE_RATE, new DnnVADConfig());
+
+        mProducerStream = new PipedOutputStream();
+        try {
+            mConsumerStream = new PipedInputStream(mProducerStream, mPrimePlaySize);
+        } catch (final IOException e) {
+        }
     }
 
     private void init(int primePlaySize) {
@@ -138,19 +144,14 @@ public class PcmReader {
 
         private void openAudioFile(File audioFile) {
             if (mInputStream != null) {
-                closeAudioFile();
+                return;
+//                closeAudioFile();
             }
             try {
                 FileInputStream inputStream = new FileInputStream(audioFile);
                 mInputStream = new DataInputStream(new BufferedInputStream(inputStream));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            }
-
-            mProducerStream = new PipedOutputStream();
-            try {
-                mConsumerStream = new PipedInputStream(mProducerStream, mPrimePlaySize);
-            } catch (final IOException e) {
             }
         }
 
