@@ -1,11 +1,14 @@
 package call.ai.com.callsecretary;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import call.ai.com.callsecretary.adapter.ChatAdapter;
 import call.ai.com.callsecretary.bean.Chat;
@@ -57,6 +60,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         ChatAdapter adapter = new ChatAdapter();
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         ChatService.getInstance().addListener(adapter);
     }
 
