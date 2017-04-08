@@ -22,7 +22,6 @@ import com.amazonaws.services.lexrts.model.PostContentResult;
 
 import java.util.Map;
 
-
 import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.chat.ChatActivity;
 import call.ai.com.callsecretary.socketcall.SocketClient;
@@ -79,17 +78,17 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         initFloatingView();
     }
 
-//    public void startBot() {
-//        Context context = CallSecretaryApplication.getContext();
-//        InteractiveVoiceView interactiveVoiceView = mFloatingView.getInteractiveVoiceView();
-//        interactiveVoiceView.setInteractiveVoiceListener(this);
-//        interactiveVoiceView.getViewAdapter().setCredentialProvider(credentialsProvider);
-//        interactiveVoiceView.getViewAdapter().setInteractionConfig(
-//                new InteractionConfig(context.getResources().getString(R.string.bot_name),
-//                context.getResources().getString(R.string.bot_alias)));
-//        interactiveVoiceView.getViewAdapter().setAwsRegion(context.getResources().getString(R.string.aws_region));
-//        interactiveVoiceView.performClick();
-//    }
+    public void startBot() {
+        Context context = CallSecretaryApplication.getContext();
+        InteractiveVoiceView interactiveVoiceView = mFloatingView.getInteractiveVoiceView();
+        interactiveVoiceView.setInteractiveVoiceListener(this);
+        interactiveVoiceView.getViewAdapter().setCredentialProvider(credentialsProvider);
+        interactiveVoiceView.getViewAdapter().setInteractionConfig(
+                new InteractionConfig(context.getResources().getString(R.string.bot_name),
+                context.getResources().getString(R.string.bot_alias)));
+        interactiveVoiceView.getViewAdapter().setAwsRegion(context.getResources().getString(R.string.aws_region));
+        interactiveVoiceView.performClick();
+    }
 
     public void stopBot() {
         Context context = CallSecretaryApplication.getContext();
@@ -115,16 +114,18 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     private void initLayoutParams() {
         mLayoutParams = new WindowManager.LayoutParams();
 
-        mLayoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+        mLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
         mLayoutParams.format = PixelFormat.RGBA_8888;
         mLayoutParams.gravity = Gravity.TOP | Gravity.LEFT;
 
         mLayoutParams.x = 0;
         mLayoutParams.y = 0;
 
-        mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+        mLayoutParams.windowAnimations = android.R.style.Animation_Translucent;
         mLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        mLayoutParams.height = mWindowManager.getDefaultDisplay().getHeight() * 3 / 4;
+        mLayoutParams.height = mWindowManager.getDefaultDisplay().getHeight() ;
     }
 
     private void initFloatingView() {
@@ -134,11 +135,7 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         mFloatingView.setUiInterface(new FloatingWindow.UiInterface() {
             @Override
             public void onClose() {
-                if (isServer) {
-                    SocketService.callRingOff();
-                } else {
-                    SocketClient.getInstance().ringoffFromSocket();
-                }
+                callRingoff();
                 hideFloatingWindows();
             }
 
@@ -152,6 +149,14 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
                 hideFloatingWindows();
             }
         });
+    }
+
+    public void callRingoff() {
+        if (isServer) {
+            SocketService.callRingOff();
+        } else {
+            SocketClient.getInstance().ringoffFromSocket();
+        }
     }
 
     public void hideFloatingWindows() {

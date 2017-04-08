@@ -66,6 +66,7 @@ public class SocketService extends Service {
                     @Override
                     public void run() {
                         callbackRingoff(clientSocket);
+                        clientSocket = null;
                     }
                 }.start();
             }
@@ -97,8 +98,9 @@ public class SocketService extends Service {
                     }
                 });
                 while (true) {
+                    Socket socket = null;
                     try {
-                        Socket socket = serverSocket.accept();
+                        socket = serverSocket.accept();
                         InputStream inputStream = socket.getInputStream();
                         ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                         while (true) {
@@ -119,7 +121,7 @@ public class SocketService extends Service {
                                             handleHandUpStatus(contentResult);
                                             break;
                                         case SerializablePostContentResult.STATE_RINGOFF:
-                                            handleRingoff();
+                                            handleRingoff(socket);
                                             break;
                                     }
                                 }
@@ -132,6 +134,13 @@ public class SocketService extends Service {
                     } catch (IOException e) {
                         e.printStackTrace();
                         Log.d("liufan", "socket service exception : " + e);
+                    } finally {
+                        try {
+                            if (socket != null) {
+                                socket.close();
+                            }
+                        } catch (Exception e) {
+                        }
                     }
                 }
             }
@@ -155,7 +164,11 @@ public class SocketService extends Service {
         }, 1500);
     }
 
-    private void handleRingoff() {
+    private void handleRingoff(Socket socket) {
+        try {
+            socket.close();
+        } catch (IOException e) {
+        }
         clientSocket = null;
         mMainHandler.post(new Runnable() {
             @Override
@@ -252,8 +265,6 @@ public class SocketService extends Service {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        clientSocket = null;
     }
 
     private void startRingTone() {
