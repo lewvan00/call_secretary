@@ -28,6 +28,8 @@ import call.ai.com.callsecretary.chat.ChatActivity;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 import call.ai.com.callsecretary.utils.PhoneUtils;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 /**
  * Created by Administrator on 2017/3/28.
  */
@@ -127,17 +129,15 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
             public void onClose() {
                 hideFloatingWindows();
             }
-        });
 
-        mFloatingView.setLongClickable(true);
-        mFloatingView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public void onTitleClick() {
                 Intent intent = new Intent(mFloatingView.getContext(), ChatActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(ChatActivity.EXTRA_CHAT, mFloatingView.getChat());
+                intent.putExtra(ChatActivity.EXTRA_RES_ID, mFloatingView.getResImageId());
                 mFloatingView.getContext().startActivity(intent);
                 hideFloatingWindows();
-                return true;
             }
         });
 
