@@ -67,7 +67,11 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
 
     private void initSocketClient() {
         final EditText editText = (EditText) findViewById(R.id.service_ip);
-        editText.setText("10.60.196.42");
+        String serviceIp = CommonSharedPref.getInstance(getApplicationContext()).getServiceIp();
+        if (TextUtils.isEmpty(serviceIp)) {
+            serviceIp = "10.60.196.42";
+        }
+        editText.setText(serviceIp);
         mMainHandler = new Handler();
         Button btn = (Button) findViewById(R.id.set_ip_btn);
         btn.setOnClickListener(new View.OnClickListener() {
