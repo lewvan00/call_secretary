@@ -32,11 +32,11 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                 PhoneUtils.autoAnswer();
                 mFloatingService = new FloatingWindowsService();
                 mFloatingService.showFloatingWindows("liufan");
-                mFloatingService.startBot();
             } else if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
                 PhoneUtils.setSpeekModle(false);   //关闭外放
             } else if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_OFFHOOK) {
                 PhoneUtils.setSpeekModle(true);
+                mFloatingService.startBot();
             }
         }
     }
