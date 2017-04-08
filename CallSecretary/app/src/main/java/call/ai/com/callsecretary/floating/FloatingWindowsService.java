@@ -152,33 +152,6 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
                 hideFloatingWindows();
             }
         });
-
-        mFloatingView.setOnArrowTouchListener(new View.OnTouchListener() {
-            float mOffsetY;
-            float mLastY = mFloatingView.getHeight();
-
-            @Override
-            public boolean onTouch(View v, MotionEvent motionEvent) {
-                int action = motionEvent.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        mOffsetY = motionEvent.getRawY() - mLastY;
-                        if (mOffsetY < 0) {
-                            mLastY = motionEvent.getRawY();
-                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (mOffsetY < 0) {
-                            mLayoutParams.height = (int)(mFloatingView.getHeight() + mLastY - motionEvent.getRawY());
-                            mWindowManager.updateViewLayout(mFloatingView, mLayoutParams);
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        break;
-                }
-                return true;
-            }
-        });
     }
 
     public void hideFloatingWindows() {
