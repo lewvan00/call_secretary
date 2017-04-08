@@ -21,6 +21,7 @@
     <string name="whitelist">白名单</string>
     <string name="setting_interception">拦截类型</string>
     <string name="record">拦截记录</string>
+    <string name="phone_paste">粘贴</string>
 
     <!--拦截类型-->
     <string-array name="array_interception">

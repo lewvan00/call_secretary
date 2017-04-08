@@ -31,4 +31,9 @@
     <color name="dial_circle_bg_pressed">#FF5373A1</color>
     <drawable name="dial_btn_bg_pressed">#FF4EA9F5</drawable>
     <drawable name="dial_btn_bg_normal">#FFF9F9F9</drawable>
+
+    <color name="t9_panel_line">#ced6dc</color>
+    <color name="t9_panel_bg">#f9f9f9</color>
+
+    <color name="color_c1c1c1">#c1c1c1</color>
 </resources>
