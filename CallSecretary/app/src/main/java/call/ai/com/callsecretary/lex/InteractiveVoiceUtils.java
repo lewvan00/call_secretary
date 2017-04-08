@@ -55,11 +55,6 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
 
     private InteractiveVoiceUtils() {
         this.context = CallSecretaryApplication.getContext();
-        awsRegion = Regions.fromName("us-east-1");
-        credentialsProvider = new CognitoCredentialsProvider(
-                "us-east-1:a16c3d73-380e-4a04-b1a7-1dda5077674e",
-                awsRegion);
-        interactionConfig = new InteractionConfig("CallSecretary", "CallSecretary");
         this.shouldInitialize = true;
         this.voiceListener = null;
         this.state = STATE_READY;
@@ -67,7 +62,6 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         // for setting the user agent
         clientConfiguration = new ClientConfiguration();
         clientConfiguration.setUserAgent(INTERACTION_VOICE_VIEW_USER_AGENT);
-        createInteractionClient();
     }
 
     public static InteractiveVoiceUtils getInstance() {
@@ -306,10 +300,8 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         if (voiceListener != null) {
             if (response != null) {
                 voiceListener.onError(response.getTextResponse(), e);
-                Log.e(this.getClass().getSimpleName(), "  errorText " + response.getTextResponse(), e);
             } else {
                 voiceListener.onError("Error from Bot", e);
-                Log.e(this.getClass().getSimpleName(), "  errorText Error from Bot" , e);
             }
         }
     }
