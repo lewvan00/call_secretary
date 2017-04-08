@@ -164,7 +164,9 @@ public final class T9PanelView extends LinearLayout implements TextWatcher, OnCl
         if (mPhoneNumEt == null) {
             return;
         }
-        mPhoneNumEt.setText(str + mPhoneNumEt.getText().toString());
+        String text = mPhoneNumEt.getText().toString() + str;
+        mPhoneNumEt.setText(text);
+        mPhoneNumEt.setSelection(text.length());
     }
 
     @Override

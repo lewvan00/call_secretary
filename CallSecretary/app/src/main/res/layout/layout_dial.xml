@@ -9,8 +9,9 @@
         android:layout_height="match_parent">
         <EditText
             android:id="@+id/edit"
-            android:padding="7dp"
-            android:textSize="20sp"
+            android:paddingLeft="15dp"
+            android:paddingBottom="10dp"
+            android:textSize="22sp"
             android:textColor="@color/white"
             android:background="@color/appbar_color"
             android:layout_width="match_parent"
