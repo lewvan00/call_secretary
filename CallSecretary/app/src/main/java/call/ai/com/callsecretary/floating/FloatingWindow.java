@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
+import com.amazonaws.services.lexrts.model.PostContentResult;
 
 import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.adapter.MessageAdapter;
@@ -107,5 +108,12 @@ public class FloatingWindow extends FrameLayout {
 
     public InteractiveVoiceView getInteractiveVoiceView() {
         return mInteractiveVoiceView;
+    }
+
+    public void addMessage(PostContentResult result){
+        if(result==null||mAdapter==null||mRecyclerView==null) return;
+        mAdapter.addCallerMessage(result.getInputTranscript());
+        mAdapter.addSecretaryMessage(result.getMessage());
+        mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 }

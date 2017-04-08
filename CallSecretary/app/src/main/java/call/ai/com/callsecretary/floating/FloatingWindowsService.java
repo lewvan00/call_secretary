@@ -76,17 +76,17 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         initFloatingView();
     }
 
-    public void startBot() {
-        Context context = CallSecretaryApplication.getContext();
-        InteractiveVoiceView interactiveVoiceView = mFloatingView.getInteractiveVoiceView();
-        interactiveVoiceView.setInteractiveVoiceListener(this);
-        interactiveVoiceView.getViewAdapter().setCredentialProvider(credentialsProvider);
-        interactiveVoiceView.getViewAdapter().setInteractionConfig(
-                new InteractionConfig(context.getResources().getString(R.string.bot_name),
-                context.getResources().getString(R.string.bot_alias)));
-        interactiveVoiceView.getViewAdapter().setAwsRegion(context.getResources().getString(R.string.aws_region));
-        interactiveVoiceView.performClick();
-    }
+//    public void startBot() {
+//        Context context = CallSecretaryApplication.getContext();
+//        InteractiveVoiceView interactiveVoiceView = mFloatingView.getInteractiveVoiceView();
+//        interactiveVoiceView.setInteractiveVoiceListener(this);
+//        interactiveVoiceView.getViewAdapter().setCredentialProvider(credentialsProvider);
+//        interactiveVoiceView.getViewAdapter().setInteractionConfig(
+//                new InteractionConfig(context.getResources().getString(R.string.bot_name),
+//                context.getResources().getString(R.string.bot_alias)));
+//        interactiveVoiceView.getViewAdapter().setAwsRegion(context.getResources().getString(R.string.aws_region));
+//        interactiveVoiceView.performClick();
+//    }
 
     public void stopBot() {
         Context context = CallSecretaryApplication.getContext();
@@ -199,7 +199,6 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     }
 
     public void onResult(PostContentResult result) {
-        mFloatingView.getMessageAdapter().addCallerMessage(result.getInputTranscript());
-        mFloatingView.getMessageAdapter().addSecretaryMessage(result.getMessage());
+        mFloatingView.addMessage(result);
     }
 }
