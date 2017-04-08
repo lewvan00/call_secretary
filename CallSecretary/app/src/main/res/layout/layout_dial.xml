@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <call.ai.com.callsecretary.widget.T9PanelView
+        android:id="@+id/panelview"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
