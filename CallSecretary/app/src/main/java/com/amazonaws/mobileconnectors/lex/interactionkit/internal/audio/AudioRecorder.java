@@ -295,7 +295,7 @@ public class AudioRecorder implements AudioSource {
                     Log.e("zhang", "startRecording: processNoiseSuppress buffer.length = " + buffer.length);
                     buffer = webRTCWrapper.processGainControl(buffer, numSamplesRead);
                     Log.e("zhang", "startRecording: processGainControl buffer.length = " + buffer.length);
-                    audioConfig.audioDataOut = buffer;
+//                    audioConfig.audioDataOut = buffer;
                 }
 
                 final int invalidOperation = AudioRecord.ERROR_INVALID_OPERATION;
