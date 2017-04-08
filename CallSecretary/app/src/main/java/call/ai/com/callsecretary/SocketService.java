@@ -46,12 +46,8 @@ public class SocketService extends Service {
         new Thread() {
             @Override
             public void run() {
-                // 声明一个ServerSocket对象
                 try {
-                    // 创建一个ServerSocket对象，并让这个Socket在1989端口监听
                     serverSocket = new ServerSocket(1989);
-                    // 调用ServerSocket的accept()方法，接受客户端所发送的请求，
-                    // 如果客户端没有发送数据，那么该线程就停滞不继续
                     mMainHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -60,7 +56,6 @@ public class SocketService extends Service {
                     });
                     Socket socket = serverSocket.accept();
                     InputStream inputStream = socket.getInputStream();
-                    // 从Socket当中得到InputStream对象
                     ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                     while (true) {
                         try {
@@ -73,7 +68,6 @@ public class SocketService extends Service {
                                 postContentResult.setMessage(contentResult.getMessage());
                                 postContentResult.setInputTranscript(contentResult.getInputTranscript());
                                 InteractiveVoiceUtils.getInstance().processAudioResponse(postContentResult);
-
                             }
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
