@@ -67,6 +67,9 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         return new InteractiveVoiceUtils();
     }
 
+    public InteractionClient getClient() {
+        return lexInteractionClient;
+    }
 
     public void setCredentialProvider(AWSCredentialsProvider credentialsProvider) {
         this.credentialsProvider = credentialsProvider;
@@ -104,6 +107,7 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
     public void finish() {
         if (lexInteractionClient != null) {
             lexInteractionClient.cancel();
+            sessionAttributes.clear();
         }
         state = STATE_READY;
     }

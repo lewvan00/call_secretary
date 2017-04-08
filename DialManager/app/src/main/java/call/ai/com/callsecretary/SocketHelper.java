@@ -10,6 +10,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import lex.InteractiveVoiceUtils;
+
 /**
  * Created by lewvan on 2017/4/8.
  */
@@ -80,7 +82,7 @@ public class SocketHelper {
         });
     }
 
-    public void sendMsgToSocket(final Object object) {
+    public void sendMsgToSocket (final Object object) {
         if (outputStream != null) {
             new Thread() {
                 @Override
@@ -89,9 +91,11 @@ public class SocketHelper {
                         outputStream.writeObject(object);
                         outputStream.flush();
                         showToast("send bytes success");
+                        Log.d("liufan", "send bytes success!");
                     } catch (IOException e) {
                         e.printStackTrace();
                         showToast("send IOException : " + e);
+                        InteractiveVoiceUtils.getInstance().onAudioPlaybackError(e);
                     }
                 }
             }.start();

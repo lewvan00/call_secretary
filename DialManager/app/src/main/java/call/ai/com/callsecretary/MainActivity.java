@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.lex.interactionkit.InteractionClient;
 import com.amazonaws.mobileconnectors.lex.interactionkit.Response;
 import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
 import com.amazonaws.services.lexrts.model.PostContentResult;
@@ -24,12 +25,13 @@ import lex.SerializablePostContentResult;
 
 public class MainActivity extends Activity implements  InteractiveVoiceView.InteractiveVoiceListener {
     Handler mMainHandler;
+    InteractiveVoiceUtils mVoiceUtils;
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         final EditText editText = (EditText) findViewById(R.id.service_ip);
-        editText.setText("10.60.200.60");
+        editText.setText("10.60.196.42");
         mMainHandler = new Handler();
         Button btn = (Button) findViewById(R.id.set_ip_btn);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -37,7 +39,8 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
             public void onClick(View v) {
                 CommonSharedPref.getInstance(MainActivity.this).setServiceIp(editText.getText().toString());
                 SocketHelper.getInstance().init(MainActivity.this.getApplicationContext(), mMainHandler);
-                InteractiveVoiceUtils.getInstance().start(MainActivity.this, null, null);
+                mVoiceUtils =  InteractiveVoiceUtils.getInstance();
+                mVoiceUtils.start(MainActivity.this, null, null);
             }
         });
     }
@@ -50,6 +53,13 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
     @Override
     public void onResponse(final Response response) {
         Log.d("liufan", "onResponse");
+        mVoiceUtils.getClient().setAudioPlaybackState(InteractionClient.BUSY);
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mVoiceUtils.onAudioPlaybackStarted();
+            }
+        });
         final SerializablePostContentResult result = new SerializablePostContentResult();
         PostContentResult realResult = response.getResult();
         result.setRealResult(realResult);
@@ -61,6 +71,13 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
             }
         });
         SocketHelper.getInstance().sendMsgToSocket(result);
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mVoiceUtils.onAudioPlayBackCompleted();
+            }
+        });
+        mVoiceUtils.getClient().setAudioPlaybackState(InteractionClient.NOT_BUSY);
     }
 
     @Override
@@ -72,6 +89,7 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
                         + ", error = " + e, Toast.LENGTH_LONG).show();
             }
         });
+        e.printStackTrace();
     }
 
     @Override
