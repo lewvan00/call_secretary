@@ -133,11 +133,7 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         mFloatingView.setUiInterface(new FloatingWindow.UiInterface() {
             @Override
             public void onClose() {
-                if (isServer) {
-                    SocketService.callRingOff();
-                } else {
-                    SocketClient.getInstance().ringoffFromSocket();
-                }
+                callRingoff();
                 hideFloatingWindows();
             }
 
@@ -151,6 +147,14 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
                 hideFloatingWindows();
             }
         });
+    }
+
+    public void callRingoff() {
+        if (isServer) {
+            SocketService.callRingOff();
+        } else {
+            SocketClient.getInstance().ringoffFromSocket();
+        }
     }
 
     public void hideFloatingWindows() {
