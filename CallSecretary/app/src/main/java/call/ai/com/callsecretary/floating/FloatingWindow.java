@@ -1,5 +1,6 @@
 package call.ai.com.callsecretary.floating;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -103,7 +104,8 @@ public class FloatingWindow extends FrameLayout {
         mDiffuseView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                FloatingWindowsService.getServiceInstance().callRingoff();
+                FloatingWindowsService.getServiceInstance().hideFloatingWindows();
             }
         });
     }
@@ -137,6 +139,24 @@ public class FloatingWindow extends FrameLayout {
 //        });
         mDiffuseView.start();
     }
+
+    public void ringConnect() {
+        mDiffuseView.animate().translationYBy(getHeight()/3).setDuration(500).start();
+        mDiffuseView.stop();
+        mChatContentLyt.setVisibility(VISIBLE);
+        mChatContentLyt.scrollTo(0, mChatContentLyt.getHeight());
+        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+        animator.setDuration(500);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                mChatContentLyt.scrollTo(0, (int) (mChatContentLyt.getHeight()*(1-value)));
+            }
+        });
+        animator.start();
+    }
+
     public void addMessage(PostContentResult result){
         if(result==null||mAdapter==null||mRecyclerView==null||
                 TextUtils.isEmpty(result.getInputTranscript())||

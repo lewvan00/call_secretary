@@ -84,7 +84,12 @@ public class SocketClient {
 
                 outputStream.writeObject(result);
                 outputStream.flush();
-
+                mMainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        FloatingWindowsService.getServiceInstance().ringConnect();
+                    }
+                });
                 showToast("call success");
                 Log.d("liufan", "call success!");
 
@@ -115,6 +120,12 @@ public class SocketClient {
             } catch (IOException e) {
                 e.printStackTrace();
                 showToast("call IOException : " + e);
+                mMainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        FloatingWindowsService.getServiceInstance().hideFloatingWindows();
+                    }
+                });
             }
         }
     }

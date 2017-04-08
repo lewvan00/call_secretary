@@ -32,6 +32,7 @@ import call.ai.com.callsecretary.floating.FloatingWindowsService;
 import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
 import call.ai.com.callsecretary.socketcall.SocketClient;
 import call.ai.com.callsecretary.socketcall.SocketService;
+import call.ai.com.callsecretary.utils.CommonSharedPref;
 import call.ai.com.callsecretary.widget.AlertDialog;
 import call.ai.com.callsecretary.widget.T9PanelView;
 import lex.SerializablePostContentResult;
@@ -130,9 +131,16 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
     }
 
     private void dial() {
-        mVoiceUtils =  InteractiveVoiceUtils.getInstance();
-        SocketClient.getInstance().init(MainActivity.this.getApplicationContext(), mMainHandler, mVoiceUtils);
-        mVoiceUtils.start(MainActivity.this);
+        String ip = CommonSharedPref.getInstance(this).getServiceIp();
+        FloatingWindowsService.getServiceInstance().showFloatingWindows(ip);
+        mMainHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mVoiceUtils =  InteractiveVoiceUtils.getInstance();
+                SocketClient.getInstance().init(MainActivity.this.getApplicationContext(), mMainHandler, mVoiceUtils);
+                mVoiceUtils.start(MainActivity.this);
+            }
+        },  3000);
     }
 
     private void initTestButton() {

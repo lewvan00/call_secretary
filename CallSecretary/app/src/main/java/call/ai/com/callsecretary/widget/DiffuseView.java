@@ -89,30 +89,31 @@ public class DiffuseView extends View {
         // 绘制扩散圆
         Log.d("liufan", "DiffuseView onDraw");
         mPaint.setColor(mColor);
-        for (int i = 0; i < mAlphas.size(); i++) {
-            // 设置透明度
-            Integer alpha = mAlphas.get(i);
-            mPaint.setAlpha(alpha);
-            // 绘制扩散圆
-            Integer width = mWidths.get(i);
-            canvas.drawCircle(getWidth() / 2, getHeight() / 2, mCoreRadius + width, mPaint);
+        if (mIsDiffuse) {
+            for (int i = 0; i < mAlphas.size(); i++) {
+                // 设置透明度
+                Integer alpha = mAlphas.get(i);
+                mPaint.setAlpha(alpha);
+                // 绘制扩散圆
+                Integer width = mWidths.get(i);
+                canvas.drawCircle(getWidth() / 2, getHeight() / 2, mCoreRadius + width, mPaint);
 
-            if(alpha > 0 && width < mMaxWidth){
-                mAlphas.set(i, alpha - 1);
-                mWidths.set(i, width + 1);
+                if (alpha > 0 && width < mMaxWidth) {
+                    mAlphas.set(i, alpha - 1);
+                    mWidths.set(i, width + 1);
+                }
+            }
+            // 判断当扩散圆扩散到指定宽度时添加新扩散圆
+            if (mWidths.get(mWidths.size() - 1) == mMaxWidth / mDiffuseWidth) {
+                mAlphas.add(255);
+                mWidths.add(0);
+            }
+            // 超过10个扩散圆，删除最外层
+            if (mWidths.size() >= 10) {
+                mWidths.remove(0);
+                mAlphas.remove(0);
             }
         }
-        // 判断当扩散圆扩散到指定宽度时添加新扩散圆
-        if (mWidths.get(mWidths.size() - 1) == mMaxWidth / mDiffuseWidth) {
-            mAlphas.add(255);
-            mWidths.add(0);
-        }
-        // 超过10个扩散圆，删除最外层
-        if(mWidths.size() >= 10){
-            mWidths.remove(0);
-            mAlphas.remove(0);
-        }
-
         // 绘制中心圆及图片
         mPaint.setAlpha(255);
         mPaint.setColor(mCoreColor);
