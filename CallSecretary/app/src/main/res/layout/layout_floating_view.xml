@@ -4,61 +4,74 @@
     android:layout_height="match_parent"
     android:background="#cc000000"
     android:orientation="vertical">
-
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp">
-        <ImageView
-            android:layout_gravity="right"
-            android:id="@+id/close_btn"
-            android:padding="12dp"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@drawable/close_btn"/>
-
-        <TextView
-            android:paddingLeft="5dp"
-            android:id="@+id/title"
+        android:layout_height="match_parent">
+        <call.ai.com.callsecretary.widget.DiffuseView
+            android:id="@+id/diffuse_view"
             android:layout_gravity="center"
-            android:gravity="center_vertical"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:textSize="17sp"
-            android:text="chatText" />
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+        <FrameLayout
+            android:id="@+id/chat_content_lyt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+                <ImageView
+                    android:layout_gravity="right"
+                    android:id="@+id/close_btn"
+                    android:padding="12dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/close_btn"/>
 
-    </FrameLayout>
+                <TextView
+                    android:paddingLeft="5dp"
+                    android:id="@+id/title"
+                    android:layout_gravity="center"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:textSize="17sp"
+                    android:text="chatText" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/chat_list"
-        android:layout_marginTop="45dp"
-        android:layout_marginBottom="26dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:padding="15dp" />
+            </FrameLayout>
 
-    <View
-        android:id="@+id/arrow_bar"
-        android:alpha="0.5"
-        android:layout_gravity="bottom"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:background="@drawable/bg_arrow_up"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/chat_list"
+                android:layout_marginTop="45dp"
+                android:layout_marginBottom="26dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:padding="15dp" />
 
-    <ImageView
-        android:alpha="0.5"
-        android:layout_marginBottom="2dp"
-        android:src="@drawable/arrow_up"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_gravity="bottom|center_horizontal"/>
+            <View
+                android:id="@+id/arrow_bar"
+                android:alpha="0.5"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:background="@drawable/bg_arrow_up"/>
 
-    <com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView
-        android:id="@+id/interactive_voice_view"
-        android:layout_width="1dp"
-        android:layout_height="1dp" />
+            <ImageView
+                android:alpha="0.5"
+                android:layout_marginBottom="2dp"
+                android:src="@drawable/arrow_up"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="bottom|center_horizontal"/>
+
+            <com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView
+                android:id="@+id/interactive_voice_view"
+                android:layout_width="1dp"
+                android:layout_height="1dp" />
+            </FrameLayout>
+        </FrameLayout>
 </FrameLayout>

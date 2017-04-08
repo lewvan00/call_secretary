@@ -28,8 +28,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".chat.ChatActivity"
-            android:launchMode="singleTop"/>
+        <activity android:name=".chat.ChatActivity" />
         <activity android:name=".SettingActivity" />
         <service android:name=".socketcall.SocketService"/>
         <activity android:name=".SplashActivity">

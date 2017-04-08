@@ -62,6 +62,7 @@ public class SettingActivity extends BaseActivity {
         enableBackButton(true);
         setBackClickFinish();
         setBarTitle(R.string.setting_title);
+
     }
 
     @Override
