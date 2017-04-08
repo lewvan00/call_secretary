@@ -1,6 +1,7 @@
 package call.ai.com.callsecretary.floating;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -22,8 +23,8 @@ import java.util.Map;
 
 
 import call.ai.com.callsecretary.R;
+import call.ai.com.callsecretary.chat.ChatActivity;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
-import call.ai.com.callsecretary.utils.CommonSharedPref;
 import call.ai.com.callsecretary.utils.PhoneUtils;
 
 /**
@@ -36,8 +37,6 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     private FloatingWindow mFloatingView;
 
     private boolean hasFloatingShowing = false;
-    private float mOffsetX;
-    private float mOffsetY;
 
     CognitoCredentialsProvider credentialsProvider;
 
@@ -110,20 +109,12 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         mLayoutParams.format = PixelFormat.RGBA_8888;
         mLayoutParams.gravity = Gravity.TOP | Gravity.LEFT;
 
-//        Context context = CallSecretaryApplication.getContext();
-//        if (CommonSharedPref.getInstance(CallSecretaryApplication.getContext()).getFloatingWindowsLocationX() == -1) {
-//            mLayoutParams.x = mWindowManager.getDefaultDisplay().getWidth() / 6;
-//            mLayoutParams.y = mWindowManager.getDefaultDisplay().getHeight() / 3;
-//        } else {
-//            mLayoutParams.x = CommonSharedPref.getInstance(context).getFloatingWindowsLocationX();
-//            mLayoutParams.y = CommonSharedPref.getInstance(context).getFloatingWindowsLocationY();
-//        }
         mLayoutParams.x = 0;
         mLayoutParams.y = 0;
 
         mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         mLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        mLayoutParams.height = mWindowManager.getDefaultDisplay().getHeight() * 2 / 3;
+        mLayoutParams.height = mWindowManager.getDefaultDisplay().getHeight() * 3 / 4;
     }
 
     private void initFloatingView() {
@@ -137,24 +128,40 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
             }
         });
 
-        mFloatingView.setOnTitleTouchListener(new View.OnTouchListener() {
+        mFloatingView.setLongClickable(true);
+        mFloatingView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(mFloatingView.getContext(), ChatActivity.class);
+                mFloatingView.getContext().startActivity(intent);
+                hideFloatingWindows();
+                return true;
+            }
+        });
+
+        mFloatingView.setOnArrowTouchListener(new View.OnTouchListener() {
+            float mOffsetY;
+            float mLastY = mFloatingView.getHeight();
+
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent) {
                 int action = motionEvent.getAction();
                 switch (action) {
                     case MotionEvent.ACTION_DOWN:
-                        mOffsetX = motionEvent.getRawX() - mLayoutParams.x;
-                        mOffsetY = motionEvent.getRawY() - mLayoutParams.y;
+                        mOffsetY = motionEvent.getRawY() - mLastY;
+                        if (mOffsetY < 0) {
+                            mLastY = motionEvent.getRawY();
+                        }
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        mLayoutParams.x = (int) (motionEvent.getRawX() - mOffsetX);
-                        mLayoutParams.y = (int) (motionEvent.getRawY() - mOffsetY);
-                        mWindowManager.updateViewLayout(mFloatingView, mLayoutParams);
+                        if (mOffsetY < 0) {
+                            mLayoutParams.height = (int)(mFloatingView.getHeight() + mLastY - motionEvent.getRawY());
+                            mWindowManager.updateViewLayout(mFloatingView, mLayoutParams);
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
                         break;
                 }
-
                 return true;
             }
         });
@@ -164,13 +171,7 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         if (mFloatingView != null && mWindowManager != null && hasFloatingShowing) {
             mWindowManager.removeView(mFloatingView);
             hasFloatingShowing = false;
-            CommonSharedPref.getInstance(CallSecretaryApplication.getContext()).setFloatingWindowsLocationX(mLayoutParams.x);
-            CommonSharedPref.getInstance(CallSecretaryApplication.getContext()).setFloatingWindowsLocationY(mLayoutParams.y);
         }
-    }
-
-    public void onDestroy() {
-        hideFloatingWindows();
     }
 
     @Override

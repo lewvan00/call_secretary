@@ -36,6 +36,7 @@ import call.ai.com.callsecretary.socketcall.SocketClient;
 import call.ai.com.callsecretary.socketcall.SocketService;
 import call.ai.com.callsecretary.utils.CommonSharedPref;
 import call.ai.com.callsecretary.widget.AlertDialog;
+import call.ai.com.callsecretary.widget.T9PanelView;
 import lex.SerializablePostContentResult;
 
 public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClickListener,
@@ -62,6 +63,8 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
 
     private void initDialView() {
         dialView = View.inflate(this, R.layout.layout_dial, null);
+        T9PanelView panelView = (T9PanelView) dialView.findViewById(R.id.panelview);
+        panelView.replaceViews((EditText) dialView.findViewById(R.id.edit));
     }
 
     private void initViewPager() {

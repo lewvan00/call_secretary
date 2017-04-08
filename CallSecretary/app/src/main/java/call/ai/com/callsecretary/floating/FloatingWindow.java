@@ -69,8 +69,8 @@ public class FloatingWindow extends FrameLayout {
         mInteractiveVoiceView = (InteractiveVoiceView) findViewById(R.id.interactive_voice_view);
     }
 
-    public void setOnTitleTouchListener(View.OnTouchListener listener) {
-        mTitleTv.setOnTouchListener(listener);
+    public void setOnArrowTouchListener(View.OnTouchListener listener) {
+        findViewById(R.id.arrow_bar).setOnTouchListener(listener);
     }
 
     public void setUiInterface(UiInterface uiInterface) {
