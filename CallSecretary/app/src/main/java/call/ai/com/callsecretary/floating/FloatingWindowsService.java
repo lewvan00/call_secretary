@@ -23,6 +23,7 @@ import java.util.Map;
 
 
 import call.ai.com.callsecretary.R;
+import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 import call.ai.com.callsecretary.utils.CommonSharedPref;
 import call.ai.com.callsecretary.utils.PhoneUtils;
@@ -68,6 +69,18 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
                 context.getResources().getString(R.string.bot_alias)));
         interactiveVoiceView.getViewAdapter().setAwsRegion(context.getResources().getString(R.string.aws_region));
         interactiveVoiceView.performClick();
+    }
+
+    public void startNativeBot(){
+        Context context = CallSecretaryApplication.getContext();
+        InteractiveVoiceUtils interactiveVoiceUtils=InteractiveVoiceUtils.getInstance(context);
+        interactiveVoiceUtils.setVoiceListener(this);
+        interactiveVoiceUtils.setCredentialProvider(credentialsProvider);
+        interactiveVoiceUtils.setInteractionConfig(
+                new InteractionConfig(context.getResources().getString(R.string.bot_name),
+                        context.getResources().getString(R.string.bot_alias)));
+        interactiveVoiceUtils.setAwsRegion(context.getResources().getString(R.string.aws_region));
+        interactiveVoiceUtils.start();
     }
 
     public void showFloatingWindows(String chatName) {

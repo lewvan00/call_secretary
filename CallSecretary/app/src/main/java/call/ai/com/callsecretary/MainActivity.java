@@ -37,6 +37,7 @@ public class MainActivity extends BaseActivity {
                 FloatingWindowsService floatingWindowsService = new FloatingWindowsService();
                 floatingWindowsService.showFloatingWindows("hhhh");
                 floatingWindowsService.startBot();
+//                floatingWindowsService.startNativeBot();
             }
         });
     }
