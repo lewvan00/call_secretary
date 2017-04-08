@@ -291,10 +291,10 @@ public class AudioRecorder implements AudioSource {
                 synchronized (mRecord) {
                     numSamplesRead = mRecord.read(buffer, 0, mNumSamplesPerRead);
                     Log.e("zhang", "startRecording: mRecord.read buffer.length = " + buffer.length);
-                    buffer = webRTCWrapper.processGainControl(buffer, numSamplesRead);
-                    Log.e("zhang", "startRecording: processGainControl buffer.length = " + buffer.length);
                     buffer = webRTCWrapper.processNoiseSuppress(buffer, numSamplesRead);
                     Log.e("zhang", "startRecording: processNoiseSuppress buffer.length = " + buffer.length);
+                    buffer = webRTCWrapper.processGainControl(buffer, numSamplesRead);
+                    Log.e("zhang", "startRecording: processGainControl buffer.length = " + buffer.length);
                     audioConfig.audioDataOut = buffer;
                 }
 
