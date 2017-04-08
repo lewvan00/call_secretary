@@ -81,7 +81,7 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
 //                new InteractionConfig(context.getResources().getString(R.string.bot_name),
 //                        context.getResources().getString(R.string.bot_alias)));
 //        interactiveVoiceUtils.setAwsRegion(context.getResources().getString(R.string.aws_region));
-        interactiveVoiceUtils.start(this);
+        interactiveVoiceUtils.start(this,this,this);
     }
 
     public void showFloatingWindows(String chatName) {
