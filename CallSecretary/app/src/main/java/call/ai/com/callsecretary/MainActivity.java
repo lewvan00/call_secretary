@@ -247,7 +247,14 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
     }
 
     @Override
-    public void onResponse(Response response) {
+    public void onResponse(final Response response) {
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                FloatingWindowsService.getServiceInstance().onResponse(response);
+            }
+        });
+
         Log.d("liufan", "onResponse");
         mVoiceUtils.getClient().setAudioPlaybackState(InteractionClient.BUSY);
         mMainHandler.post(new Runnable() {

@@ -123,7 +123,6 @@ public class SocketClient {
                 Context context = CallSecretaryApplication.getContext();
                 FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
                 floatingWindowsService.showFloatingWindows(context.getString(R.string.float_title_call));
-
             }
         });
     }
