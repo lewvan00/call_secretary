@@ -309,7 +309,7 @@ public class InteractiveVoiceViewAdapter
     /**
      * Cancel current dialog.
      */
-    protected void cancel() {
+    public void cancel() {
         reset();
     }
 
