@@ -76,13 +76,13 @@ public class DiffuseView extends View {
         mAlphas.add(255);
         mWidths.add(0);
     }
-
-    @Override
-    public void invalidate() {
-        if(hasWindowFocus()){
-            super.invalidate();
-        }
-    }
+//
+//    @Override
+//    public void invalidate() {
+//        if(hasWindowFocus()){
+//            super.invalidate();
+//        }
+//    }
 
     @Override
     public void onDraw(Canvas canvas) {

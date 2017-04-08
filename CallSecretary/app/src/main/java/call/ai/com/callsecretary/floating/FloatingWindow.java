@@ -98,8 +98,14 @@ public class FloatingWindow extends FrameLayout {
         mInteractiveVoiceView = (InteractiveVoiceView) findViewById(R.id.interactive_voice_view);
         mDiffuseView = (DiffuseView) findViewById(R.id.diffuse_view);
         mChatContentLyt = findViewById(R.id.chat_content_lyt);
-//        mChatContentLyt.setVisibility(GONE);
-        mDiffuseView.setVisibility(GONE);
+        mChatContentLyt.setVisibility(GONE);
+//        mDiffuseView.setVisibility(GONE);
+        mDiffuseView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     public void setOnArrowTouchListener(View.OnTouchListener listener) {
@@ -129,6 +135,7 @@ public class FloatingWindow extends FrameLayout {
 //                mDiffuseView.start();
 //            }
 //        });
+        mDiffuseView.start();
     }
     public void addMessage(PostContentResult result){
         if(result==null||mAdapter==null||mRecyclerView==null||
