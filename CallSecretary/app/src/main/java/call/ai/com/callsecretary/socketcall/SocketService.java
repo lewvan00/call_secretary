@@ -41,6 +41,7 @@ public class SocketService extends Service {
     Handler mMainHandler;
     ServerSocket serverSocket = null;
     Socket clientSocket = null;
+    private MediaPlayer mMediaPlayer;
 
     @Nullable
     @Override
@@ -112,10 +113,10 @@ public class SocketService extends Service {
                                             handleCall(socket);
                                             break;
                                         case SerializablePostContentResult.STATE_FINAL:
-                                            handleFinalStatus();
+                                            startRingTone();
                                             break;
                                         case SerializablePostContentResult.STATE_HANGUP:
-                                            handleFinalHandleUp(contentResult);
+                                            handleHandUpStatus(contentResult);
                                             break;
                                         case SerializablePostContentResult.STATE_RINGOFF:
                                             handleRingoff();
@@ -137,11 +138,7 @@ public class SocketService extends Service {
         }.start();
     }
 
-    private void handleFinalStatus() {
-        startAlarm();
-    }
-
-    private void handleFinalHandleUp(SerializablePostContentResult contentResult) {
+    private void handleHandUpStatus(SerializablePostContentResult contentResult) {
         PostContentResult postContentResult = new PostContentResult();
         postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
         postContentResult.setMessage(contentResult.getMessage());
@@ -153,7 +150,7 @@ public class SocketService extends Service {
         mMainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startAlarm();
+                startRingTone();
             }
         }, 1500);
     }
@@ -259,7 +256,7 @@ public class SocketService extends Service {
         clientSocket = null;
     }
 
-    private void startAlarm() {
+    private void startRingTone() {
         MediaPlayer mMediaPlayer = MediaPlayer.create(this, getSystemDefultRingtoneUri());
         mMediaPlayer.setLooping(false);
         try {
@@ -270,6 +267,12 @@ public class SocketService extends Service {
             e.printStackTrace();
         }
         mMediaPlayer.start();
+    }
+
+    public void stopRingTone() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+        }
     }
 
     private Uri getSystemDefultRingtoneUri() {

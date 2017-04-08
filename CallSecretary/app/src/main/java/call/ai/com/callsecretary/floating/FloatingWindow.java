@@ -9,11 +9,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
+import com.amazonaws.services.lexrts.model.PostContentResult;
 
 import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.adapter.MessageAdapter;
+import call.ai.com.callsecretary.bean.Chat;
 import call.ai.com.callsecretary.utils.AvatarUtils;
-import call.ai.com.callsecretary.utils.ChatUtils;
 
 /**
  * Created by Administrator on 2017/4/7.
@@ -21,12 +22,23 @@ import call.ai.com.callsecretary.utils.ChatUtils;
 
 public class FloatingWindow extends FrameLayout {
 
+    public Chat getChat() {
+        return chat;
+    }
+
+    public int getResImageId() {
+        return resImageId;
+    }
+
     public interface UiInterface {
         void onClose();
+        void onTitleClick();
     }
 
     private TextView mTitleTv;
     private RecyclerView mRecyclerView;
+    private Chat chat;
+    private int resImageId;
 
     public MessageAdapter getMessageAdapter() {
         return mAdapter;
@@ -52,12 +64,25 @@ public class FloatingWindow extends FrameLayout {
     }
 
     private void initViews() {
+        chat = new Chat();
+        chat.setPhone("1586329525");
+        chat.setTime(System.currentTimeMillis());
+        resImageId = AvatarUtils.getRandomAvatarResId();
+
         mTitleTv = (TextView) findViewById(R.id.title);
         mRecyclerView = (RecyclerView) findViewById(R.id.chat_list);
 
-        mAdapter = new MessageAdapter(ChatUtils.createTestChat(), AvatarUtils.getRandomAvatarResId());
+        mAdapter = new MessageAdapter(chat, resImageId);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
+        mTitleTv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mUiInterface != null) {
+                    mUiInterface.onTitleClick();
+                }
+            }
+        });
 
         findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,5 +108,12 @@ public class FloatingWindow extends FrameLayout {
 
     public InteractiveVoiceView getInteractiveVoiceView() {
         return mInteractiveVoiceView;
+    }
+
+    public void addMessage(PostContentResult result){
+        if(result==null||mAdapter==null||mRecyclerView==null) return;
+        mAdapter.addCallerMessage(result.getInputTranscript());
+        mAdapter.addSecretaryMessage(result.getMessage());
+        mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 }

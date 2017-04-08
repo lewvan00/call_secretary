@@ -30,6 +30,8 @@ import call.ai.com.callsecretary.socketcall.SocketService;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 import call.ai.com.callsecretary.utils.PhoneUtils;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 /**
  * Created by Administrator on 2017/3/28.
  */
@@ -77,17 +79,17 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         initFloatingView();
     }
 
-    public void startBot() {
-        Context context = CallSecretaryApplication.getContext();
-        InteractiveVoiceView interactiveVoiceView = mFloatingView.getInteractiveVoiceView();
-        interactiveVoiceView.setInteractiveVoiceListener(this);
-        interactiveVoiceView.getViewAdapter().setCredentialProvider(credentialsProvider);
-        interactiveVoiceView.getViewAdapter().setInteractionConfig(
-                new InteractionConfig(context.getResources().getString(R.string.bot_name),
-                context.getResources().getString(R.string.bot_alias)));
-        interactiveVoiceView.getViewAdapter().setAwsRegion(context.getResources().getString(R.string.aws_region));
-        interactiveVoiceView.performClick();
-    }
+//    public void startBot() {
+//        Context context = CallSecretaryApplication.getContext();
+//        InteractiveVoiceView interactiveVoiceView = mFloatingView.getInteractiveVoiceView();
+//        interactiveVoiceView.setInteractiveVoiceListener(this);
+//        interactiveVoiceView.getViewAdapter().setCredentialProvider(credentialsProvider);
+//        interactiveVoiceView.getViewAdapter().setInteractionConfig(
+//                new InteractionConfig(context.getResources().getString(R.string.bot_name),
+//                context.getResources().getString(R.string.bot_alias)));
+//        interactiveVoiceView.getViewAdapter().setAwsRegion(context.getResources().getString(R.string.aws_region));
+//        interactiveVoiceView.performClick();
+//    }
 
     public void stopBot() {
         Context context = CallSecretaryApplication.getContext();
@@ -139,16 +141,15 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
                 }
                 hideFloatingWindows();
             }
-        });
 
-        mFloatingView.setLongClickable(true);
-        mFloatingView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public void onTitleClick() {
                 Intent intent = new Intent(mFloatingView.getContext(), ChatActivity.class);
+                intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(ChatActivity.EXTRA_CHAT, mFloatingView.getChat());
+                intent.putExtra(ChatActivity.EXTRA_RES_ID, mFloatingView.getResImageId());
                 mFloatingView.getContext().startActivity(intent);
                 hideFloatingWindows();
-                return true;
             }
         });
 
@@ -237,7 +238,6 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     }
 
     public void onResult(PostContentResult result) {
-        mFloatingView.getMessageAdapter().addCallerMessage(result.getInputTranscript());
-        mFloatingView.getMessageAdapter().addSecretaryMessage(result.getMessage());
+        mFloatingView.addMessage(result);
     }
 }

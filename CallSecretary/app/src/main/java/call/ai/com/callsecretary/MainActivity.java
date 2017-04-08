@@ -65,6 +65,12 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         dialView = View.inflate(this, R.layout.layout_dial, null);
         T9PanelView panelView = (T9PanelView) dialView.findViewById(R.id.panelview);
         panelView.replaceViews((EditText) dialView.findViewById(R.id.edit));
+        panelView.setOnDialClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void initViewPager() {
@@ -243,7 +249,10 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
 
     @Override
     public void dialogReadyForFulfillment(Map<String, String> slots, String intent) {
-
+        Log.e("zhang", "dialogReadyForFulfillment");
+        SerializablePostContentResult serializablePostContentResult = new SerializablePostContentResult();
+        serializablePostContentResult.setState(SerializablePostContentResult.STATE_FINAL);
+        SocketClient.getInstance().sendMsgToSocket(serializablePostContentResult);
     }
 
     @Override
