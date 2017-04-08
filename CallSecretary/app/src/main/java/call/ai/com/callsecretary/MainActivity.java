@@ -69,6 +69,24 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
                 return view == object;
             }
         });
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    setBarTitle(R.string.app_name);
+                } else {
+                    setBarTitle(R.string.record);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     private void initAppBar() {
