@@ -22,6 +22,8 @@
     <string name="setting_interception">拦截类型</string>
     <string name="record">拦截记录</string>
     <string name="phone_paste">粘贴</string>
+    <string name="float_title_answer">接听电话</string>
+    <string name="float_title_call">拨打电话</string>
 
     <!--拦截类型-->
     <string-array name="array_interception">
