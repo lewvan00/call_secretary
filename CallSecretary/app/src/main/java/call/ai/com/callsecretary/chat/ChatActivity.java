@@ -1,5 +1,6 @@
 package call.ai.com.callsecretary.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,8 @@ import call.ai.com.callsecretary.bean.Chat;
 import call.ai.com.callsecretary.utils.ChatUtils;
 
 public class ChatActivity extends BaseActivity {
+
+    public static final String EXTRA_CHAT = "extra_chat";
 
     private RecyclerView recyclerView;
     private MessageAdapter adapter;
@@ -39,6 +42,13 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void initData() {
-        chat = ChatUtils.createTestChat();
+        Intent intent = getIntent();
+        if (intent != null) {
+            chat = intent.getParcelableExtra(EXTRA_CHAT);
+        }
+        if (chat == null) {
+            chat = ChatUtils.createTestChat();
+        }
+        setBarTitle(chat.getPhone());
     }
 }

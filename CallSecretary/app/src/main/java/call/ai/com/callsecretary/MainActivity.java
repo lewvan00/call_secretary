@@ -100,6 +100,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
     @Override
     public void onItemClick(Chat chat) {
         Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+        intent.putExtra(ChatActivity.EXTRA_CHAT, chat);
         startActivity(intent);
     }
 
