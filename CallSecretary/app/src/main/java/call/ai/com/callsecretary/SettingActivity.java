@@ -7,64 +7,61 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.zhy.view.flowlayout.FlowLayout;
+import com.zhy.view.flowlayout.TagAdapter;
+import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import call.ai.com.callsecretary.utils.CommonSharedPref;
 
-public class SettingActivity extends BaseActivity implements View.OnClickListener {
+public class SettingActivity extends BaseActivity {
 
     CheckBox mCheckBox;
-    EditText mFilterEditText;
-    List<String> mFilterContentList = new ArrayList<>();
-    ListView mFilterContentListView;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        initAppbar();
+        initViews();
+        initFlowLayout();
+    }
+
+    private void initFlowLayout() {
+        TagFlowLayout flowLayout = (TagFlowLayout) findViewById(R.id.flowlayout);
+        String[] list = getResources().getStringArray(R.array.array_interception);
+        TagAdapter adapter = new TagAdapter<String>(list) {
+            @Override
+            public View getView(FlowLayout parent, int position, String value) {
+                TextView tv = (TextView) View.inflate(SettingActivity.this, R.layout.layout_tag, null);
+                tv.setText(value);
+                return tv;
+            }
+        };
+        flowLayout.setAdapter(adapter);
+        adapter.setSelectedList(1, 3, 4, 5);
+    }
+
+    private void initViews() {
+        mCheckBox = (CheckBox) findViewById(R.id.auto_pickup_phone);
+        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                CommonSharedPref.getInstance(SettingActivity.this).setAutoPickupPhone(isChecked);
+            }
+        });
+    }
+
+    private void initAppbar() {
         enableBackButton(true);
         setBackClickFinish();
         setBarTitle(R.string.setting_title);
-
-        mCheckBox = (CheckBox) findViewById(R.id.auto_pickup_phone);
-        Button setDone = (Button) findViewById(R.id.set_done);
-
-        mCheckBox.setOnClickListener(this);
-        setDone.setOnClickListener(this);
-
-        mFilterEditText = (EditText) findViewById(R.id.editor);
-
-        View addTv = findViewById(R.id.add_filter);
-        addTv.setOnClickListener(this);
-
-        mFilterContentListView = (ListView) findViewById(R.id.filter_content_listview);
-        mFilterContentListView.setAdapter(new BaseAdapter() {
-            @Override
-            public int getCount() {
-                return mFilterContentList.size();
-            }
-
-            @Override
-            public Object getItem(int position) {
-                return mFilterContentList.get(position);
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return 0;
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                TextView textView = new TextView(parent.getContext());
-                textView.setText((CharSequence) getItem(position));
-                return textView;
-            }
-        });
     }
 
     @Override
@@ -72,26 +69,4 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         return R.layout.activity_setting;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.auto_pickup_phone:
-                CommonSharedPref.getInstance(this).setAutoPickupPhone(mCheckBox.isChecked());
-                break;
-            case R.id.set_done:
-                finish();
-                break;
-            case R.id.add_filter:
-                String filterItem = mFilterEditText.getText().toString();
-                if (!TextUtils.isEmpty(filterItem)) {
-                    mFilterContentList.add(filterItem);
-                    BaseAdapter adapter = (BaseAdapter) mFilterContentListView.getAdapter();
-                    if (adapter != null) {
-                        adapter.notifyDataSetChanged();
-                    }
-                    mFilterEditText.setText("");
-                }
-                break;
-        }
-    }
 }
