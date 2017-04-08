@@ -5,10 +5,14 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import call.ai.com.callsecretary.adapter.ChatAdapter;
 import call.ai.com.callsecretary.chat.ChatActivity;
+import call.ai.com.callsecretary.chat.ChatService;
 import call.ai.com.callsecretary.floating.FloatingWindowsService;
 
 public class MainActivity extends BaseActivity {
@@ -16,6 +20,13 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        initAppBar();
+        initTestButton();
+        initChatListView();
+    }
+
+    private void initAppBar() {
         setBarTitle(R.string.app_name);
         enableBackButton(false);
         View setting = View.inflate(this, R.layout.layout_setting, null);
@@ -27,6 +38,9 @@ public class MainActivity extends BaseActivity {
                 goToSetting();
             }
         });
+    }
+
+    private void initTestButton() {
         findViewById(R.id.chat).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -40,6 +54,8 @@ public class MainActivity extends BaseActivity {
             public void onClick(View view) {
                 FloatingWindowsService floatingWindowsService = new FloatingWindowsService();
                 floatingWindowsService.showFloatingWindows("hhhh");
+                floatingWindowsService.startBot();
+//                floatingWindowsService.startNativeBot();
             }
         });
 
@@ -55,6 +71,14 @@ public class MainActivity extends BaseActivity {
         Toast.makeText(this, "ip : " + ip, Toast.LENGTH_LONG).show();
         Intent i = new Intent(this, SocketService.class);
         startService(i);
+    }
+
+    private void initChatListView() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recylerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ChatAdapter adapter = new ChatAdapter();
+        recyclerView.setAdapter(adapter);
+        ChatService.getInstance().addListener(adapter);
     }
 
     @Override

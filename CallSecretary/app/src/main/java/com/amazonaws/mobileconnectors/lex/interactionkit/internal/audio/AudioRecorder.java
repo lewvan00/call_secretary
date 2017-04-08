@@ -21,6 +21,7 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Environment;
 import android.util.Log;
 
 import com.amazonaws.AmazonClientException;
@@ -28,6 +29,8 @@ import com.amazonaws.mobileconnectors.lex.interactionkit.internal.audio.encoder.
 import com.amazonaws.mobileconnectors.lex.interactionkit.internal.audio.encoder.L16PcmEncoder;
 import com.google.common.base.Preconditions;
 import com.google.common.net.MediaType;
+import com.singun.media.audio.AudioConfig;
+import com.singun.media.audio.AudioFileWriter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -252,7 +255,16 @@ public class AudioRecorder implements AudioSource {
      */
     public void startRecording() throws Exception {
         startAudioRecorder();
+        AudioConfig audioConfig = new AudioConfig();
+        audioConfig.audioDirPath = Environment.getExternalStorageDirectory().getPath();
+        audioConfig.audioName = "call_secretary";
+        AudioFileWriter fileWriter = new AudioFileWriter(audioConfig);
         final short[] buffer = new short[mNumSamplesPerRead];
+        audioConfig.audioDataIn = buffer;
+        audioConfig.audioDataOut = buffer;
+        audioConfig.audioDataSize = mNumSamplesPerRead;
+
+        fileWriter.createAudioFile(true);
         int numSamplesRead;
 
         final AudioSourceListener listener = getAudioSourceListener();
@@ -275,6 +287,8 @@ public class AudioRecorder implements AudioSource {
                 if (invalidOperation != numSamplesRead) {
                     setPostRecordingFields();
                     if (numSamplesRead > 0) {
+                        fileWriter.saveRecordData(numSamplesRead);
+
                         // Prepare samples for the callback.
                         final byte[] callbackBuffer = pcmEncoder.encode(buffer, numSamplesRead);
                         listener.onBufferReceived(callbackBuffer);
@@ -289,6 +303,7 @@ public class AudioRecorder implements AudioSource {
             }
             Log.v(TAG, "Finished record loop");
         } finally {
+            fileWriter.saveAudioFormat(mRecord.getSampleRate(), mRecord.getChannelCount());
             cleanUpAfterRecording();
         }
     }

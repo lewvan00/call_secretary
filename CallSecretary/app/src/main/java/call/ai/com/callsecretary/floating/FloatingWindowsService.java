@@ -23,6 +23,7 @@ import java.util.Map;
 
 
 import call.ai.com.callsecretary.R;
+import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 import call.ai.com.callsecretary.utils.CommonSharedPref;
 import call.ai.com.callsecretary.utils.PhoneUtils;
@@ -56,6 +57,8 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
                 context.getResources().getString(R.string.bot_alias));
         lexInteractionClient.setAudioPlaybackListener(this);
         lexInteractionClient.setInteractionListener(this);
+
+        initFloatingView();
     }
 
     public void startBot() {
@@ -68,6 +71,18 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
                 context.getResources().getString(R.string.bot_alias)));
         interactiveVoiceView.getViewAdapter().setAwsRegion(context.getResources().getString(R.string.aws_region));
         interactiveVoiceView.performClick();
+    }
+
+    public void startNativeBot(){
+        Context context = CallSecretaryApplication.getContext();
+        InteractiveVoiceUtils interactiveVoiceUtils=InteractiveVoiceUtils.getInstance(context);
+        interactiveVoiceUtils.setVoiceListener(this);
+        interactiveVoiceUtils.setCredentialProvider(credentialsProvider);
+        interactiveVoiceUtils.setInteractionConfig(
+                new InteractionConfig(context.getResources().getString(R.string.bot_name),
+                        context.getResources().getString(R.string.bot_alias)));
+        interactiveVoiceUtils.setAwsRegion(context.getResources().getString(R.string.aws_region));
+        interactiveVoiceUtils.start();
     }
 
     public void showFloatingWindows(String chatName) {
@@ -169,8 +184,6 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
 
     @Override
     public void promptUserToRespond(Response response, LexServiceContinuation continuation) {
-        mFloatingView.getMessageAdapter().addSecretaryMessage(response.getResult().getMessage());
-        mFloatingView.getMessageAdapter().addCallerMessage(response.getResult().getInputTranscript());
     }
 
     @Override
@@ -185,7 +198,8 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
 
     @Override
     public void onResponse(Response response) {
-
+        mFloatingView.getMessageAdapter().addCallerMessage(response.getResult().getInputTranscript());
+        mFloatingView.getMessageAdapter().addSecretaryMessage(response.getResult().getMessage());
     }
 
     @Override

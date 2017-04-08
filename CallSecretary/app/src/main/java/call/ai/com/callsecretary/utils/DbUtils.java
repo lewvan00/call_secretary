@@ -3,6 +3,7 @@ package call.ai.com.callsecretary.utils;
 import android.content.Context;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import call.ai.com.callsecretary.bean.Chat;
@@ -20,7 +21,7 @@ public class DbUtils {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public static void saveChat(Chat chat) {
