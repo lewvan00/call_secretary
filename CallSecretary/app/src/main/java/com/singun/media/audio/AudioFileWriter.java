@@ -84,24 +84,14 @@ public class AudioFileWriter {
             if (dataOutputStream == null) {
                 return;
             }
-            byte[] bytes = toBytes(length);
-            dataOutputStream.write(bytes);
+            for (int shortIndex = 0; shortIndex != length; shortIndex++) {
+                short data = mAudioConfig.audioDataOut[shortIndex];
+                dataOutputStream.write((byte) (data & 0x00FF));
+                dataOutputStream.write((byte) ((data & 0xFF00) >> 8));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private byte[] toBytes(int length) {
-        int shortIndex, byteIndex;
-        byte[] buffer = new byte[length * 2];
-        shortIndex = byteIndex = 0;
-        for (; shortIndex != length; ) {
-            buffer[byteIndex] = (byte) (mAudioConfig.audioDataOut[shortIndex] & 0x00FF);
-            buffer[byteIndex + 1] = (byte) ((mAudioConfig.audioDataOut[shortIndex] & 0xFF00) >> 8);
-            ++shortIndex;
-            byteIndex += 2;
-        }
-        return buffer;
     }
 
     public void saveAudioFormat(int sampleRate, int channelCount) {
