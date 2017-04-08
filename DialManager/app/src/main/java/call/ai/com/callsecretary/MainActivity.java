@@ -31,7 +31,7 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         final EditText editText = (EditText) findViewById(R.id.service_ip);
-        editText.setText("10.60.196.42");
+        editText.setText("10.60.205.64");
         mMainHandler = new Handler();
         Button btn = (Button) findViewById(R.id.set_ip_btn);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -46,8 +46,13 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
     }
 
     @Override
-    public void dialogReadyForFulfillment(Map<String, String> slots, String intent) {
-
+    public void dialogReadyForFulfillment(Map<String, String> slots, final String intent) {
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "intent = " + intent, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
