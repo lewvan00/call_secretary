@@ -221,7 +221,7 @@ public class InteractiveVoiceViewAdapter
                 if (sessionAttributes == null) {
                     sessionAttributes = new HashMap<String, String>();
                 }
-                startListening(sessionAttributes);
+                startListening(/*"/sdcard/record_data.pcm",*/sessionAttributes);
                 break;
             case STATE_LISTENING:
             case STATE_AUDIO_PLAYBACK:
@@ -292,6 +292,11 @@ public class InteractiveVoiceViewAdapter
     private void startListening(Map<String, String> sessionParameters) {
         state = STATE_LISTENING;
         lexInteractionClient.audioInForAudioOut(sessionParameters);
+    }
+
+    private void startListening(String filePath, Map<String, String> sessionParameters) {
+        state = STATE_LISTENING;
+        lexInteractionClient.pcmFileInForAudioOut(filePath, sessionParameters);
     }
 
     /**

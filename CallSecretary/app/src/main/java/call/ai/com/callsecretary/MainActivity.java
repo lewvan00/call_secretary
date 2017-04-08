@@ -57,7 +57,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         });
 
         //获取wifi服务
-        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         //判断wifi是否开启
         if (!wifiManager.isWifiEnabled()) {
             wifiManager.setWifiEnabled(true);
@@ -76,7 +76,6 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         ChatAdapter adapter = new ChatAdapter();
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         ChatService.getInstance().addListener(adapter);
     }
 
