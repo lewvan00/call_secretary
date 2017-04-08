@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#cc000000"
@@ -30,24 +30,35 @@
             android:textSize="17sp"
             android:text="chatText" />
 
-        <ImageView
-            android:id="@+id/fold_btn"
-            android:padding="12dp"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@drawable/close_btn"/>
     </FrameLayout>
-
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chat_list"
+        android:layout_marginTop="45dp"
+        android:layout_marginBottom="26dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
         android:padding="15dp" />
 
+    <View
+        android:alpha="0.5"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"/>
+
+    <ImageView
+        android:alpha="0.5"
+        android:layout_marginBottom="2dp"
+        android:src="@drawable/arrow_up"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="bottom|center_horizontal"/>
+
     <com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView
         android:id="@+id/interactive_voice_view"
         android:layout_width="1dp"
         android:layout_height="1dp" />
-</LinearLayout>
+</FrameLayout>
