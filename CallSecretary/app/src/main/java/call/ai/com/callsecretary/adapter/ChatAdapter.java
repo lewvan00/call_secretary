@@ -1,6 +1,7 @@
 package call.ai.com.callsecretary.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -16,13 +17,32 @@ import call.ai.com.callsecretary.chat.ChatService;
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ChatService.LoaderListener {
     List<Chat> mList = new ArrayList<>();
 
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Chat chat);
+    }
+
+    private OnItemClickListener onItemClickListener;
+
+
     public ChatAdapter() {
         mList = new ArrayList<>(ChatService.getInstance().getChatList());
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return ChatViewHolder.create();
+        final ChatViewHolder viewHolder = ChatViewHolder.create();
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null)
+                    onItemClickListener.onItemClick(viewHolder.getData());
+            }
+        });
+        return viewHolder;
     }
 
     @Override
