@@ -10,8 +10,8 @@ public class ProcessorConfig {
     public static final int NS_MODE_LEVEL_2 = 2; // |mode| = 2 is aggressive (15dB).
     public static final int NS_MODE_LEVEL_3 = 3;
 
-    private static final int AGC_DB_DEFAULT = 20;
-    private static final int AGC_DBFS_DEFAULT = 3;
+    private static final int AGC_DB_DEFAULT = 30;
+    private static final int AGC_DBFS_DEFAULT = 1;
 
     public int nsMode = NS_MODE_LEVEL_2;
     public int agcDb = AGC_DB_DEFAULT;
