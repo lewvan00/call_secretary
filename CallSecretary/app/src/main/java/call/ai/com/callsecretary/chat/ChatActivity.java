@@ -9,11 +9,13 @@ import call.ai.com.callsecretary.BaseActivity;
 import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.adapter.MessageAdapter;
 import call.ai.com.callsecretary.bean.Chat;
+import call.ai.com.callsecretary.utils.AvatarUtils;
 import call.ai.com.callsecretary.utils.ChatUtils;
 
 public class ChatActivity extends BaseActivity {
 
     public static final String EXTRA_CHAT = "extra_chat";
+    public static final String EXTRA_RES_ID = "extra_res_id";
 
     private RecyclerView recyclerView;
     private MessageAdapter adapter;
@@ -36,7 +38,7 @@ public class ChatActivity extends BaseActivity {
 
     private void initViews() {
         recyclerView = (RecyclerView) findViewById(R.id.recylerview);
-        adapter = new MessageAdapter(chat);
+        adapter = new MessageAdapter(chat, getIntent().getIntExtra(EXTRA_RES_ID, AvatarUtils.getRandomAvatarResId()));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }

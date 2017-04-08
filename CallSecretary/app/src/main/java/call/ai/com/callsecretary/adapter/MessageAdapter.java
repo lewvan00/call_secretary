@@ -15,9 +15,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int TYPE_CALLER_MESSAGE = 1;
     private static final int TYPE_SECRETARY_MESSAGE = 2;
     private Chat chat;
+    private int imageResId;
 
-    public MessageAdapter(Chat chat) {
+    public MessageAdapter(Chat chat, int resId) {
         this.chat = chat;
+        imageResId = resId;
     }
 
     @Override
@@ -32,7 +34,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_CALLER_MESSAGE) {
-            return MessageViewHolder.createCallerMessage();
+            return MessageViewHolder.createCallerMessage(imageResId);
         } else if (viewType == TYPE_SECRETARY_MESSAGE) {
             return MessageViewHolder.createSecretaryMessage();
         }
