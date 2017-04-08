@@ -28,6 +28,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                 PhoneUtils.setSpeekModle(false);   //关闭外放
                 floatingService.stopBot();
                 floatingService.hideFloatingWindows();
+                floatingService.release();
             } else if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_OFFHOOK) {
                 PhoneUtils.setSpeekModle(true);
                 floatingService.startBot();
