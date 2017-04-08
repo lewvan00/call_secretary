@@ -59,6 +59,7 @@ public abstract class AbstractVAD<T extends VADConfig> implements VoiceActivityD
         mConsecutiveSpeechFrames = 0;
         mConsecutiveNonSpeechFrames = 0;
         mVAD = setupVAD(vadConfig);
+        setWebRtcMode(mVAD, 2);
         mVADState = VADState.NOT_STARTPOINTED;
         mSamplesBuffer = ShortBuffer.wrap(new short[mSampleRate / VAD_FRAMES_PER_SEC]);
     }

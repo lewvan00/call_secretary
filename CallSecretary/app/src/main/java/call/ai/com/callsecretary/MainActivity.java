@@ -2,19 +2,30 @@ package call.ai.com.callsecretary;
 
 import android.content.Context;
 import android.content.Intent;
+<<<<<<< HEAD
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+=======
+import android.graphics.Rect;
+>>>>>>> d54067f56bf808b8ebfdf3976a4bc64a4d4aab89
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
+<<<<<<< HEAD
 import android.widget.Toast;
+=======
+import android.widget.LinearLayout;
+>>>>>>> d54067f56bf808b8ebfdf3976a4bc64a4d4aab89
 
 import call.ai.com.callsecretary.adapter.ChatAdapter;
 import call.ai.com.callsecretary.bean.Chat;
 import call.ai.com.callsecretary.chat.ChatActivity;
 import call.ai.com.callsecretary.chat.ChatService;
 import call.ai.com.callsecretary.floating.FloatingWindowsService;
+import call.ai.com.callsecretary.widget.AlertDialog;
 
 public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClickListener{
 
@@ -45,7 +56,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         findViewById(R.id.floatwindow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FloatingWindowsService floatingWindowsService = new FloatingWindowsService();
+                FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
                 floatingWindowsService.showFloatingWindows("hhhh");
                 floatingWindowsService.startBot();
 //                floatingWindowsService.startNativeBot();
@@ -72,6 +83,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         ChatAdapter adapter = new ChatAdapter();
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
         ChatService.getInstance().addListener(adapter);
     }
 
@@ -104,5 +116,28 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         super.onDestroy();
         Intent i = new Intent(this, SocketService.class);
         stopService(i);
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            checkLeave();
+        } else {
+            super.onKeyDown(keyCode, event);
+        }
+        return false;
+    }
+
+    private void checkLeave() {
+        int msgResId = R.string.warning_quit;
+        showCommonAlert(0, msgResId, R.string.leave, R.string.stay,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        hideCommonAlert();
+                        if (v.getId() == AlertDialog.BUTTON_POSITIVE) {
+                            finish();
+                        }
+                    }
+                });
     }
 }

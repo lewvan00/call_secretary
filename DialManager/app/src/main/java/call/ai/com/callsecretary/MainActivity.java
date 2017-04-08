@@ -77,7 +77,7 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
                 audioStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+
         }
     }
 

@@ -2,9 +2,7 @@ package call.ai.com.callsecretary.floating;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,13 +15,13 @@ import com.amazonaws.mobileconnectors.lex.interactionkit.continuations.LexServic
 import com.amazonaws.mobileconnectors.lex.interactionkit.listeners.AudioPlaybackListener;
 import com.amazonaws.mobileconnectors.lex.interactionkit.listeners.InteractionListener;
 import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
+import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceViewAdapter;
 import com.amazonaws.regions.Regions;
 
 import java.util.Map;
 
 
 import call.ai.com.callsecretary.R;
-import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 import call.ai.com.callsecretary.utils.CommonSharedPref;
 import call.ai.com.callsecretary.utils.PhoneUtils;
@@ -43,7 +41,22 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
 
     CognitoCredentialsProvider credentialsProvider;
 
-    public FloatingWindowsService() {
+    private static FloatingWindowsService sServiceInstance;
+
+    public static synchronized FloatingWindowsService getServiceInstance() {
+        if (sServiceInstance == null) {
+            if (sServiceInstance == null) {
+                sServiceInstance = new FloatingWindowsService();
+            }
+        }
+        return sServiceInstance;
+    }
+
+    public synchronized void release() {
+        sServiceInstance = null;
+    }
+
+    private FloatingWindowsService() {
         Context context = CallSecretaryApplication.getContext();
         mWindowManager = (WindowManager) CallSecretaryApplication.getContext().getSystemService(CallSecretaryApplication.getContext().WINDOW_SERVICE);
         initLayoutParams();
@@ -73,15 +86,12 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         interactiveVoiceView.performClick();
     }
 
-    public void startNativeBot(){
-        InteractiveVoiceUtils interactiveVoiceUtils=InteractiveVoiceUtils.getInstance();
-//        interactiveVoiceUtils.setVoiceListener(this);
-//        interactiveVoiceUtils.setCredentialProvider(credentialsProvider);
-//        interactiveVoiceUtils.setInteractionConfig(
-//                new InteractionConfig(context.getResources().getString(R.string.bot_name),
-//                        context.getResources().getString(R.string.bot_alias)));
-//        interactiveVoiceUtils.setAwsRegion(context.getResources().getString(R.string.aws_region));
-        interactiveVoiceUtils.start(this,this,this);
+    public void stopBot() {
+        Context context = CallSecretaryApplication.getContext();
+        InteractiveVoiceView interactiveVoiceView = mFloatingView.getInteractiveVoiceView();
+        InteractiveVoiceViewAdapter interactiveVoiceViewAdapter =
+                InteractiveVoiceViewAdapter.getInstance(context, interactiveVoiceView);
+        interactiveVoiceViewAdapter.cancel();
     }
 
     public void showFloatingWindows(String chatName) {
