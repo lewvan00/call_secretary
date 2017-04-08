@@ -196,8 +196,8 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
 
     @Override
     public void onResponse(Response response) {
-        mFloatingView.getMessageAdapter().addSecretaryMessage(response.getResult().getMessage());
         mFloatingView.getMessageAdapter().addCallerMessage(response.getResult().getInputTranscript());
+        mFloatingView.getMessageAdapter().addSecretaryMessage(response.getResult().getMessage());
     }
 
     @Override
