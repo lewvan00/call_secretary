@@ -17,8 +17,7 @@
         <TextView
             android:id="@+id/tv_alert_title"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="10dp"
             android:textColor="@color/color5f5f5f"
@@ -28,8 +27,7 @@
         <TextView
             android:id="@+id/tv_alert_message"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingBottom="30dp"
             android:paddingTop="20dp"
@@ -41,8 +39,7 @@
         <TextView
             android:id="@+id/tv_alert_long_message"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingBottom="30dp"
             android:paddingTop="20dp"
@@ -69,8 +66,7 @@
             android:id="@+id/Layout_btn_alert"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:visibility="gone" >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_negative"
@@ -79,15 +75,13 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_confrim"
                 android:textColor="@color/alert_btn_blue"
-                android:textSize="21dp"
-                android:visibility="gone" />
+                android:textSize="20dp"/>
 
             <View
                 android:id="@+id/v_delimit_btn"
                 android:layout_width="0.5dp"
                 android:layout_height="match_parent"
-                android:background="@color/list_div_color"
-                android:visibility="gone" />
+                android:background="@color/list_div_color"/>
 
             <Button
                 android:id="@+id/btn_positive"
@@ -96,8 +90,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/btn_confrim"
                 android:textColor="@color/alert_btn_blue"
-                android:textSize="21dp"
-                android:visibility="gone" />
+                android:textSize="20dp" />
         </LinearLayout>
     </LinearLayout>
 
