@@ -15,6 +15,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -61,17 +63,15 @@ public class SocketService extends Service {
                     while (true) {
                         try {
                             SerializablePostContentResult contentResult = (SerializablePostContentResult) objectInputStream.readObject();
-                            if (contentResult != null && contentResult.getState() == SerializablePostContentResult.STATE_RESPONSE) {
-                                //get audio stream;
-                                Log.d("liufan", "receive audio result = " + contentResult);
-                                PostContentResult postContentResult = new PostContentResult();
-                                postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
-                                postContentResult.setMessage(contentResult.getMessage());
-                                postContentResult.setInputTranscript(contentResult.getInputTranscript());
-
-                                InteractionClient client = InteractiveVoiceUtils.getInstance().getClient();
-                                client.setNeedPlayback(true);
-                                client.processSocketResponse(postContentResult);
+                            if (contentResult != null) {
+                                switch (contentResult.getState()) {
+                                    case SerializablePostContentResult.STATE_RESPONSE:
+                                        handleVoiceResponse(contentResult);
+                                        break;
+                                    case SerializablePostContentResult.STATE_CALL:
+                                        handleCall(socket);
+                                        break;
+                                }
                             }
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
@@ -93,6 +93,36 @@ public class SocketService extends Service {
                 }
             }
         }.start();
+    }
+
+    private void handleVoiceResponse(SerializablePostContentResult contentResult) {
+        //get audio stream;
+        Log.d("liufan", "receive audio result = " + contentResult);
+        PostContentResult postContentResult = new PostContentResult();
+        postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
+        postContentResult.setMessage(contentResult.getMessage());
+        postContentResult.setInputTranscript(contentResult.getInputTranscript());
+
+        InteractionClient client = InteractiveVoiceUtils.getInstance().getClient();
+        client.setNeedPlayback(true);
+        client.processSocketResponse(postContentResult);
+    }
+
+    private void handleCall(Socket socket) throws IOException {
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(SocketService.this, "call received, auto answering", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        OutputStream outputStream = socket.getOutputStream();
+
+        byte[] ackData = new byte[3];
+        ackData[0] = 'a' - 'a';
+        ackData[1] = 'c' - 'a';
+        ackData[2] = 'k' - 'a';
+        outputStream.write(ackData);
     }
 
     @Override
