@@ -21,10 +21,10 @@
 
         <!--这个布局随便放很不美观啊！-->
         <LinearLayout
-            android:layout_gravity="bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
+            android:id="@+id/ip_setting_layout"
             android:orientation="horizontal">
             <EditText
                 android:id="@+id/service_ip"

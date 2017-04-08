@@ -10,12 +10,10 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -34,7 +32,6 @@ import call.ai.com.callsecretary.floating.FloatingWindowsService;
 import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
 import call.ai.com.callsecretary.socketcall.SocketClient;
 import call.ai.com.callsecretary.socketcall.SocketService;
-import call.ai.com.callsecretary.utils.CommonSharedPref;
 import call.ai.com.callsecretary.widget.AlertDialog;
 import call.ai.com.callsecretary.widget.T9PanelView;
 import lex.SerializablePostContentResult;
@@ -53,7 +50,6 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         super.onCreate(savedInstanceState);
 
         initAppBar();
-        initSocketClient();
         initTestButton();
 
         initDialView();
@@ -127,29 +123,10 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         });
     }
 
-    private void initSocketClient() {
-        final EditText editText = (EditText) findViewById(R.id.service_ip);
-        String serviceIp = CommonSharedPref.getInstance(getApplicationContext()).getServiceIp();
-        if (TextUtils.isEmpty(serviceIp)) {
-            serviceIp = "10.60.196.42";
-        }
-        editText.setText(serviceIp);
-        mMainHandler = new Handler();
-        Button btn = (Button) findViewById(R.id.set_ip_btn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String ip = editText.getText().toString();
-                if (TextUtils.equals(ip, mCurrentIp)) {
-                    Toast.makeText(MainActivity.this, R.string.toast_connect_self, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                CommonSharedPref.getInstance(MainActivity.this).setServiceIp(editText.getText().toString());
-                mVoiceUtils =  InteractiveVoiceUtils.getInstance();
-                SocketClient.getInstance().init(MainActivity.this.getApplicationContext(), mMainHandler, mVoiceUtils);
-                mVoiceUtils.start(MainActivity.this);
-            }
-        });
+    private void dial() {
+        mVoiceUtils =  InteractiveVoiceUtils.getInstance();
+        SocketClient.getInstance().init(MainActivity.this.getApplicationContext(), mMainHandler, mVoiceUtils);
+        mVoiceUtils.start(MainActivity.this);
     }
 
     private void initTestButton() {

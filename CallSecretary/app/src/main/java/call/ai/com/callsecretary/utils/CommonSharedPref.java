@@ -55,6 +55,6 @@ public class CommonSharedPref {
     }
 
     public String getServiceIp() {
-        return mSharedPreferences.getString("service_ip", null);
+        return mSharedPreferences.getString("service_ip", "10.60.205.64");
     }
 }

@@ -14,6 +14,7 @@ import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.adapter.MessageAdapter;
 import call.ai.com.callsecretary.utils.AvatarUtils;
 import call.ai.com.callsecretary.utils.ChatUtils;
+import call.ai.com.callsecretary.widget.DiffuseView;
 
 /**
  * Created by Administrator on 2017/4/7.
@@ -36,6 +37,8 @@ public class FloatingWindow extends FrameLayout {
 
     private InteractiveVoiceView mInteractiveVoiceView;
     private UiInterface mUiInterface;
+    private DiffuseView mDiffuseView;
+    private View mChatContentLyt;
     
     public FloatingWindow(Context context) {
         this(context, null);
@@ -67,6 +70,9 @@ public class FloatingWindow extends FrameLayout {
         });
 
         mInteractiveVoiceView = (InteractiveVoiceView) findViewById(R.id.interactive_voice_view);
+        mDiffuseView = (DiffuseView) findViewById(R.id.diffuse_view);
+        mChatContentLyt = findViewById(R.id.chat_content_lyt);
+        mChatContentLyt.setVisibility(GONE);
     }
 
     public void setOnArrowTouchListener(View.OnTouchListener listener) {
@@ -83,5 +89,18 @@ public class FloatingWindow extends FrameLayout {
 
     public InteractiveVoiceView getInteractiveVoiceView() {
         return mInteractiveVoiceView;
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        setAlpha(0);
+        animate().alpha(1).setDuration(1500).start();
+        post(new Runnable() {
+            @Override
+            public void run() {
+                mDiffuseView.start();
+            }
+        });
     }
 }

@@ -29,6 +29,7 @@
         </receiver>
 
         <activity android:name=".chat.ChatActivity" />
+        <activity android:name=".FloatActivity" />
         <activity android:name=".SettingActivity" />
         <service android:name=".socketcall.SocketService"/>
         <activity android:name=".SplashActivity">

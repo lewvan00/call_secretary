@@ -21,7 +21,6 @@ import com.amazonaws.regions.Regions;
 
 import java.util.Map;
 
-
 import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.chat.ChatActivity;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
@@ -105,16 +104,18 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     private void initLayoutParams() {
         mLayoutParams = new WindowManager.LayoutParams();
 
-        mLayoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+        mLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
         mLayoutParams.format = PixelFormat.RGBA_8888;
         mLayoutParams.gravity = Gravity.TOP | Gravity.LEFT;
 
         mLayoutParams.x = 0;
         mLayoutParams.y = 0;
 
-        mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+        mLayoutParams.windowAnimations = android.R.style.Animation_Translucent;
         mLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        mLayoutParams.height = mWindowManager.getDefaultDisplay().getHeight() * 3 / 4;
+        mLayoutParams.height = mWindowManager.getDefaultDisplay().getHeight() ;
     }
 
     private void initFloatingView() {
