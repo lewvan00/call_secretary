@@ -12,7 +12,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.lex.interactionkit.InteractionClient;
-import com.amazonaws.mobileconnectors.lex.interactionkit.Response;
 import com.amazonaws.services.lexrts.model.PostContentResult;
 
 import java.io.ByteArrayInputStream;
@@ -37,6 +36,8 @@ import lex.SerializablePostContentResult;
 public class SocketService extends Service {
     Handler mMainHandler;
     ServerSocket serverSocket = null;
+    private MediaPlayer mMediaPlayer;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -83,10 +84,10 @@ public class SocketService extends Service {
                                             handleCall(socket);
                                             break;
                                         case SerializablePostContentResult.STATE_FINAL:
-                                            handleFinalStatus();
+                                            startRingTone();
                                             break;
                                         case SerializablePostContentResult.STATE_HANGUP:
-                                            handleFinalHandleUp(contentResult);
+                                            handleHandUpStatus(contentResult);
                                             break;
                                     }
                                 }
@@ -105,11 +106,7 @@ public class SocketService extends Service {
         }.start();
     }
 
-    private void handleFinalStatus() {
-        startAlarm();
-    }
-
-    private void handleFinalHandleUp(SerializablePostContentResult contentResult) {
+    private void handleHandUpStatus(SerializablePostContentResult contentResult) {
         PostContentResult postContentResult = new PostContentResult();
         postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
         postContentResult.setMessage(contentResult.getMessage());
@@ -121,7 +118,7 @@ public class SocketService extends Service {
         mMainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startAlarm();
+                startRingTone();
             }
         }, 1500);
     }
@@ -201,8 +198,8 @@ public class SocketService extends Service {
     }
 
 
-    private void startAlarm() {
-        MediaPlayer mMediaPlayer = MediaPlayer.create(this, getSystemDefultRingtoneUri());
+    private void startRingTone() {
+        mMediaPlayer = MediaPlayer.create(this, getSystemDefultRingtoneUri());
         mMediaPlayer.setLooping(false);
         try {
             mMediaPlayer.prepare();
@@ -212,6 +209,12 @@ public class SocketService extends Service {
             e.printStackTrace();
         }
         mMediaPlayer.start();
+    }
+
+    public void stopRingTone() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+        }
     }
 
     private Uri getSystemDefultRingtoneUri() {

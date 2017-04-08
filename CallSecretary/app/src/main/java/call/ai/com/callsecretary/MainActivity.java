@@ -243,6 +243,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
 
     @Override
     public void dialogReadyForFulfillment(Map<String, String> slots, String intent) {
+        Log.e("zhang", "dialogReadyForFulfillment");
         SerializablePostContentResult serializablePostContentResult = new SerializablePostContentResult();
         serializablePostContentResult.setState(SerializablePostContentResult.STATE_FINAL);
         SocketClient.getInstance().sendMsgToSocket(serializablePostContentResult);
