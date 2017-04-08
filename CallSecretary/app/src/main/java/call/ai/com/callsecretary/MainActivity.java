@@ -5,10 +5,14 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Toast;
 
 import call.ai.com.callsecretary.adapter.ChatAdapter;
@@ -20,13 +24,51 @@ import call.ai.com.callsecretary.widget.AlertDialog;
 
 public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClickListener{
 
+    RecyclerView recyclerView;
+    View dialView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         initAppBar();
         initTestButton();
+
+        initDialView();
         initChatListView();
+        initViewPager();
+    }
+
+    private void initDialView() {
+        dialView = View.inflate(this, R.layout.layout_dial, null);
+    }
+
+    private void initViewPager() {
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new PagerAdapter() {
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                if (position == 0) {
+                    container.addView(dialView);
+                    return dialView;
+                }
+                if (position == 1) {
+                    container.addView(recyclerView);
+                    return recyclerView;
+                }
+                return null;
+            }
+
+            @Override
+            public int getCount() {
+                return 2;
+            }
+
+            @Override
+            public boolean isViewFromObject(View view, Object object) {
+                return view == object;
+            }
+        });
     }
 
     private void initAppBar() {
@@ -69,7 +111,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
     }
 
     private void initChatListView() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recylerview);
+        recyclerView = (RecyclerView) View.inflate(this, R.layout.layout_recyclerview, null);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ChatAdapter adapter = new ChatAdapter();
         adapter.setOnItemClickListener(this);
