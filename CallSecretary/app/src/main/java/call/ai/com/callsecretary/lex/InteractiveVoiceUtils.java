@@ -275,8 +275,10 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         if (voiceListener != null) {
             if (response != null) {
                 voiceListener.onError(response.getTextResponse(), e);
+                Log.e(this.getClass().getSimpleName(), "  errorText " + response.getTextResponse(), e);
             } else {
                 voiceListener.onError("Error from Bot", e);
+                Log.e(this.getClass().getSimpleName(), "  errorText Error from Bot" , e);
             }
         }
     }
