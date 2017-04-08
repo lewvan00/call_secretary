@@ -2,6 +2,9 @@ package call.ai.com.callsecretary.socketcall;
 
 import android.app.Service;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -15,10 +18,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
+import call.ai.com.callsecretary.polley.PolleyUtils;
 import lex.SerializablePostContentResult;
 
 
@@ -61,18 +66,23 @@ public class SocketService extends Service {
                     while (true) {
                         try {
                             SerializablePostContentResult contentResult = (SerializablePostContentResult) objectInputStream.readObject();
-                            if (contentResult != null && contentResult.getState() == SerializablePostContentResult.STATE_RESPONSE) {
-                                //get audio stream;
-                                Log.d("liufan", "receive audio result = " + contentResult);
-                                PostContentResult postContentResult = new PostContentResult();
-                                postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
-                                postContentResult.setMessage(contentResult.getMessage());
-                                postContentResult.setInputTranscript(contentResult.getInputTranscript());
-
-                                InteractionClient client = InteractiveVoiceUtils.getInstance().getClient();
-                                client.setNeedPlayback(true);
-                                client.processSocketResponse(postContentResult);
+                            if (contentResult != null) {
+                                switch (contentResult.getState()) {
+                                    case SerializablePostContentResult.STATE_RESPONSE:
+                                        handleVoiceResponse(contentResult);
+                                        break;
+                                    case SerializablePostContentResult.STATE_CALL:
+                                        handleCall(socket);
+                                        break;
+                                    case SerializablePostContentResult.STATE_FINAL:
+                                        handleFinalStatus();
+                                        break;
+                                    case SerializablePostContentResult.STATE_HANGUP:
+                                        handleFinalHandleUp(contentResult);
+                                        break;
+                                }
                             }
+
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                             Log.d("liufan", "receive result = ClassNotFoundException ---- " + e);
@@ -93,6 +103,104 @@ public class SocketService extends Service {
                 }
             }
         }.start();
+    }
+
+    private void handleFinalStatus() {
+        startAlarm();
+    }
+
+    private void handleFinalHandleUp(SerializablePostContentResult contentResult) {
+        PostContentResult postContentResult = new PostContentResult();
+        postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
+        postContentResult.setMessage(contentResult.getMessage());
+        postContentResult.setInputTranscript(contentResult.getInputTranscript());
+
+        InteractionClient client = InteractiveVoiceUtils.getInstance().getClient();
+        client.setNeedPlayback(true);
+        client.processSocketResponse(postContentResult);
+        mMainHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startAlarm();
+            }
+        }, 1500);
+    }
+
+    private void handleVoiceResponse(SerializablePostContentResult contentResult) {
+        //get audio stream;
+        Log.d("liufan", "receive audio result = " + contentResult);
+        PostContentResult postContentResult = new PostContentResult();
+        postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
+        postContentResult.setMessage(contentResult.getMessage());
+        postContentResult.setInputTranscript(contentResult.getInputTranscript());
+
+        InteractionClient client = InteractiveVoiceUtils.getInstance().getClient();
+        client.setNeedPlayback(true);
+        client.processSocketResponse(postContentResult);
+    }
+
+    private void handleCall(final Socket socket) throws IOException {
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(SocketService.this, "call received, auto answering", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        if (isAutoAnswer()) {
+            callbackAck(socket);
+        } else {
+            PolleyUtils.getInstance().readText("Fuck you! Answer the phone! ");
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        sleep(2000);
+                    } catch (InterruptedException e) {
+                    }
+
+                    callbackAck(socket);
+                }
+            }.start();
+        }
+
+    }
+
+    private boolean isAutoAnswer() {
+        return true;
+    }
+
+    private void callbackAck(Socket socket) {
+        try {
+            OutputStream outputStream = socket.getOutputStream();
+            byte[] ackData = new byte[3];
+            ackData[0] = 'a' - 'a';
+            ackData[1] = 'c' - 'a';
+            ackData[2] = 'k' - 'a';
+            outputStream.write(ackData);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void startAlarm() {
+        MediaPlayer mMediaPlayer = MediaPlayer.create(this, getSystemDefultRingtoneUri());
+        mMediaPlayer.setLooping(false);
+        try {
+            mMediaPlayer.prepare();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mMediaPlayer.start();
+    }
+
+    private Uri getSystemDefultRingtoneUri() {
+        return RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE);
     }
 
     @Override
