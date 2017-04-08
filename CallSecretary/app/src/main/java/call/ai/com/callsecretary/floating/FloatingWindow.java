@@ -3,6 +3,7 @@ package call.ai.com.callsecretary.floating;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -97,7 +98,8 @@ public class FloatingWindow extends FrameLayout {
         mInteractiveVoiceView = (InteractiveVoiceView) findViewById(R.id.interactive_voice_view);
         mDiffuseView = (DiffuseView) findViewById(R.id.diffuse_view);
         mChatContentLyt = findViewById(R.id.chat_content_lyt);
-        mChatContentLyt.setVisibility(GONE);
+//        mChatContentLyt.setVisibility(GONE);
+        mDiffuseView.setVisibility(GONE);
     }
 
     public void setOnArrowTouchListener(View.OnTouchListener listener) {
@@ -121,15 +123,18 @@ public class FloatingWindow extends FrameLayout {
         super.onAttachedToWindow();
         setAlpha(0);
         animate().alpha(1).setDuration(1500).start();
-        post(new Runnable() {
-            @Override
-            public void run() {
-                mDiffuseView.start();
-            }
-        });
+//        post(new Runnable() {
+//            @Override
+//            public void run() {
+//                mDiffuseView.start();
+//            }
+//        });
     }
     public void addMessage(PostContentResult result){
-        if(result==null||mAdapter==null||mRecyclerView==null) return;
+        if(result==null||mAdapter==null||mRecyclerView==null||
+                TextUtils.isEmpty(result.getInputTranscript())||
+                TextUtils.isEmpty(result.getMessage())
+                ) return;
         mAdapter.addCallerMessage(result.getInputTranscript());
         mAdapter.addSecretaryMessage(result.getMessage());
         mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);

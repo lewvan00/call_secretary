@@ -48,7 +48,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mMainHandler = new Handler();
         initAppBar();
         initTestButton();
 
@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         panelView.setOnDialClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                dial();
             }
         });
     }
