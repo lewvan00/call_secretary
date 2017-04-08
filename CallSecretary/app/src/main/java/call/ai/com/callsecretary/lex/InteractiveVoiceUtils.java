@@ -66,6 +66,7 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         // for setting the user agent
         clientConfiguration = new ClientConfiguration();
         clientConfiguration.setUserAgent(INTERACTION_VOICE_VIEW_USER_AGENT);
+        createInteractionClient();
     }
 
     public static InteractiveVoiceUtils getInstance() {
@@ -122,7 +123,6 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
     private void init() {
         state = STATE_READY;
         validateAppData();
-        createInteractionClient();
         shouldInitialize = false;
     }
 
