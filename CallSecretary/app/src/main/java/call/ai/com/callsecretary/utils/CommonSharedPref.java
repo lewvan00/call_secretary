@@ -49,4 +49,12 @@ public class CommonSharedPref {
     public void setFloatingWindowsLocationY(int locationY) {
         mSharedPreferences.edit().putInt("floating_windows_location_y", locationY).apply();
     }
+
+    public void setServiceIp(String ip) {
+        mSharedPreferences.edit().putString("service_ip", ip).apply();
+    }
+
+    public String getServiceIp() {
+        return mSharedPreferences.getString("service_ip", null);
+    }
 }

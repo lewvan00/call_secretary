@@ -16,16 +16,16 @@ import lex.InteractiveVoiceUtils;
  * Created by lewvan on 2017/4/8.
  */
 
-public class SocketHelper {
-    private static SocketHelper sInstance = new SocketHelper();
+public class SocketClient {
+    private static SocketClient sInstance = new SocketClient();
     ObjectOutputStream outputStream;
     Handler mMainHandler;
 
-    public static SocketHelper getInstance() {
+    public static SocketClient getInstance() {
         return sInstance;
     }
 
-    private SocketHelper(){
+    private SocketClient(){
 
     }
 

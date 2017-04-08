@@ -5,26 +5,46 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import com.amazonaws.mobileconnectors.lex.interactionkit.InteractionClient;
+import com.amazonaws.mobileconnectors.lex.interactionkit.Response;
+import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
+import com.amazonaws.services.lexrts.model.PostContentResult;
+
+import java.util.Map;
 
 import call.ai.com.callsecretary.adapter.ChatAdapter;
 import call.ai.com.callsecretary.bean.Chat;
 import call.ai.com.callsecretary.chat.ChatActivity;
 import call.ai.com.callsecretary.chat.ChatService;
 import call.ai.com.callsecretary.floating.FloatingWindowsService;
+import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
+import call.ai.com.callsecretary.socketcall.SocketClient;
+import call.ai.com.callsecretary.socketcall.SocketService;
+import call.ai.com.callsecretary.utils.CommonSharedPref;
 import call.ai.com.callsecretary.widget.AlertDialog;
+import lex.SerializablePostContentResult;
 
-public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClickListener{
+public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClickListener,
+        InteractiveVoiceView.InteractiveVoiceListener {
+    Handler mMainHandler;
+    InteractiveVoiceUtils mVoiceUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         initAppBar();
+        initSocketClient();
         initTestButton();
         initChatListView();
     }
@@ -39,6 +59,22 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
             @Override
             public void onClick(View v) {
                 goToSetting();
+            }
+        });
+    }
+
+    private void initSocketClient() {
+        final EditText editText = (EditText) findViewById(R.id.service_ip);
+        editText.setText("10.60.196.42");
+        mMainHandler = new Handler();
+        Button btn = (Button) findViewById(R.id.set_ip_btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonSharedPref.getInstance(MainActivity.this).setServiceIp(editText.getText().toString());
+                SocketClient.getInstance().init(MainActivity.this.getApplicationContext(), mMainHandler);
+                mVoiceUtils =  InteractiveVoiceUtils.getInstance();
+                mVoiceUtils.start(MainActivity.this, null, null);
             }
         });
     }
@@ -88,7 +124,6 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
     }
 
     private String intToIp(int i) {
-
         return (i & 0xFF) + "." +
                 ((i >> 8) & 0xFF) + "." +
                 ((i >> 16) & 0xFF) + "." +
@@ -129,5 +164,60 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
                         }
                     }
                 });
+    }
+
+    @Override
+    public void dialogReadyForFulfillment(Map<String, String> slots, String intent) {
+
+    }
+
+    @Override
+    public void onResponse(Response response) {
+        Log.d("liufan", "onResponse");
+        mVoiceUtils.getClient().setAudioPlaybackState(InteractionClient.BUSY);
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mVoiceUtils.onAudioPlaybackStarted();
+            }
+        });
+        final SerializablePostContentResult result = new SerializablePostContentResult();
+        PostContentResult realResult = response.getResult();
+        result.setRealResult(realResult);
+        Log.d("liufan", "response = " + result);
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "response = " + result, Toast.LENGTH_LONG).show();
+            }
+        });
+        SocketClient.getInstance().sendMsgToSocket(result);
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mVoiceUtils.onAudioPlayBackCompleted();
+            }
+        });
+        mVoiceUtils.getClient().setAudioPlaybackState(InteractionClient.NOT_BUSY);
+    }
+
+    @Override
+    public void onError(final String responseText, final Exception e) {
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "onError = " + responseText
+                        + ", error = " + e, Toast.LENGTH_LONG).show();
+            }
+        });
+        e.printStackTrace();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mVoiceUtils != null) {
+            mVoiceUtils.finish();
+        }
     }
 }
