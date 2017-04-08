@@ -145,7 +145,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
                 CommonSharedPref.getInstance(MainActivity.this).setServiceIp(editText.getText().toString());
                 mVoiceUtils =  InteractiveVoiceUtils.getInstance();
                 SocketClient.getInstance().init(MainActivity.this.getApplicationContext(), mMainHandler, mVoiceUtils);
-                mVoiceUtils.start(MainActivity.this, null, null);
+                mVoiceUtils.start(MainActivity.this);
             }
         });
     }
