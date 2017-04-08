@@ -160,7 +160,7 @@ public class InteractiveVoiceViewAdapter
 
         if (voiceListener != null) {
             if (response != null) {
-                voiceListener.onError(response.getTextResponse(), e);
+                voiceListener.onHangUp(response);
             } else {
                 voiceListener.onError("Error from Bot", e);
             }
