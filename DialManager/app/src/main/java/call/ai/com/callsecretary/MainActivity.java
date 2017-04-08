@@ -47,12 +47,10 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
 
     @Override
     public void dialogReadyForFulfillment(Map<String, String> slots, final String intent) {
-        mMainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(MainActivity.this, "intent = " + intent, Toast.LENGTH_LONG).show();
-            }
-        });
+
+        SerializablePostContentResult serializablePostContentResult = new SerializablePostContentResult();
+        serializablePostContentResult.setState(SerializablePostContentResult.STATE_FINAL);
+        SocketClient.getInstance().sendMsgToSocket(serializablePostContentResult);
     }
 
     @Override
@@ -66,6 +64,36 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
             }
         });
         final SerializablePostContentResult result = new SerializablePostContentResult();
+        PostContentResult realResult = response.getResult();
+        result.setRealResult(realResult);
+        Log.d("liufan", "response = " + result);
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "response = " + result, Toast.LENGTH_LONG).show();
+            }
+        });
+        SocketClient.getInstance().sendMsgToSocket(result);
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mVoiceUtils.onAudioPlayBackCompleted();
+            }
+        });
+        mVoiceUtils.getClient().setAudioPlaybackState(InteractionClient.NOT_BUSY);
+    }
+
+    @Override
+    public void onHangUp(Response response) {
+        mVoiceUtils.getClient().setAudioPlaybackState(InteractionClient.BUSY);
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mVoiceUtils.onAudioPlaybackStarted();
+            }
+        });
+        final SerializablePostContentResult result = new SerializablePostContentResult();
+        result.setState(SerializablePostContentResult.STATE_HANGUP);
         PostContentResult realResult = response.getResult();
         result.setRealResult(realResult);
         Log.d("liufan", "response = " + result);

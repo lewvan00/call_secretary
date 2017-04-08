@@ -159,6 +159,11 @@ public class PhoneCallReceiver extends BroadcastReceiver implements AudioPlaybac
     }
 
     @Override
+    public void onHangUp(Response response) {
+
+    }
+
+    @Override
     public void onError(String responseText, Exception e) {
 
     }
