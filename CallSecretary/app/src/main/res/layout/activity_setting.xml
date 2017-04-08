@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zhy="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#FFC"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,52 +10,91 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <CheckBox
+        android:padding="20dp"
         android:id="@+id/auto_pickup_phone"
         android:text="@string/if_pickup_call_auto"
-        android:gravity="center"
         android:textSize="16sp"
-        android:background="#FFCDCD"
         android:layout_width="match_parent"
-        android:layout_height="60dp" />
-    <LinearLayout
-        android:layout_below="@id/auto_pickup_phone"
-        android:id="@+id/editor_lyt"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"/>
+    
+    <RelativeLayout
+        android:id="@+id/layout_mode"
         android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
         android:layout_height="60dp">
-        <EditText
-            android:id="@+id/editor"
-            android:layout_weight="1"
-            android:textSize="16sp"
-            android:background="#FFCDCDCD"
-            android:hint="@string/add_call_filter"
-            android:gravity="center"
+        <ImageView
+            android:id="@+id/image_mode"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <LinearLayout
+            android:layout_toRightOf="@id/image_mode"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="60dp" />
+            android:layout_height="60dp">
+            <TextView
+                android:textSize="16sp"
+                android:text="@string/setting_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_mode"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"/>
+
+    <FrameLayout
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
         <TextView
-            android:text="@string/add"
-            android:id="@+id/add_filter"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:layout_weight="3"
-            android:background="#FF3CB371"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/whitelist"/>
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/right_arrow"
+            android:layout_gravity="center_vertical|right"/>
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"/>
+
+    <LinearLayout
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:text="@string/setting_interception"/>
+        <com.zhy.view.flowlayout.TagFlowLayout
+            android:id="@+id/flowlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            zhy:max_select="-1" />
     </LinearLayout>
-    <Button
-        android:id="@+id/set_done"
-        android:background="#FF3CB371"
-        android:textSize="24sp"
-        android:textColor="#FFFFFF"
-        android:layout_alignParentBottom="true"
-        android:text="@string/setting_done"
-        android:layout_width="match_parent"
-        android:layout_height="60dp" />
-    <ListView
-        android:id="@+id/filter_content_listview"
-        android:layout_below="@id/editor_lyt"
-        android:layout_above="@id/set_done"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+
 </LinearLayout>

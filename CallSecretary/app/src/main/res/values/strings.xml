@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">电话秘书</string>
-    <string name="if_pickup_call_auto">是否自动接听</string>
+    <string name="if_pickup_call_auto">启动小秘书</string>
     <string name="setting_done">完成</string>
     <string name="add_call_filter">添加语音拦截情景</string>
     <string name="add">添加</string>
@@ -11,9 +11,23 @@
     <string name="identity_id_test">us-east-1:a16c3d73-380e-4a04-b1a7-1dda5077674e</string>
     <string name="aws_region">us-east-1</string>
     <string name="screen_options_main_message">Amazon Lex</string>
-    <string name="setting_title">setting</string>
+    <string name="setting_title">设置</string>
     <string name="app_sub_title">Convenience · Flexible · Safe</string>
     <string name="warning_quit">主人，是否离开小秘书？</string>
     <string name="stay">容我三思</string>
     <string name="leave">决意离开</string>
+    <string name="setting_mode">工作模式</string>
+    <string name="whitelist">白名单</string>
+    <string name="setting_interception">拦截类型</string>
+
+    <!--拦截类型-->
+    <string-array name="array_interception">
+        <item>股票</item>
+        <item>贷款</item>
+        <item>买房</item>
+        <item>装修</item>
+        <item>留学</item>
+        <item>健身</item>
+        <item>中奖</item>
+    </string-array>
 </resources>
