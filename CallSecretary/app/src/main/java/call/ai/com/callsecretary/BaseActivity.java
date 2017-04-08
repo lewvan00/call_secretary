@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import call.ai.com.callsecretary.widget.AppBar;
+import call.ai.com.callsecretary.widget.AlertDialog;
 
 /**
  * 公共activity，包含共用方法
@@ -55,4 +56,29 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected abstract int getLayoutId();
+
+    private AlertDialog mAlertDlg;
+
+    protected void showCommonAlert(int titleResId, int msgResId, int posTxtResId, int nagTxtResId,
+                                View.OnClickListener l) {
+        if (mAlertDlg == null) {
+            mAlertDlg = new AlertDialog(this);
+        }
+        if (titleResId != 0) {
+            mAlertDlg.setTitle(getText(titleResId));
+        }
+        mAlertDlg.setMessage(getText(msgResId));
+        mAlertDlg.setPositiveButton(getText(posTxtResId), l);
+        mAlertDlg.setNegativeButton(getText(nagTxtResId), l);
+        mAlertDlg.show();
+    }
+
+    protected void hideCommonAlert() {
+        if (mAlertDlg != null) {
+            if (mAlertDlg.isShowing()) {
+                mAlertDlg.dismiss();
+            }
+            mAlertDlg = null;
+        }
+    }
 }

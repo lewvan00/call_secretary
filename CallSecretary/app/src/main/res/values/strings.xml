@@ -13,4 +13,7 @@
     <string name="screen_options_main_message">Amazon Lex</string>
     <string name="setting_title">setting</string>
     <string name="app_sub_title">Convenience · Flexible · Safe</string>
+    <string name="warning_quit">主人，是否离开小秘书？</string>
+    <string name="stay">容我三思</string>
+    <string name="leave">决意离开</string>
 </resources>
