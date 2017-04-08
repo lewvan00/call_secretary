@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import call.ai.com.callsecretary.R;
+import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 
 /**
  * Created by 李东 on 2017/4/8.
@@ -50,8 +51,8 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
     protected final static int STATE_AUDIO_PLAYBACK = 3;
     protected final static int STATE_AWAITING_RESPONSE = 4;
 
-    private InteractiveVoiceUtils(Context context) {
-        this.context = context;
+    private InteractiveVoiceUtils() {
+        this.context = CallSecretaryApplication.getContext();
         this.shouldInitialize = true;
         this.voiceListener = null;
         this.state = STATE_READY;
@@ -61,8 +62,8 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         clientConfiguration.setUserAgent(INTERACTION_VOICE_VIEW_USER_AGENT);
     }
 
-    public static InteractiveVoiceUtils getInstance(Context context) {
-        return new InteractiveVoiceUtils(context);
+    public static InteractiveVoiceUtils getInstance() {
+        return new InteractiveVoiceUtils();
     }
 
 

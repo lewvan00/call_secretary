@@ -74,8 +74,7 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     }
 
     public void startNativeBot(){
-        Context context = CallSecretaryApplication.getContext();
-        InteractiveVoiceUtils interactiveVoiceUtils=InteractiveVoiceUtils.getInstance(context);
+        InteractiveVoiceUtils interactiveVoiceUtils=InteractiveVoiceUtils.getInstance();
 //        interactiveVoiceUtils.setVoiceListener(this);
 //        interactiveVoiceUtils.setCredentialProvider(credentialsProvider);
 //        interactiveVoiceUtils.setInteractionConfig(
