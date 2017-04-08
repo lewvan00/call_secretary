@@ -25,7 +25,10 @@ public class ChatMessage implements Serializable {
     @DatabaseField(foreign=true, foreignAutoRefresh=true)
     private Chat chat;
 
-    private ChatMessage(byte userType, String message, Chat chat) {
+    public ChatMessage() {
+    }
+
+    public ChatMessage(byte userType, String message, Chat chat) {
         this.userType = userType;
         this.message = message;
         this.chat = chat;
