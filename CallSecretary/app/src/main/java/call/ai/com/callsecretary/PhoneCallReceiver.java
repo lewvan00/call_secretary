@@ -22,6 +22,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
     private FloatingWindowsService mFloatingService;
 
     public PhoneCallReceiver() {
+        mFloatingService = new FloatingWindowsService();
     }
 
     @Override
@@ -29,7 +30,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
         if (intent != null && intent.getAction().equals("android.intent.action.PHONE_STATE")) {
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_RINGING) {
-                mFloatingService = new FloatingWindowsService();
+//                mFloatingService = new FloatingWindowsService();
                 mFloatingService.showFloatingWindows("liufan");
                 PhoneUtils.autoAnswer();
             } else if (telephonyManager.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
