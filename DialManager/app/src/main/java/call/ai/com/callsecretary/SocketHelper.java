@@ -39,27 +39,11 @@ public class SocketHelper {
             @Override
             public void run() {
                 Socket socket;
-                try {// 创建一个Socket对象，并指定服务端的IP及端口号
+                try {
                     String serviceIp = CommonSharedPref.getInstance(context).getServiceIp();
                     Log.d("liufan", "service ip = " + serviceIp);
                     socket = new Socket(serviceIp, 1989);
-                    // 获取Socket的OutputStream对象用于发送数据。
-//            OutputStream outputStream = socket.getOutputStream();
                     outputStream = new ObjectOutputStream(socket.getOutputStream());
-//                    String sendMsg = "hello world";
-//                    byte[] msgByte = sendMsg.getBytes();
-//                    // 把数据写入到OuputStream对象中
-//                    outputStream.write(msgByte, 0, msgByte.length);
-//                    // 发送读取的数据到服务端
-//                    outputStream.flush();
-
-                    /** 或创建一个报文，使用BufferedWriter写入,看你的需求 **/
-//          String socketData = "[2143213;21343fjks;213]";
-//          BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-//                  socket.getOutputStream()));
-//          writer.write(socketData.replace("\n", " ") + "\n");
-//          writer.flush();
-                    /************************************************/
                     Log.d("liufan", "bind success");
                     showToast("bind success");
                 } catch (UnknownHostException e) {
