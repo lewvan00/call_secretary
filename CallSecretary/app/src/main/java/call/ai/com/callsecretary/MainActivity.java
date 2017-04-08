@@ -36,6 +36,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View view) {
                 FloatingWindowsService floatingWindowsService = new FloatingWindowsService();
                 floatingWindowsService.showFloatingWindows("hhhh");
+                floatingWindowsService.startBot();
             }
         });
     }
