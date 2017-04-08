@@ -133,6 +133,7 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
                 context.getResources().getString(R.string.bot_alias));
         lexInteractionClient.setAudioPlaybackListener(audioPlaybackListener);
         lexInteractionClient.setInteractionListener(interactionListener);
+        lexInteractionClient.setNeedPlayback(false);
         setVoiceListener(voiceListener);
         setCredentialProvider(cognitoCredentialsProvider);
         setInteractionConfig(
