@@ -60,10 +60,13 @@ import com.amazonaws.services.lexrts.model.DialogState;
 import com.amazonaws.services.lexrts.model.PostContentRequest;
 import com.amazonaws.services.lexrts.model.PostContentResult;
 import com.amazonaws.util.StringUtils;
+import com.singun.media.audio.PcmReader;
 
 import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -141,6 +144,8 @@ public class InteractionClient {
      * Records user audio for streaming.
      */
     private LexAudioRecorder lexAudioRecorder;
+
+    private PcmReader pcmFileReader;
 
     /**
      * The size of the each sample in bit.
@@ -267,6 +272,14 @@ public class InteractionClient {
      */
     public void textInForAudioOut(final String text, final Map<String, String> sessionAttributes) {
         carryOnWithText(text, sessionAttributes, ResponseType.AUDIO_MPEG);
+    }
+
+    public void pcmFileInForAudioOut(final String filePath, final Map<String, String> sessionAttributes) {
+        carryOnWithPcmFile(filePath, sessionAttributes, ResponseType.AUDIO_MPEG);
+    }
+
+    public void pcmFileInForTextOut(final String filePath, final Map<String, String> sessionAttributes) {
+        carryOnWithPcmFile(filePath, sessionAttributes, ResponseType.TEXT);
     }
 
     /**
@@ -439,6 +452,74 @@ public class InteractionClient {
                         }
                     };
                     handler.post(returnCallback);
+                } finally {
+                    setBusyState(NOT_BUSY);
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * Starts recognize from pcm file.
+     */
+    private void carryOnWithPcmFile(final String filePath, final Map<String, String> sessionAttributes, final ResponseType mode) {
+        // Ensure that the client is not pre-occupied with another dlalog
+        checkBusyState();
+        // Send user's response to Amazon Lex service as an audio-stream.
+        final InteractionClient client = this;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Handler handler = new Handler(context.getMainLooper());
+                Runnable returnCallBack;
+                try {
+                    // Create a new voice interaction client.
+                    if (AudioEncoding.LPCM.equals(interactionConfig.getAudioEncoding())) {
+                        audioEncoder = new BufferedAudioEncoder(new L16PcmEncoder());
+                    } else {
+                        audioEncoder = new BufferedAudioEncoder(new OpusEncoder());
+                    }
+
+                    // Set time-out limits for mic audio.
+                    audioTimeouts = new AudioTimeouts(interactionConfig.getNoSpeechTimeoutInterval(),
+                            interactionConfig.getMaxSpeechTimeoutInterval());
+
+                    // Set VAD configuration.
+                    vadConfig = new DnnVADConfig(interactionConfig.getLrtThreshold(),
+                            interactionConfig.getStartPointingThreshold(),
+                            interactionConfig.getEndPointingThreshold());
+
+                    final int maxTotalAudioLengthInMills = audioTimeouts.getNoSpeechTimeout()
+                            + audioTimeouts.getMaxSpeechTimeout();
+                    final int pipeSize = AudioRecorder.DEFAULT_SAMPLE_RATE
+                            * (int) TimeUnit.MILLISECONDS.toSeconds(maxTotalAudioLengthInMills)
+                            * (SAMPLE_SIZE / Byte.SIZE);
+
+                    pcmFileReader = new PcmReader(pipeSize, audioEncoder);
+
+                    final InputStream audioInStream =
+                            new BufferedInputStream(pcmFileReader.getConsumerStream(),
+                                    pipeSize);
+
+                    final PostContentRequest request =
+                            CreateLexServiceRequest.generatePostContentRequest(sessionAttributes,
+                                    interactionConfig,
+                                    credentialsProvider,
+                                    mode,
+                                    audioInStream,
+                                    audioEncoder.getMediaType().toString());
+
+                    pcmFileReader.startReading(filePath);
+                    sendAudioRequest(handler, request, client, mode);
+
+                } catch (final Exception e) {
+                    returnCallBack = new Runnable() {
+                        @Override
+                        public void run() {
+                            interactionListener.onInteractionError(null, e);
+                        }
+                    };
+                    handler.post(returnCallBack);
                 } finally {
                     setBusyState(NOT_BUSY);
                 }
