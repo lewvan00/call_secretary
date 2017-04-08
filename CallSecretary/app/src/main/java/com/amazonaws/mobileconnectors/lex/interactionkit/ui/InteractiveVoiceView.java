@@ -580,7 +580,7 @@ public class InteractiveVoiceView extends View {
          * @param response The response from the Amazon Lex bot.
          */
         void onResponse(Response response);
-
+        void onHangUp(Response response);
         /**
          * Called on encountering errors during a dialog.
          *
