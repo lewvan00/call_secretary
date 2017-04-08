@@ -1,5 +1,8 @@
 package call.ai.com.callsecretary.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -9,7 +12,7 @@ import java.io.Serializable;
  * Created by Administrator on 2017/3/31.
  */
 @DatabaseTable(tableName = "tb_message")
-public class ChatMessage implements Serializable {
+public class ChatMessage implements Parcelable {
     public static final byte TYPE_CALLER = 0x01;
     public static final byte TYPE_SECRETARY = 0x02;
 
@@ -33,6 +36,24 @@ public class ChatMessage implements Serializable {
         this.message = message;
         this.chat = chat;
     }
+
+    protected ChatMessage(Parcel in) {
+        id = in.readInt();
+        message = in.readString();
+        userType = in.readByte();
+    }
+
+    public static final Creator<ChatMessage> CREATOR = new Creator<ChatMessage>() {
+        @Override
+        public ChatMessage createFromParcel(Parcel in) {
+            return new ChatMessage(in);
+        }
+
+        @Override
+        public ChatMessage[] newArray(int size) {
+            return new ChatMessage[size];
+        }
+    };
 
     public static ChatMessage createCallerMessage(String message, Chat chat) {
         return new ChatMessage(TYPE_CALLER, message, chat);
@@ -64,5 +85,17 @@ public class ChatMessage implements Serializable {
 
     public void setChat(Chat chat) {
         this.chat = chat;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(message);
+        dest.writeByte(userType);
     }
 }

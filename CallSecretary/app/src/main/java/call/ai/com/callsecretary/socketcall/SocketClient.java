@@ -1,4 +1,4 @@
-package call.ai.com.callsecretary;
+package call.ai.com.callsecretary.socketcall;
 
 import android.content.Context;
 import android.os.Handler;
@@ -10,27 +10,31 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import lex.InteractiveVoiceUtils;
+import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
+import call.ai.com.callsecretary.utils.CallSecretaryApplication;
+import call.ai.com.callsecretary.utils.CommonSharedPref;
 
 /**
  * Created by lewvan on 2017/4/8.
  */
 
-public class SocketHelper {
-    private static SocketHelper sInstance = new SocketHelper();
+public class SocketClient {
+    private static SocketClient sInstance = new SocketClient();
     ObjectOutputStream outputStream;
     Handler mMainHandler;
+    InteractiveVoiceUtils mVoiceUtil;
 
-    public static SocketHelper getInstance() {
+    public static SocketClient getInstance() {
         return sInstance;
     }
 
-    private SocketHelper(){
+    private SocketClient(){
 
     }
 
-    public void init(Context context, Handler mainHandler) {
+    public void init(Context context, Handler mainHandler, InteractiveVoiceUtils voiceUtil) {
         mMainHandler = mainHandler;
+        mVoiceUtil = voiceUtil;
         connectServerWithTCPSocket(context, mainHandler);
     }
 
@@ -39,27 +43,11 @@ public class SocketHelper {
             @Override
             public void run() {
                 Socket socket;
-                try {// 创建一个Socket对象，并指定服务端的IP及端口号
+                try {
                     String serviceIp = CommonSharedPref.getInstance(context).getServiceIp();
                     Log.d("liufan", "service ip = " + serviceIp);
                     socket = new Socket(serviceIp, 1989);
-                    // 获取Socket的OutputStream对象用于发送数据。
-//            OutputStream outputStream = socket.getOutputStream();
                     outputStream = new ObjectOutputStream(socket.getOutputStream());
-//                    String sendMsg = "hello world";
-//                    byte[] msgByte = sendMsg.getBytes();
-//                    // 把数据写入到OuputStream对象中
-//                    outputStream.write(msgByte, 0, msgByte.length);
-//                    // 发送读取的数据到服务端
-//                    outputStream.flush();
-
-                    /** 或创建一个报文，使用BufferedWriter写入,看你的需求 **/
-//          String socketData = "[2143213;21343fjks;213]";
-//          BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-//                  socket.getOutputStream()));
-//          writer.write(socketData.replace("\n", " ") + "\n");
-//          writer.flush();
-                    /************************************************/
                     Log.d("liufan", "bind success");
                     showToast("bind success");
                 } catch (UnknownHostException e) {
@@ -95,7 +83,7 @@ public class SocketHelper {
                     } catch (IOException e) {
                         e.printStackTrace();
                         showToast("send IOException : " + e);
-                        InteractiveVoiceUtils.getInstance().onAudioPlaybackError(e);
+                        mVoiceUtil.onAudioPlaybackError(e);
                     }
                 }
             }.start();

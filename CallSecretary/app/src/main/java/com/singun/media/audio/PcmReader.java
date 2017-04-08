@@ -1,6 +1,5 @@
 package com.singun.media.audio;
 
-import com.amazon.blueshift.bluefront.android.vad.AbstractVAD;
 import com.amazonaws.mobileconnectors.lex.interactionkit.internal.audio.AudioRecorder;
 import com.amazonaws.mobileconnectors.lex.interactionkit.internal.audio.encoder.AudioEncoder;
 import com.amazonaws.mobileconnectors.lex.interactionkit.internal.vad.DnnVAD;
@@ -144,8 +143,8 @@ public class PcmReader {
 
         private void openAudioFile(File audioFile) {
             if (mInputStream != null) {
-                return;
-//                closeAudioFile();
+//                return;
+                closeAudioFile();
             }
             try {
                 FileInputStream inputStream = new FileInputStream(audioFile);
@@ -156,7 +155,7 @@ public class PcmReader {
         }
 
         private void readComplete() {
-//            closeAudioFile();
+            closeAudioFile();
             mIsReading = false;
 
             if (mListener != null) {

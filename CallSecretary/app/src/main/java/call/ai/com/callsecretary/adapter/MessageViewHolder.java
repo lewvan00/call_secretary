@@ -3,6 +3,7 @@ package call.ai.com.callsecretary.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import call.ai.com.callsecretary.R;
@@ -21,8 +22,8 @@ public abstract class MessageViewHolder extends RecyclerView.ViewHolder {
         return CallSecretaryApplication.getContext();
     }
 
-    public static MessageViewHolder createCallerMessage() {
-        return new CallerMessage(View.inflate(getContext(), R.layout.layout_caller_message, null));
+    public static MessageViewHolder createCallerMessage(int resId) {
+        return new CallerMessage(View.inflate(getContext(), R.layout.layout_caller_message, null), resId);
     }
 
     public static MessageViewHolder createSecretaryMessage() {
@@ -33,8 +34,9 @@ public abstract class MessageViewHolder extends RecyclerView.ViewHolder {
 
     private static class CallerMessage extends MessageViewHolder {
 
-        CallerMessage(View itemView) {
+        CallerMessage(View itemView, int resId) {
             super(itemView);
+            ((ImageView)itemView.findViewById(R.id.image)).setImageResource(resId);
         }
 
         @Override

@@ -73,6 +73,9 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         return new InteractiveVoiceUtils();
     }
 
+    public InteractionClient getClient() {
+        return lexInteractionClient;
+    }
 
     public void setCredentialProvider(AWSCredentialsProvider credentialsProvider) {
         this.credentialsProvider = credentialsProvider;
@@ -126,10 +129,6 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         shouldInitialize = false;
     }
 
-    public void processAudioResponse(PostContentResult result) {
-        lexInteractionClient.processSocketResponse(result);
-    }
-
     protected void validateAppData() {
         if (interactionConfig == null) {
             throw new InvalidParameterException(
@@ -168,6 +167,7 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         lexInteractionClient.setAudioPlaybackListener(this);
         lexInteractionClient.setInteractionListener(this);
         lexInteractionClient.setMicrophoneListener(this);
+        lexInteractionClient.setNeedPlayback(false);
     }
 
     protected void reset() {
@@ -280,10 +280,8 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         if (voiceListener != null) {
             if (response != null) {
                 voiceListener.onError(response.getTextResponse(), e);
-                Log.e(this.getClass().getSimpleName(), "  errorText " + response.getTextResponse(), e);
             } else {
                 voiceListener.onError("Error from Bot", e);
-                Log.e(this.getClass().getSimpleName(), "  errorText Error from Bot" , e);
             }
         }
     }

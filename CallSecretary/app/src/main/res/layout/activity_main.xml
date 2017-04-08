@@ -10,15 +10,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/service_ip"
+            android:hint="service ip"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="60dp" />
+        <Button
+            android:id="@+id/set_ip_btn"
+            android:text="Set"
+            android:layout_weight="2"
+            android:layout_width="match_parent"
+            android:layout_height="60dp" />
+    </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recylerview"
-            android:paddingTop="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

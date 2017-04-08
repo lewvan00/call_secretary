@@ -1,5 +1,8 @@
 package call.ai.com.callsecretary.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -13,7 +16,7 @@ import java.util.List;
  */
 
 @DatabaseTable(tableName = "tb_chat")
-public class Chat {
+public class Chat implements Parcelable{
     @DatabaseField(generatedId = true)
     private int id;
 
@@ -38,6 +41,25 @@ public class Chat {
         this.time = time;
         this.messages = messages;
     }
+
+    protected Chat(Parcel in) {
+        id = in.readInt();
+        phone = in.readString();
+        time = in.readLong();
+        messageList = in.createTypedArrayList(ChatMessage.CREATOR);
+    }
+
+    public static final Creator<Chat> CREATOR = new Creator<Chat>() {
+        @Override
+        public Chat createFromParcel(Parcel in) {
+            return new Chat(in);
+        }
+
+        @Override
+        public Chat[] newArray(int size) {
+            return new Chat[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -81,5 +103,18 @@ public class Chat {
 
     public void addSecretaryMessage(String text) {
         addMessage(ChatMessage.createSecretaryMessage(text, this));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(phone);
+        dest.writeLong(time);
+        dest.writeTypedList(messageList);
     }
 }

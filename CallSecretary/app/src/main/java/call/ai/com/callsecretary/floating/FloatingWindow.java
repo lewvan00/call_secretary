@@ -12,6 +12,7 @@ import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView
 
 import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.adapter.MessageAdapter;
+import call.ai.com.callsecretary.utils.AvatarUtils;
 import call.ai.com.callsecretary.utils.ChatUtils;
 
 /**
@@ -54,7 +55,7 @@ public class FloatingWindow extends FrameLayout {
         mTitleTv = (TextView) findViewById(R.id.title);
         mRecyclerView = (RecyclerView) findViewById(R.id.chat_list);
 
-        mAdapter = new MessageAdapter(ChatUtils.createTestChat());
+        mAdapter = new MessageAdapter(ChatUtils.createTestChat(), AvatarUtils.getRandomAvatarResId());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
 

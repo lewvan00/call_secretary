@@ -38,7 +38,7 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
             @Override
             public void onClick(View v) {
                 CommonSharedPref.getInstance(MainActivity.this).setServiceIp(editText.getText().toString());
-                SocketHelper.getInstance().init(MainActivity.this.getApplicationContext(), mMainHandler);
+                SocketClient.getInstance().init(MainActivity.this.getApplicationContext(), mMainHandler);
                 mVoiceUtils =  InteractiveVoiceUtils.getInstance();
                 mVoiceUtils.start(MainActivity.this, null, null);
             }
@@ -75,7 +75,7 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
                 Toast.makeText(MainActivity.this, "response = " + result, Toast.LENGTH_LONG).show();
             }
         });
-        SocketHelper.getInstance().sendMsgToSocket(result);
+        SocketClient.getInstance().sendMsgToSocket(result);
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {

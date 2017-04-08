@@ -85,6 +85,8 @@ public class InteractionClient {
     private final String TAG = "Lex";
     private static final String INTERACTION_CLIENT_USER_AGENT = "INTERACTION_CLIENT";
 
+    private boolean mPlayback = true;
+
     /**
      * Application context.
      */
@@ -155,8 +157,8 @@ public class InteractionClient {
     /**
      * Client states.
      */
-    private final boolean BUSY = true;
-    private final boolean NOT_BUSY = false;
+    public static final boolean BUSY = true;
+    public static final boolean NOT_BUSY = false;
 
     /**
      * Indicates if the client is busy with a request.
@@ -236,6 +238,10 @@ public class InteractionClient {
 
         amazonlex = new AmazonLexRuntimeClient(credentialsProvider, clientConfiguration);
         amazonlex.setRegion(Region.getRegion(region));
+    }
+
+    public void setNeedPlayback(boolean playback) {
+        mPlayback = false;
     }
 
     /**
@@ -400,7 +406,11 @@ public class InteractionClient {
             public void run() {
                 try {
                     final PostContentResult result = amazonlex.postContent(request);
-                    processResponseAudioPlayback(handler, result, client, mode, ResponseType.AUDIO_MPEG);
+                    if (mPlayback) {
+                        processResponseAudioPlayback(handler, result, client, mode, ResponseType.AUDIO_MPEG);
+                    } else {
+                        processResponse(handler, result, client, mode, ResponseType.AUDIO_MPEG);
+                    }
                 } catch (final Exception e) {
                     final Runnable returnCallBack = new Runnable() {
                         @Override
@@ -737,7 +747,13 @@ public class InteractionClient {
         } finally {
             setBusyState(NOT_BUSY);
         }
-        handler.post(response);
+
+        if (mPlayback) {
+            handler.post(response);
+        } else {
+            // // FIXME: 2017/4/8 0008 方便线程同步
+            response.run();
+        }
     }
 
     /**
@@ -951,7 +967,7 @@ public class InteractionClient {
      * Sets the current state of the client.
      * @param playbackState the audio playback state.
      */
-    private void setAudioPlaybackState(boolean playbackState) {
+    public void setAudioPlaybackState(boolean playbackState) {
         this.audioPlayBackInProgress = playbackState;
     }
 

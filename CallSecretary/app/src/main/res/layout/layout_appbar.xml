@@ -5,6 +5,27 @@
     android:background="#FF28A4FF">
 
     <LinearLayout
+        android:id="@+id/layout_icon"
+        android:layout_alignParentLeft="true"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/topbar_btn"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="20dp"
+        android:layout_marginBottom="0.5dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/icon_btn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="left|center_vertical"
+            android:background="@drawable/theme_icon"
+            android:textColor="@color/white"
+            android:clickable="false" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/layout_left"
         android:layout_alignParentLeft="true"
         android:layout_width="60dp"

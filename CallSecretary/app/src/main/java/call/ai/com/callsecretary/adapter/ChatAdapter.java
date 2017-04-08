@@ -9,6 +9,7 @@ import java.util.List;
 
 import call.ai.com.callsecretary.bean.Chat;
 import call.ai.com.callsecretary.chat.ChatService;
+import call.ai.com.callsecretary.utils.AvatarUtils;
 
 /**
  * Created by Administrator on 2017/4/8.
@@ -22,7 +23,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
 
     public interface OnItemClickListener {
-        void onItemClick(Chat chat);
+        void onItemClick(Chat chat, int imageResId);
     }
 
     private OnItemClickListener onItemClickListener;
@@ -39,7 +40,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null)
-                    onItemClickListener.onItemClick(viewHolder.getData());
+                    onItemClickListener.onItemClick(viewHolder.getData(), viewHolder.getImageResId());
             }
         });
         return viewHolder;
@@ -49,6 +50,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ChatViewHolder) {
             ((ChatViewHolder) holder).setData(mList.get(position));
+            ((ChatViewHolder) holder).setImageResId(AvatarUtils.getRandomAvatarResId());
         }
     }
 

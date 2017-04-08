@@ -14,6 +14,7 @@ import call.ai.com.callsecretary.R;
  */
 
 public class AppBar extends FrameLayout{
+    private View iconView;
     private View leftView;
     private TextView title;
     private ViewGroup menuLayout;
@@ -33,6 +34,7 @@ public class AppBar extends FrameLayout{
     }
 
     private void initViews() {
+        iconView = findViewById(R.id.layout_icon);
         leftView = findViewById(R.id.layout_left);
         title = (TextView)findViewById(R.id.title);
         menuLayout = (ViewGroup) findViewById(R.id.menu_layout);
@@ -45,8 +47,10 @@ public class AppBar extends FrameLayout{
     public void enableBackButton(boolean isable) {
         if (isable) {
             leftView.setVisibility(VISIBLE);
+            iconView.setVisibility(GONE);
         } else {
             leftView.setVisibility(GONE);
+            iconView.setVisibility(VISIBLE);
         }
     }
 

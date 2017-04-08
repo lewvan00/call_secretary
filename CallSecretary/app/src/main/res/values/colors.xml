@@ -18,4 +18,22 @@
     <color name="theme_text_color_black">#333333</color>
     <color name="theme_text_color_grey">#aaaaaa</color>
     <color name="theme_text_color_white">#ffffff</color>
+
+    <color name="dial_num_text_color_n">#FF4B6699</color>
+    <color name="dial_num_text_color_p">@color/white</color>
+
+    <color name="dial_letter_text_color_n">#FFA6B0C6</color>
+    <color name="dial_letter_text_color_p">@color/white</color>
+
+    <drawable name="dial_call_pressed">#FF2287D3</drawable>
+    <drawable name="dial_call_normal">#FF4EA9F5</drawable>
+
+    <color name="dial_circle_bg_pressed">#FF5373A1</color>
+    <drawable name="dial_btn_bg_pressed">#FF4EA9F5</drawable>
+    <drawable name="dial_btn_bg_normal">#FFF9F9F9</drawable>
+
+    <color name="t9_panel_line">#ced6dc</color>
+    <color name="t9_panel_bg">#f9f9f9</color>
+
+    <color name="color_c1c1c1">#c1c1c1</color>
 </resources>
