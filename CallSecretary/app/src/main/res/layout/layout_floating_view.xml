@@ -44,10 +44,9 @@
     <View
         android:alpha="0.5"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="25dp"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider"/>
+        android:layout_height="25dp"
+        android:background="@drawable/bg_arrow_up"/>
 
     <ImageView
         android:alpha="0.5"
