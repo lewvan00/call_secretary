@@ -12,8 +12,9 @@ import java.io.Serializable;
 
 public class SerializablePostContentResult implements Serializable {
     public static final int STATE_RESPONSE = 1;
-    public static final int STATE_FINAL = 2;
-    public static final int STATE_HANGUP = 3;
+    public static final int STATE_CALL = 2;
+    public static final int STATE_FINAL = 3;
+    public static final int STATE_HANGUP = 4;
 
     private String contentType;
 
