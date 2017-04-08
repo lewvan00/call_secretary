@@ -134,6 +134,7 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
             @Override
             public boolean onLongClick(View v) {
                 Intent intent = new Intent(mFloatingView.getContext(), ChatActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mFloatingView.getContext().startActivity(intent);
                 hideFloatingWindows();
                 return true;
