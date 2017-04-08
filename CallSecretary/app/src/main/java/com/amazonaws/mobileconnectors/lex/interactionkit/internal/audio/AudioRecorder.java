@@ -124,7 +124,7 @@ public class AudioRecorder implements AudioSource {
         this(context, mediaType,
                 AudioRecord.getMinBufferSize(sampleRate, channels, format),
                 recorderPositionNotificationPeriod,
-                new AudioRecord(MediaRecorder.AudioSource.VOICE_COMMUNICATION,
+                new AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION,
                         sampleRate,
                         channels,
                         format,
@@ -337,7 +337,7 @@ public class AudioRecorder implements AudioSource {
      */
     protected void setUpAudioRecord() {
         final AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-        am.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL,
+        am.requestAudioFocus(null, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
     }
 
