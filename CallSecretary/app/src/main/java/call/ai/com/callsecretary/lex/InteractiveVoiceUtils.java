@@ -19,7 +19,6 @@ import com.amazonaws.mobileconnectors.lex.interactionkit.listeners.MicrophoneLis
 import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.lexrts.model.DialogState;
-import com.amazonaws.services.lexrts.model.PostContentResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -279,7 +278,7 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
 
         if (voiceListener != null) {
             if (response != null) {
-                voiceListener.onError(response.getTextResponse(), e);
+                voiceListener.onHangUp(response);
             } else {
                 voiceListener.onError("Error from Bot", e);
             }

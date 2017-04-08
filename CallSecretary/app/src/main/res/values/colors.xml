@@ -12,6 +12,7 @@
     <color name="list_div_color">#dfe4e5</color>
     <color name="transparent">#00000000</color>
     <color name="divider">#cacaca</color>
+    <color name="appbar_color">#FF28A4FF</color>
 
     <color name="theme_bg_color_blue">#3399f0</color>
     <color name="theme_text_color_blue">#0b8cef</color>

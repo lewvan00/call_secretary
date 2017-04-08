@@ -11,6 +11,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import call.ai.com.callsecretary.R;
+import call.ai.com.callsecretary.floating.FloatingWindowsService;
 import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 import call.ai.com.callsecretary.utils.CommonSharedPref;
@@ -99,10 +101,7 @@ public class SocketClient {
                                 bytes[1] == 'c' - 'a' &&
                                 bytes[2] == 'k' - 'a') {
 
-                            showToast("remote listen");
-                            Log.d("liufan", "remote listen!");
-
-                            return;
+                            onPhoneReceived();
                         }
                     }
                 }
@@ -112,6 +111,21 @@ public class SocketClient {
                 showToast("call IOException : " + e);
             }
         }
+    }
+
+    private void onPhoneReceived() {
+        showToast("remote listen");
+        Log.d("liufan", "remote listen!");
+
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Context context = CallSecretaryApplication.getContext();
+                FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
+                floatingWindowsService.showFloatingWindows(context.getString(R.string.float_title_call));
+
+            }
+        });
     }
 
     public void sendMsgToSocket (final Object object) {

@@ -10,24 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <EditText
-            android:id="@+id/service_ip"
-            android:hint="service ip"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="60dp" />
-        <Button
-            android:id="@+id/set_ip_btn"
-            android:text="Set"
-            android:layout_weight="2"
-            android:layout_width="match_parent"
-            android:layout_height="60dp" />
-    </LinearLayout>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -37,13 +19,29 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <Button
-            android:layout_gravity="bottom|right"
-            android:id="@+id/floatwindow"
-            android:layout_width="wrap_content"
+        <!--这个布局随便放很不美观啊！-->
+        <LinearLayout
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="floatwindow"/>
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/service_ip"
+                android:hint="service ip"
+                android:layout_width="180dp"
+                android:layout_height="50dp" />
+            <Button
+                android:id="@+id/set_ip_btn"
+                android:text="Set"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/floatwindow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="float"/>
+        </LinearLayout>
     </FrameLayout>
 
 </LinearLayout>

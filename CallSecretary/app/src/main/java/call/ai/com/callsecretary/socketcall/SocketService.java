@@ -22,6 +22,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import call.ai.com.callsecretary.R;
+import call.ai.com.callsecretary.floating.FloatingWindowsService;
 import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
 import call.ai.com.callsecretary.polley.PolleyUtils;
 import lex.SerializablePostContentResult;
@@ -54,51 +56,48 @@ public class SocketService extends Service {
             public void run() {
                 try {
                     serverSocket = new ServerSocket(1989);
-                    mMainHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(SocketService.this, "socket listening", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    Socket socket = serverSocket.accept();
-                    InputStream inputStream = socket.getInputStream();
-                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                    while (true) {
-                        try {
-                            SerializablePostContentResult contentResult = (SerializablePostContentResult) objectInputStream.readObject();
-                            if (contentResult != null) {
-                                switch (contentResult.getState()) {
-                                    case SerializablePostContentResult.STATE_RESPONSE:
-                                        handleVoiceResponse(contentResult);
-                                        break;
-                                    case SerializablePostContentResult.STATE_CALL:
-                                        handleCall(socket);
-                                        break;
-                                    case SerializablePostContentResult.STATE_FINAL:
-                                        handleFinalStatus();
-                                        break;
-                                    case SerializablePostContentResult.STATE_HANGUP:
-                                        handleFinalHandleUp(contentResult);
-                                        break;
-                                }
-                            }
-
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                            Log.d("liufan", "receive result = ClassNotFoundException ---- " + e);
-                        }
-                    }
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.d("liufan", "socket service exception : " + e);
-                } finally {
-                    Log.d("liufan", "finally");
+                }
+                mMainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(SocketService.this, "socket listening", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                while (true) {
                     try {
-                        if (serverSocket != null) {
-                            serverSocket.close();
+                        Socket socket = serverSocket.accept();
+                        InputStream inputStream = socket.getInputStream();
+                        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                        while (true) {
+                            try {
+                                SerializablePostContentResult contentResult = (SerializablePostContentResult) objectInputStream.readObject();
+                                if (contentResult != null) {
+                                    switch (contentResult.getState()) {
+                                        case SerializablePostContentResult.STATE_RESPONSE:
+                                            handleVoiceResponse(contentResult);
+                                            break;
+                                        case SerializablePostContentResult.STATE_CALL:
+                                            handleCall(socket);
+                                            break;
+                                        case SerializablePostContentResult.STATE_FINAL:
+                                            handleFinalStatus();
+                                            break;
+                                        case SerializablePostContentResult.STATE_HANGUP:
+                                            handleFinalHandleUp(contentResult);
+                                            break;
+                                    }
+                                }
+
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                                Log.d("liufan", "receive result = ClassNotFoundException ---- " + e);
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Log.d("liufan", "socket service exception : " + e);
                     }
                 }
             }
@@ -150,6 +149,14 @@ public class SocketService extends Service {
 
         if (isAutoAnswer()) {
             callbackAck(socket);
+
+            mMainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
+                    floatingWindowsService.showFloatingWindows(getString(R.string.float_title_answer));
+                }
+            });
         } else {
             PolleyUtils.getInstance().readText("Fuck you! Answer the phone! ");
             new Thread() {
@@ -168,7 +175,7 @@ public class SocketService extends Service {
     }
 
     private boolean isAutoAnswer() {
-        return false;
+        return true;
     }
 
     private void callbackAck(Socket socket) {
