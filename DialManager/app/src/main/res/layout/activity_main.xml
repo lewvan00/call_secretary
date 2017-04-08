@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_chat"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <EditText
+        android:id="@+id/service_ip"
+        android:hint="service ip"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="60dp" />
+    <Button
+        android:id="@+id/set_ip_btn"
+        android:text="Set"
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="60dp" />
+</LinearLayout>

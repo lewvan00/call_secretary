@@ -1,4 +1,4 @@
-package call.ai.com.callsecretary.lex;
+package lex;
 
 import android.content.Context;
 import android.util.Log;
@@ -19,13 +19,12 @@ import com.amazonaws.mobileconnectors.lex.interactionkit.listeners.MicrophoneLis
 import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.lexrts.model.DialogState;
-import com.amazonaws.services.lexrts.model.PostContentResult;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import call.ai.com.callsecretary.CallSecretaryApplication;
 import call.ai.com.callsecretary.R;
-import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 
 /**
  * Created by 李东 on 2017/4/8.
@@ -136,10 +135,6 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         validateAppData();
         createInteractionClient();
         shouldInitialize = false;
-    }
-
-    public void processAudioResponse(PostContentResult result) {
-        lexInteractionClient.processSocketResponse(result);
     }
 
     protected void validateAppData() {

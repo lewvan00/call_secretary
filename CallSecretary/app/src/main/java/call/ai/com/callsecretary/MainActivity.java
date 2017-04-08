@@ -98,4 +98,11 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         Intent intent = new Intent(MainActivity.this, ChatActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Intent i = new Intent(this, SocketService.class);
+        stopService(i);
+    }
 }
