@@ -3,6 +3,26 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/edit"
+            android:padding="7dp"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:background="@color/appbar_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/record_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+
     <call.ai.com.callsecretary.widget.T9PanelView
         android:id="@+id/panelview"
         android:layout_gravity="bottom"
