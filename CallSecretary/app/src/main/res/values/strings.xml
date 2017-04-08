@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">电话秘书</string>
     <string name="if_pickup_call_auto">启动小秘书</string>
+    <string name="toast_connect_self">你是逗比吗？打电话给寄几(⊙﹏⊙)b</string>
     <string name="setting_done">完成</string>
     <string name="add_call_filter">添加语音拦截情景</string>
     <string name="add">添加</string>

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,6 +37,7 @@ import lex.SerializablePostContentResult;
 
 public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClickListener,
         InteractiveVoiceView.InteractiveVoiceListener {
+    String mCurrentIp;
     Handler mMainHandler;
     InteractiveVoiceUtils mVoiceUtils;
 
@@ -71,6 +73,11 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String ip = editText.getText().toString();
+                if (TextUtils.equals(ip, mCurrentIp)) {
+                    Toast.makeText(MainActivity.this, R.string.toast_connect_self, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 CommonSharedPref.getInstance(MainActivity.this).setServiceIp(editText.getText().toString());
                 SocketClient.getInstance().init(MainActivity.this.getApplicationContext(), mMainHandler);
                 mVoiceUtils =  InteractiveVoiceUtils.getInstance();
@@ -98,8 +105,8 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         }
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         int ipAddress = wifiInfo.getIpAddress();
-        String ip = intToIp(ipAddress);
-        Toast.makeText(this, "ip : " + ip, Toast.LENGTH_LONG).show();
+        mCurrentIp = intToIp(ipAddress);
+        Toast.makeText(this, "ip : " + mCurrentIp, Toast.LENGTH_LONG).show();
         Intent i = new Intent(this, SocketService.class);
         startService(i);
     }
