@@ -2,8 +2,6 @@ package call.ai.com.callsecretary.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.text.Editable;
@@ -11,7 +9,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -28,38 +25,15 @@ import call.ai.com.callsecretary.R;
 public final class T9PanelView extends LinearLayout implements TextWatcher, OnClickListener, View.OnLongClickListener {
 
     private Context mContext;
-    // 输入父布局
-    private View mInputLayout;
-    // 输入的电话号码
-    private EditText mPhoneNumEt;
-    // 国家名称（包含国旗），如 China
-    private TextView mCountryNameTv;
-    // 国家电话区号，如 +86
-    private TextView mCountryCodeTv;
     // 删除键
     private ImageButton mDeleteBtn;
     // 清除键
     private TextView mClearBtn;
 
-    private OnAfterTextChangedListener mOnAfterTextChangedListener;
-    private OnPhoneInputChangedListener mInputChangedListener;
-    private OnPhoneInputLongClickListener mOnPhoneInputLongClickListener;
-    private OnPhoneInputTouchListener mOnPhoneInputTouchListener;
+    private EditText mPhoneNumEt;
 
     private ToneGenerator mToneGenerator;
     private boolean isEnableKeypadTone;
-    private boolean mIsPasteEnable;
-
-    private OnT9PanelViewCallback mOnT9PanelViewCallback = null;
-
-    public interface OnT9PanelViewCallback {
-
-        public void onCountrySelectCange(String countryCode, String countryName, String countryIso);
-    }
-
-    public void setOnT9PanelViewCallback(OnT9PanelViewCallback onT9PanelViewCallback) {
-        mOnT9PanelViewCallback = onT9PanelViewCallback;
-    }
 
     public T9PanelView(Context context) {
         super(context);
@@ -119,72 +93,17 @@ public final class T9PanelView extends LinearLayout implements TextWatcher, OnCl
         initToneGenerator();
     }
 
-    public void setPasteEnabled(boolean enabled) {
-        mIsPasteEnable = enabled;
+    private String getCurrentInput() {
+        return mPhoneNumEt.getText().toString();
     }
 
-    private void setupEditText() {
-        //隐藏系统软键盘，避免T9键盘被遮挡
-        mPhoneNumEt.setOnTouchListener(new OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (mOnPhoneInputTouchListener != null) {
-                    mOnPhoneInputTouchListener.onPhoneInputTouch(v);
-                }
-                return true;
-            }
-        });
-        mPhoneNumEt.setOnLongClickListener(new OnLongClickListener() {
-
-            @Override
-            public boolean onLongClick(View v) {
-                if (mOnPhoneInputLongClickListener != null) {
-                    mOnPhoneInputLongClickListener.onPhoneInputLongClick(getCurrentInput());
-                }
-                return true;
-            }
-        });
-        setupInputEt();
-    }
-
-    public void replaceViews(TextView countryCodeTv, EditText phoneNumEt, TextView countryNameTv, View inputLayout) {
-        if (countryCodeTv != null) {
-            this.mCountryCodeTv = countryCodeTv;
-        }
+    public void replaceViews(EditText phoneNumEt) {
         if (phoneNumEt != null) {
             this.mPhoneNumEt = phoneNumEt;
-            setupEditText();
-        }
-        if (countryNameTv != null) {
-            this.mCountryNameTv = countryNameTv;
-        }
-        if (inputLayout != null) {
-            this.mInputLayout = inputLayout;
-        }
-    }
-
-    public void updateInput(String countryCode, String phoneNum) {
-        if (phoneNum != null && (!phoneNum.isEmpty())) {
-            appendStr(phoneNum);
-        }
-        if (countryCode != null && (!countryCode.isEmpty())) {
-            mIsSpecialStartInput = false;
-            mCountryCodeTv.setText(countryCode);
-        }
-    }
-
-    public void resetInput(String countryCode, String phoneNum) {
-        if (countryCode != null && (!countryCode.isEmpty())) {
-            mIsSpecialStartInput = false;
-            mCountryCodeTv.setText(countryCode);
-        }
-        if (phoneNum != null && (!phoneNum.isEmpty())) {
-            appendStr(phoneNum);
         }
     }
 
     private void initToneGenerator() {
-        //TODO(jianhua) a lot of "Init Fail" happens here
-        // re-implement it according to http://stackoverflow.com/questions/13439051/tonegenerator-crash-android
         try {
             mToneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, (int) (ToneGenerator.MAX_VOLUME * 0.8));
         } catch (Exception ex) {
@@ -211,23 +130,6 @@ public final class T9PanelView extends LinearLayout implements TextWatcher, OnCl
         }
 
         mPhoneNumEt.addTextChangedListener(this);
-//		setEditViewFoused();
-    }
-
-    public void setOnAfterTextChangedListener(OnAfterTextChangedListener l) {
-        mOnAfterTextChangedListener = l;
-    }
-
-    public void setOnPhoneInputChangedListener(OnPhoneInputChangedListener l) {
-        mInputChangedListener = l;
-    }
-
-    public void setOnPhoneInputLongClickListener(OnPhoneInputLongClickListener listener) {
-        mOnPhoneInputLongClickListener = listener;
-    }
-
-    public void setOnPhoneInputTouchListener(OnPhoneInputTouchListener listener) {
-        mOnPhoneInputTouchListener = listener;
     }
 
 
@@ -239,12 +141,6 @@ public final class T9PanelView extends LinearLayout implements TextWatcher, OnCl
 
             mPhoneNumEt.setCursorVisible(false);
             mPhoneNumEt.setText("");
-            if (mInputChangedListener != null) {
-                mInputChangedListener.onPhoneInputChanged("", null);
-            }
-            if (mOnAfterTextChangedListener != null) {
-                mOnAfterTextChangedListener.onAfterTextChanged("");
-            }
         }
     }
 
@@ -253,36 +149,6 @@ public final class T9PanelView extends LinearLayout implements TextWatcher, OnCl
             return true;
         }
         return mPhoneNumEt.getText().toString().isEmpty();
-    }
-
-    public boolean isKeepShowKeypad() {
-        return !isInputEmpty();
-    }
-
-    private boolean mIsSpecialStartInput = false;
-
-    public String getCurrentInput() {
-        if (mPhoneNumEt != null) {
-            if (deFormat(mPhoneNumEt.getText().toString()).isEmpty()) {
-                return "";
-            }
-            if (mIsSpecialStartInput) {
-                return deFormat(mPhoneNumEt.getText().toString());
-            }
-            return mCountryCodeTv.getText() + deFormat(mPhoneNumEt.getText().toString());
-        }
-        return "";
-    }
-
-    private String deFormat(String s) {
-        return s;
-    }
-
-    public String getPhoneNumInput() {
-        if (mPhoneNumEt != null) {
-            return deFormat(mPhoneNumEt.getText().toString());
-        }
-        return "";
     }
 
     public void setInputString(String inputString) {
@@ -294,37 +160,22 @@ public final class T9PanelView extends LinearLayout implements TextWatcher, OnCl
         }
     }
 
-
     public void appendChat(String str) {
         if (mPhoneNumEt == null) {
             return;
         }
-        appendStr(str);
-    }
-
-    private void appendStr(String str) {
-
-    }
-
-
-    public void setEditViewFoused() {
-        if (mPhoneNumEt != null) {
-            mPhoneNumEt.requestFocus();
-        }
+        mPhoneNumEt.setText(str + mPhoneNumEt.getText().toString());
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (mOnAfterTextChangedListener != null) {
-            mOnAfterTextChangedListener.onAfterTextChanged(getCurrentInput());
-            if (TextUtils.isEmpty(getCurrentInput())) {
-                // 输入为空, 清除键 和 删除键 置灰
-                mClearBtn.setTextColor(mContext.getResources().getColor(R.color.color_c1c1c1));
-                mDeleteBtn.setImageResource(R.drawable.ic_dial_delete_gray);
-            } else {
-                mClearBtn.setTextColor(mContext.getResources().getColor(R.color.text_color_sector_new));
-                mDeleteBtn.setImageResource(R.drawable.dial_delete);
-            }
+        if (TextUtils.isEmpty(getCurrentInput())) {
+            // 输入为空, 清除键 和 删除键 置灰
+            mClearBtn.setTextColor(mContext.getResources().getColor(R.color.color_c1c1c1));
+            mDeleteBtn.setImageResource(R.drawable.ic_dial_delete_gray);
+        } else {
+            mClearBtn.setTextColor(mContext.getResources().getColor(R.color.text_color_sector_new));
+            mDeleteBtn.setImageResource(R.drawable.dial_delete);
         }
     }
 
@@ -334,25 +185,6 @@ public final class T9PanelView extends LinearLayout implements TextWatcher, OnCl
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        boolean hasInput = !TextUtils.isEmpty(s.toString());
-
-        if (mInputChangedListener != null) {
-            if (hasInput) {
-                mInputChangedListener.onPhoneInputChanged(getCurrentInput(), null);
-            } else {
-                mInputChangedListener.onPhoneInputChanged(null, null);
-            }
-        }
-    }
-
-
-    public void countryCodeUpdate() {
-        if (mInputChangedListener != null) {
-            mInputChangedListener.onPhoneInputChanged(getCurrentInput(), null);
-        }
-        if (mOnAfterTextChangedListener != null) {
-            mOnAfterTextChangedListener.onAfterTextChanged(getCurrentInput());
-        }
     }
 
     @Override
@@ -411,32 +243,5 @@ public final class T9PanelView extends LinearLayout implements TextWatcher, OnCl
     public boolean isEnableKeypadTone() {
         return isEnableKeypadTone;
     }
-
-    public static interface OnAfterTextChangedListener {
-
-        void onAfterTextChanged(String input);
-    }
-
-    public static interface OnPhoneInputChangedListener {
-
-        void onPhoneInputChanged(String input, String filterCountryCode);
-    }
-
-    public static interface OnCreateContactListener {
-
-        void onCreateContact(String number);
-    }
-
-    public static interface OnPhoneInputLongClickListener {
-
-        void onPhoneInputLongClick(String phone);
-    }
-
-    public static interface OnPhoneInputTouchListener {
-
-        void onPhoneInputTouch(View v);
-
-    }
-
 
 }
