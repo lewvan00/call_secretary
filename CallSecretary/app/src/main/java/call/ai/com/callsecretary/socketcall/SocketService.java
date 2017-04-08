@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.lex.interactionkit.InteractionClient;
+import com.amazonaws.mobileconnectors.lex.interactionkit.Response;
 import com.amazonaws.services.lexrts.model.PostContentResult;
 
 import java.io.ByteArrayInputStream;
@@ -131,7 +132,7 @@ public class SocketService extends Service {
     private void handleVoiceResponse(SerializablePostContentResult contentResult) {
         //get audio stream;
         Log.d("liufan", "receive audio result = " + contentResult);
-        PostContentResult postContentResult = new PostContentResult();
+        final PostContentResult postContentResult = new PostContentResult();
         postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
         postContentResult.setMessage(contentResult.getMessage());
         postContentResult.setInputTranscript(contentResult.getInputTranscript());
@@ -139,6 +140,13 @@ public class SocketService extends Service {
         InteractionClient client = InteractiveVoiceUtils.getInstance().getClient();
         client.setNeedPlayback(true);
         client.processSocketResponse(postContentResult);
+
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                FloatingWindowsService.getServiceInstance().onResult(postContentResult);
+            }
+        });
     }
 
     private void handleCall(final Socket socket) throws IOException {

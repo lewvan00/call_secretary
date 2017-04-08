@@ -18,6 +18,7 @@ import com.amazonaws.mobileconnectors.lex.interactionkit.listeners.InteractionLi
 import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
 import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceViewAdapter;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.lexrts.model.PostContentResult;
 
 import java.util.Map;
 
@@ -210,12 +211,16 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
 
     @Override
     public void onResponse(Response response) {
-        mFloatingView.getMessageAdapter().addCallerMessage(response.getResult().getInputTranscript());
-        mFloatingView.getMessageAdapter().addSecretaryMessage(response.getResult().getMessage());
+        onResult(response.getResult());
     }
 
     @Override
     public void onError(String responseText, Exception e) {
 
+    }
+
+    public void onResult(PostContentResult result) {
+        mFloatingView.getMessageAdapter().addCallerMessage(result.getInputTranscript());
+        mFloatingView.getMessageAdapter().addSecretaryMessage(result.getMessage());
     }
 }
