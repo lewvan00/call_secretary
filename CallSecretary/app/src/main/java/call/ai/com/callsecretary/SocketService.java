@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.amazonaws.services.lexrts.model.PostContentResult;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -64,12 +65,11 @@ public class SocketService extends Service {
                         ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                         try {
                             SerializablePostContentResult contentResult = (SerializablePostContentResult) objectInputStream.readObject();
-                            Log.d("liufan", "receive result = " + contentResult);
                             if (contentResult != null && contentResult.getState() == SerializablePostContentResult.STATE_RESPONSE) {
                                 //get audio stream;
                                 Log.d("liufan", "receive audio result = " + contentResult);
                                 PostContentResult postContentResult = new PostContentResult();
-                                postContentResult.setAudioStream(inputStream);
+                                postContentResult.setAudioStream(new ByteArrayInputStream(contentResult.getAudioBytes()));
                                 postContentResult.setMessage(contentResult.getMessage());
                                 postContentResult.setInputTranscript(contentResult.getInputTranscript());
                                 InteractiveVoiceUtils.getInstance().processAudioResponse(postContentResult);

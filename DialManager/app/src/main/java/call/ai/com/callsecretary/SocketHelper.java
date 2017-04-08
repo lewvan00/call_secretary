@@ -88,9 +88,10 @@ public class SocketHelper {
                     try {
                         outputStream.writeObject(object);
                         outputStream.flush();
+                        showToast("send bytes success");
                     } catch (IOException e) {
                         e.printStackTrace();
-                        showToast("send IOException");
+                        showToast("send IOException : " + e);
                     }
                 }
             }.start();
@@ -108,7 +109,7 @@ public class SocketHelper {
                         showToast("send bytes success");
                     } catch (IOException e) {
                         e.printStackTrace();
-                        showToast("send IOException");
+                        showToast("send IOException : " + e);
                     }
                 }
             }.start();

@@ -13,8 +13,6 @@ import com.amazonaws.mobileconnectors.lex.interactionkit.Response;
 import com.amazonaws.mobileconnectors.lex.interactionkit.ui.InteractiveVoiceView;
 import com.amazonaws.services.lexrts.model.PostContentResult;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 
 import lex.InteractiveVoiceUtils;
@@ -63,23 +61,6 @@ public class MainActivity extends Activity implements  InteractiveVoiceView.Inte
             }
         });
         SocketHelper.getInstance().sendMsgToSocket(result);
-        InputStream audioStream = realResult.getAudioStream();
-        final byte buffer[] = new byte[16384];
-        int length;
-        try {
-            while ((length = audioStream.read(buffer)) != -1) {
-                SocketHelper.getInstance().sendMsgToSocket(buffer);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                audioStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-
-            }
-        }
     }
 
     @Override
