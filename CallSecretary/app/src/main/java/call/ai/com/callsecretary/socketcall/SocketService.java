@@ -21,6 +21,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import call.ai.com.callsecretary.lex.InteractiveVoiceUtils;
+import call.ai.com.callsecretary.polley.PolleyUtils;
 import lex.SerializablePostContentResult;
 
 
@@ -108,7 +109,7 @@ public class SocketService extends Service {
         client.processSocketResponse(postContentResult);
     }
 
-    private void handleCall(Socket socket) throws IOException {
+    private void handleCall(final Socket socket) throws IOException {
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -116,13 +117,42 @@ public class SocketService extends Service {
             }
         });
 
-        OutputStream outputStream = socket.getOutputStream();
 
-        byte[] ackData = new byte[3];
-        ackData[0] = 'a' - 'a';
-        ackData[1] = 'c' - 'a';
-        ackData[2] = 'k' - 'a';
-        outputStream.write(ackData);
+        if (isAutoAnswer()) {
+            callbackAck(socket);
+        } else {
+            PolleyUtils.getInstance().readText("Fuck you! Answer the phone! ");
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        sleep(2000);
+                    } catch (InterruptedException e) {
+                    }
+
+                    callbackAck(socket);
+                }
+            }.start();
+        }
+
+    }
+
+    private boolean isAutoAnswer() {
+        return false;
+    }
+
+    private void callbackAck(Socket socket) {
+        try {
+            OutputStream outputStream = socket.getOutputStream();
+            byte[] ackData = new byte[3];
+            ackData[0] = 'a' - 'a';
+            ackData[1] = 'c' - 'a';
+            ackData[2] = 'k' - 'a';
+            outputStream.write(ackData);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
