@@ -138,7 +138,7 @@ public class SocketService extends Service {
     }
 
     private boolean isAutoAnswer() {
-        return false;
+        return true;
     }
 
     private void callbackAck(Socket socket) {
