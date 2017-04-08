@@ -109,8 +109,12 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
         mFloatingView.ringConnect();
     }
 
-    public void setClientSocket(boolean isServer) {
+    public void setIsServer(boolean isServer) {
         this.isServer = isServer;
+    }
+
+    public boolean getIsServer() {
+        return isServer;
     }
 
     private void initLayoutParams() {
