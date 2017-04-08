@@ -24,6 +24,7 @@ import lex.SerializablePostContentResult;
 
 public class SocketClient {
     private static SocketClient sInstance = new SocketClient();
+    Socket socket;
     ObjectOutputStream outputStream;
     InputStream inputStream;
     Handler mMainHandler;
@@ -47,7 +48,6 @@ public class SocketClient {
         new Thread(){
             @Override
             public void run() {
-                Socket socket;
                 try {
                     String serviceIp = CommonSharedPref.getInstance(context).getServiceIp();
                     Log.d("liufan", "service ip = " + serviceIp);
@@ -106,6 +106,8 @@ public class SocketClient {
                                 bytes[1] == 'f' - 'a' &&
                                 bytes[2] == 'f' - 'a') {
                             onPhoneROff();
+                            closeSocket();
+                            break;
                         }
                     }
                 }
@@ -143,6 +145,13 @@ public class SocketClient {
                 floatingWindowsService.hideFloatingWindows();
             }
         });
+    }
+
+    private void closeSocket() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+        }
     }
 
     public void ringoffFromSocket() {
