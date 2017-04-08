@@ -1,10 +1,12 @@
 package call.ai.com.callsecretary.lex;
 
+import android.content.ContentProvider;
 import android.content.Context;
 import android.util.Log;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.amazonaws.mobileconnectors.lex.interactionkit.InteractionClient;
 import com.amazonaws.mobileconnectors.lex.interactionkit.Response;
 import com.amazonaws.mobileconnectors.lex.interactionkit.config.InteractionConfig;
@@ -23,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import call.ai.com.callsecretary.R;
+import call.ai.com.callsecretary.utils.CallSecretaryApplication;
 
 /**
  * Created by 李东 on 2017/4/8.
@@ -50,8 +53,8 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
     protected final static int STATE_AUDIO_PLAYBACK = 3;
     protected final static int STATE_AWAITING_RESPONSE = 4;
 
-    private InteractiveVoiceUtils(Context context) {
-        this.context = context;
+    private InteractiveVoiceUtils() {
+        this.context = CallSecretaryApplication.getContext();
         this.shouldInitialize = true;
         this.voiceListener = null;
         this.state = STATE_READY;
@@ -61,8 +64,8 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         clientConfiguration.setUserAgent(INTERACTION_VOICE_VIEW_USER_AGENT);
     }
 
-    public static InteractiveVoiceUtils getInstance(Context context) {
-        return new InteractiveVoiceUtils(context);
+    public static InteractiveVoiceUtils getInstance() {
+        return new InteractiveVoiceUtils();
     }
 
 
@@ -88,9 +91,9 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         this.awsRegion = Regions.fromName(awsRegion) ;
     }
 
-    public void start(InteractiveVoiceView.InteractiveVoiceListener listener) {
+    public void start(InteractiveVoiceView.InteractiveVoiceListener voiceListener,AudioPlaybackListener audioPlaybackListener,InteractionListener interactionListener) {
         if (shouldInitialize) {
-            init(listener);
+            init(voiceListener, audioPlaybackListener, interactionListener);
         }
 
         if (sessionAttributes == null) {
@@ -111,9 +114,19 @@ public class InteractiveVoiceUtils implements InteractionListener, AudioPlayback
         lexInteractionClient.audioInForAudioOut(sessionParameters);
     }
 
-    private void init(InteractiveVoiceView.InteractiveVoiceListener voiceListener) {
+    private void init(InteractiveVoiceView.InteractiveVoiceListener voiceListener,AudioPlaybackListener audioPlaybackListener,InteractionListener interactionListener) {
+        CognitoCredentialsProvider cognitoCredentialsProvider= new CognitoCredentialsProvider(
+                context.getResources().getString(R.string.identity_id_test),
+                Regions.fromName(context.getResources().getString(R.string.aws_region)));
+        InteractionClient lexInteractionClient = new InteractionClient(context,
+                cognitoCredentialsProvider,
+                Regions.US_EAST_1,
+                context.getResources().getString(R.string.bot_name),
+                context.getResources().getString(R.string.bot_alias));
+        lexInteractionClient.setAudioPlaybackListener(audioPlaybackListener);
+        lexInteractionClient.setInteractionListener(interactionListener);
         setVoiceListener(voiceListener);
-        setCredentialProvider(credentialsProvider);
+        setCredentialProvider(cognitoCredentialsProvider);
         setInteractionConfig(
                 new InteractionConfig(context.getResources().getString(R.string.bot_name),
                         context.getResources().getString(R.string.bot_alias)));
