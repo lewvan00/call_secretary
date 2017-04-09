@@ -1,5 +1,6 @@
 package call.ai.com.callsecretary;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -30,22 +31,6 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(bundle);
         initAppbar();
         initViews();
-        initFlowLayout();
-    }
-
-    private void initFlowLayout() {
-        TagFlowLayout flowLayout = (TagFlowLayout) findViewById(R.id.flowlayout);
-        String[] list = getResources().getStringArray(R.array.array_interception);
-        TagAdapter adapter = new TagAdapter<String>(list) {
-            @Override
-            public View getView(FlowLayout parent, int position, String value) {
-                TextView tv = (TextView) View.inflate(SettingActivity.this, R.layout.layout_tag, null);
-                tv.setText(value);
-                return tv;
-            }
-        };
-        flowLayout.setAdapter(adapter);
-        adapter.setSelectedList(1, 3, 4, 5);
     }
 
     private void initViews() {
@@ -56,13 +41,37 @@ public class SettingActivity extends BaseActivity {
                 CommonSharedPref.getInstance(SettingActivity.this).setAutoPickupPhone(isChecked);
             }
         });
+
+        findViewById(R.id.layout_mode).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingActivity.this, SettingModeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.layout_whilelist).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingActivity.this, SettingWhiteActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.layout_interception).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingActivity.this, SettingInterceptionActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void initAppbar() {
         enableBackButton(true);
         setBackClickFinish();
         setBarTitle(R.string.setting_title);
-
     }
 
     @Override

@@ -208,38 +208,18 @@ public class SocketService extends Service {
             }
         });
 
+        PolleyUtils.getInstance().readText("Hello!");
+        callbackAck(socket);
 
-        if (isAutoAnswer()) {
-            callbackAck(socket);
-
-            clientSocket = socket;
-            mMainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
-                    floatingWindowsService.setIsServer(true);
-                    floatingWindowsService.showFloatingWindows(getString(R.string.float_title_answer));
-                }
-            });
-        } else {
-            PolleyUtils.getInstance().readText("Fuck you! Answer the phone! ");
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        sleep(2000);
-                    } catch (InterruptedException e) {
-                    }
-
-                    callbackAck(socket);
-                }
-            }.start();
-        }
-
-    }
-
-    private boolean isAutoAnswer() {
-        return true;
+        clientSocket = socket;
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
+                floatingWindowsService.setClientSocket(true);
+                floatingWindowsService.showFloatingWindows(getString(R.string.float_title_answer));
+            }
+        });
     }
 
     private void callbackAck(Socket socket) {
