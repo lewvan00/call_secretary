@@ -10,6 +10,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -246,6 +247,10 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
 
     @Override
     public void onResponse(final Response response) {
+        PostContentResult contentResult = response.getResult();
+        if (TextUtils.isEmpty(contentResult.getInputTranscript())) {
+            return;
+        }
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
