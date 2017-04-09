@@ -2,6 +2,11 @@ package call.ai.com.callsecretary.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.ArraySet;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Created by lewvan on 2017/3/27.
@@ -68,5 +73,13 @@ public class CommonSharedPref {
 
     public void setWorkMode(int i) {
         mSharedPreferences.edit().putInt("work_mode", i).apply();
+    }
+
+    public Set<String> getWhiteList() {
+        return mSharedPreferences.getStringSet("white_list", new HashSet<String>());
+    }
+
+    public void setWhiteList(HashSet<String> strings) {
+        mSharedPreferences.edit().putStringSet("white_list", strings).apply();
     }
 }
