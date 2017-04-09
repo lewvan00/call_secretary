@@ -134,12 +134,15 @@ public class FloatingWindow extends FrameLayout {
         if (!isServer) {
             mDiffuseView.start();
             mChatContentLyt.setVisibility(GONE);
+        } else {
+            mDiffuseView.scrollTo(0, -getHeight()/3);
         }
         setAlpha(0);
         animate().alpha(1).setDuration(1500).start();
     }
 
     public void ringConnect() {
+        mDiffuseView.setTranslationY(0);
         mDiffuseView.animate().translationYBy(getHeight()/3).setDuration(500).start();
         mDiffuseView.stop();
         mChatContentLyt.setVisibility(VISIBLE);
