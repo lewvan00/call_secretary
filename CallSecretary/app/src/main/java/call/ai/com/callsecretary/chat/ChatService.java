@@ -51,9 +51,8 @@ public class ChatService {
             public void run() {
                 List<Chat> chats = DbUtils.getAllChat();
                 if (chats.isEmpty()) {
-                    Log.e("hhhh", "empty!!!!!!!");
                     chats = ChatUtils.createTestChatList();
-                    DbUtils.saveChats(chats);
+//                    DbUtils.saveChats(chats);
                 }
                 mList.clear();
                 mList.addAll(chats);

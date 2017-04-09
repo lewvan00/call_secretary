@@ -171,7 +171,7 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
     public void hideFloatingWindows() {
         if (mFloatingView != null && mWindowManager != null && hasFloatingShowing) {
             Chat chat = mFloatingView.getChat();
-            DbUtils.saveChat(chat);
+//            DbUtils.saveChat(chat);
             ChatService.getInstance().addChatHeader(chat);
             mWindowManager.removeView(mFloatingView);
             hasFloatingShowing = false;
