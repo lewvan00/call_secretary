@@ -21,10 +21,13 @@ import com.amazonaws.services.lexrts.model.PostContentResult;
 import java.util.Map;
 
 import call.ai.com.callsecretary.R;
+import call.ai.com.callsecretary.bean.Chat;
 import call.ai.com.callsecretary.chat.ChatActivity;
+import call.ai.com.callsecretary.chat.ChatService;
 import call.ai.com.callsecretary.socketcall.SocketClient;
 import call.ai.com.callsecretary.socketcall.SocketService;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
+import call.ai.com.callsecretary.utils.DbUtils;
 import call.ai.com.callsecretary.utils.PhoneUtils;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -167,6 +170,9 @@ public class FloatingWindowsService implements AudioPlaybackListener, Interactio
 
     public void hideFloatingWindows() {
         if (mFloatingView != null && mWindowManager != null && hasFloatingShowing) {
+            Chat chat = mFloatingView.getChat();
+            DbUtils.saveChat(chat);
+            ChatService.getInstance().addChatHeader(chat);
             mWindowManager.removeView(mFloatingView);
             hasFloatingShowing = false;
         }

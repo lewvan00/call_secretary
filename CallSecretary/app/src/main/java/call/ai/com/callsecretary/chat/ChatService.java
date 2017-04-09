@@ -17,7 +17,7 @@ import call.ai.com.callsecretary.utils.DbUtils;
  */
 public class ChatService {
     public interface LoaderListener {
-        void onLoadDone(List<Chat> list);
+        void onListChange(List<Chat> list);
     }
 
     private List<LoaderListener> listeners = new ArrayList<>();
@@ -31,6 +31,18 @@ public class ChatService {
         if (!listeners.contains(loaderListener)) {
             listeners.add(loaderListener);
         }
+    }
+
+    public void addChatHeader(Chat chat) {
+        mList.add(0, chat);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                for (LoaderListener loaderListener: listeners) {
+                    loaderListener.onListChange(mList);
+                }
+            }
+        });
     }
 
     public void loadChats() {
@@ -51,7 +63,7 @@ public class ChatService {
                     @Override
                     public void run() {
                         for (LoaderListener loaderListener: listeners) {
-                            loaderListener.onLoadDone(results);
+                            loaderListener.onListChange(results);
                         }
                     }
                 });
