@@ -1,8 +1,10 @@
 package call.ai.com.callsecretary.floating;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,6 +18,8 @@ import call.ai.com.callsecretary.adapter.MessageAdapter;
 import call.ai.com.callsecretary.bean.Chat;
 import call.ai.com.callsecretary.utils.AvatarUtils;
 import call.ai.com.callsecretary.widget.DiffuseView;
+
+import static call.ai.com.callsecretary.floating.FloatingWindowsService.getServiceInstance;
 
 /**
  * Created by Administrator on 2017/4/7.
@@ -97,7 +101,14 @@ public class FloatingWindow extends FrameLayout {
         mInteractiveVoiceView = (InteractiveVoiceView) findViewById(R.id.interactive_voice_view);
         mDiffuseView = (DiffuseView) findViewById(R.id.diffuse_view);
         mChatContentLyt = findViewById(R.id.chat_content_lyt);
-        mChatContentLyt.setVisibility(GONE);
+//        mDiffuseView.setVisibility(GONE);
+        mDiffuseView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getServiceInstance().callRingoff();
+                getServiceInstance().hideFloatingWindows();
+            }
+        });
     }
 
     public void setOnArrowTouchListener(View.OnTouchListener listener) {
@@ -119,17 +130,37 @@ public class FloatingWindow extends FrameLayout {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
+        boolean isServer = FloatingWindowsService.getServiceInstance().getIsServer();
+        if (!isServer) {
+            mDiffuseView.start();
+            mChatContentLyt.setVisibility(GONE);
+        }
         setAlpha(0);
         animate().alpha(1).setDuration(1500).start();
-        post(new Runnable() {
+    }
+
+    public void ringConnect() {
+        mDiffuseView.animate().translationYBy(getHeight()/3).setDuration(500).start();
+        mDiffuseView.stop();
+        mChatContentLyt.setVisibility(VISIBLE);
+        mChatContentLyt.scrollTo(0, mChatContentLyt.getHeight());
+        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+        animator.setDuration(500);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void run() {
-                mDiffuseView.start();
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                mChatContentLyt.scrollTo(0, (int) (mChatContentLyt.getHeight()*(1-value)));
             }
         });
+        animator.start();
     }
+
     public void addMessage(PostContentResult result){
-        if(result==null||mAdapter==null||mRecyclerView==null) return;
+        if(result==null||mAdapter==null||mRecyclerView==null||
+                TextUtils.isEmpty(result.getInputTranscript())||
+                TextUtils.isEmpty(result.getMessage())
+                ) return;
         mAdapter.addCallerMessage(result.getInputTranscript());
         mAdapter.addSecretaryMessage(result.getMessage());
         mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);

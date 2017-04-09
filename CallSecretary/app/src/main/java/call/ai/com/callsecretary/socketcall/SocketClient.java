@@ -84,7 +84,12 @@ public class SocketClient {
 
                 outputStream.writeObject(result);
                 outputStream.flush();
-
+                mMainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        FloatingWindowsService.getServiceInstance().ringConnect();
+                    }
+                });
                 showToast("call success");
                 Log.d("liufan", "call success!");
 
@@ -115,6 +120,12 @@ public class SocketClient {
             } catch (IOException e) {
                 e.printStackTrace();
                 showToast("call IOException : " + e);
+                mMainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        FloatingWindowsService.getServiceInstance().hideFloatingWindows();
+                    }
+                });
             }
         }
     }
@@ -128,7 +139,7 @@ public class SocketClient {
             public void run() {
                 Context context = CallSecretaryApplication.getContext();
                 FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
-                floatingWindowsService.setClientSocket(false);
+                floatingWindowsService.setIsServer(false);
                 floatingWindowsService.showFloatingWindows(context.getString(R.string.float_title_call));
             }
         });
