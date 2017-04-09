@@ -17,17 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="15dp">
-
-        <TextView
-            android:textSize="16sp"
-            android:textColor="@color/theme_text_color_black"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/setting_interception" />
+        android:paddingTop="25dp">
 
         <com.zhy.view.flowlayout.TagFlowLayout
-            android:layout_marginTop="15dp"
             android:id="@+id/flowlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

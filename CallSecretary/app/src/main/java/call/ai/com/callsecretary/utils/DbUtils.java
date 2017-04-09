@@ -35,4 +35,12 @@ public class DbUtils {
     private static Context getContext() {
         return CallSecretaryApplication.getContext();
     }
+
+    public static void saveChats(List<Chat> chats) {
+        try {
+            DbHelper.getInstance(getContext()).getChatDao().create(chats);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

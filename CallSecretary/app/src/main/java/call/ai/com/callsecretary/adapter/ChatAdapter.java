@@ -60,7 +60,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
 
     @Override
-    public void onLoadDone(List<Chat> list) {
+    public void onListChange(List<Chat> list) {
         mList.clear();
         mList.addAll(list);
         notifyDataSetChanged();

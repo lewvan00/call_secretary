@@ -237,9 +237,11 @@ public final class T9PanelView extends LinearLayout implements TextWatcher, OnCl
 
     private void deleteAChar() {
         if (mPhoneNumEt != null) {
-            String text = mPhoneNumEt.getText().toString().substring(0, mPhoneNumEt.getText().toString().length() - 1);
-            mPhoneNumEt.setText(text);
-            mPhoneNumEt.setSelection(text.length());
+            if (mPhoneNumEt.getText().toString().length() > 0) {
+                String text = mPhoneNumEt.getText().toString().substring(0, mPhoneNumEt.getText().toString().length() - 1);
+                mPhoneNumEt.setText(text);
+                mPhoneNumEt.setSelection(text.length());
+            }
         }
     }
 

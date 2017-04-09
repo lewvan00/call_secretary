@@ -18,12 +18,47 @@
         android:orientation="vertical"
         android:paddingTop="15dp">
 
-        <TextView
-            android:textSize="16sp"
-            android:textColor="@color/theme_text_color_black"
+        <LinearLayout
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/setting_interception" />
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/edit"
+                    android:textSize="16sp"
+                    android:background="@null"
+                    android:textColor="@color/theme_text_color_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:hint="@string/add_while_num" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/add"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="@string/add"/>
+        </LinearLayout>
+
+        <ListView
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
