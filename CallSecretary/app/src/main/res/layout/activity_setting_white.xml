@@ -33,10 +33,11 @@
                 <EditText
                     android:id="@+id/edit"
                     android:textSize="16sp"
+                    android:background="@null"
                     android:textColor="@color/theme_text_color_black"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:hint="@string/setting_interception" />
+                    android:hint="@string/add_while_num" />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

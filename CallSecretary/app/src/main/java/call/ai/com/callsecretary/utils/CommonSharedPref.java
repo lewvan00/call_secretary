@@ -15,6 +15,10 @@ public class CommonSharedPref {
         mSharedPreferences = context.getSharedPreferences("ai_call", Context.MODE_PRIVATE);
     }
 
+    public static CommonSharedPref getInstance() {
+        return getInstance(CallSecretaryApplication.getContext());
+    }
+
     public static CommonSharedPref getInstance(Context context) {
         if (sInstance == null) {
             synchronized (CommonSharedPref.class) {
@@ -31,7 +35,7 @@ public class CommonSharedPref {
     }
 
     public boolean getAutoPickupPhone() {
-        return mSharedPreferences.getBoolean("auto_pickup_phone", false);
+        return mSharedPreferences.getBoolean("auto_pickup_phone", true);
     }
 
     public int getFloatingWindowsLocationX() {
@@ -56,5 +60,13 @@ public class CommonSharedPref {
 
     public String getServiceIp() {
         return mSharedPreferences.getString("service_ip", "10.60.205.64");
+    }
+
+    public int getWorkMode() {
+        return mSharedPreferences.getInt("work_mode", 0);
+    }
+
+    public void setWorkMode(int i) {
+        mSharedPreferences.edit().putInt("work_mode", i).apply();
     }
 }

@@ -51,7 +51,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="自动拦截"
                 android:textSize="16sp" />
 
             <ImageView

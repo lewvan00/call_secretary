@@ -35,6 +35,8 @@ public class SettingActivity extends BaseActivity {
 
     private void initViews() {
         mCheckBox = (CheckBox) findViewById(R.id.auto_pickup_phone);
+        boolean is_auto = CommonSharedPref.getInstance().getAutoPickupPhone();
+        mCheckBox.setChecked(is_auto);
         mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -66,6 +68,22 @@ public class SettingActivity extends BaseActivity {
             }
         });
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        TextView tvMode = (TextView) findViewById(R.id.tv_mode);
+        int mode = CommonSharedPref.getInstance().getWorkMode();
+        if (mode == 0) {
+            tvMode.setText("正常模式");
+        } else if (mode == 1) {
+            tvMode.setText("会议模式");
+        } else if (mode == 2) {
+            tvMode.setText("勿扰模式");
+        }
     }
 
     private void initAppbar() {
