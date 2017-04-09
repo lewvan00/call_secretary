@@ -216,7 +216,7 @@ public class SocketService extends Service {
             @Override
             public void run() {
                 FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
-                floatingWindowsService.setClientSocket(true);
+                floatingWindowsService.setIsServer(true);
                 floatingWindowsService.showFloatingWindows(getString(R.string.float_title_answer));
             }
         });
