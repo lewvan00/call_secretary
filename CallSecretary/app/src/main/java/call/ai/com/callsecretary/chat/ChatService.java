@@ -2,6 +2,7 @@ package call.ai.com.callsecretary.chat;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,9 @@ public class ChatService {
             public void run() {
                 List<Chat> chats = DbUtils.getAllChat();
                 if (chats.isEmpty()) {
+                    Log.e("hhhh", "empty!!!!!!!");
                     chats = ChatUtils.createTestChatList();
+                    DbUtils.saveChats(chats);
                 }
                 mList.clear();
                 mList.addAll(chats);
