@@ -218,6 +218,7 @@ public class SocketService extends Service {
                 FloatingWindowsService floatingWindowsService = FloatingWindowsService.getServiceInstance();
                 floatingWindowsService.setIsServer(true);
                 floatingWindowsService.showFloatingWindows(getString(R.string.float_title_answer));
+                floatingWindowsService.ringConnect();
             }
         });
     }

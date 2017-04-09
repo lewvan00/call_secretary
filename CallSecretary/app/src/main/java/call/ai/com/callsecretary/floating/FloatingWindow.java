@@ -135,7 +135,7 @@ public class FloatingWindow extends FrameLayout {
             mDiffuseView.start();
             mChatContentLyt.setVisibility(GONE);
         } else {
-            mDiffuseView.scrollTo(0, -getHeight()/3);
+            ringConnect();
         }
         setAlpha(0);
         animate().alpha(1).setDuration(1500).start();
