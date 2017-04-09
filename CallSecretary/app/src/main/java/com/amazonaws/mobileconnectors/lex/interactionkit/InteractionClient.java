@@ -931,7 +931,7 @@ public class InteractionClient {
         if (isBusy()) {
             throw new LexClientException("Client is busy with a request.");
         } else if (isAudioPlayBackInProgress()) {
-            throw new LexClientException("Audio playback is in progress.");
+//            throw new LexClientException("Audio playback is in progress.");
         } else {
             setBusyState(BUSY);
         }

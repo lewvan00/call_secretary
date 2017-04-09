@@ -6,6 +6,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Process;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +17,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.lex.interactionkit.InteractionClient;
 import com.amazonaws.mobileconnectors.lex.interactionkit.Response;
@@ -164,7 +164,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         int ipAddress = wifiInfo.getIpAddress();
         mCurrentIp = intToIp(ipAddress);
-        Toast.makeText(this, "ip : " + mCurrentIp, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "ip : " + mCurrentIp, Toast.LENGTH_LONG).show();
         Intent i = new Intent(this, SocketService.class);
         startService(i);
     }
@@ -208,6 +208,12 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         super.onDestroy();
         Intent i = new Intent(this, SocketService.class);
         stopService(i);
+        mMainHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Process.killProcess(Process.myPid());
+            }
+        }, 500);
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -273,7 +279,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(MainActivity.this, "response = " + result, Toast.LENGTH_LONG).show();
+//                Toast.makeText(MainActivity.this, "response = " + result, Toast.LENGTH_LONG).show();
             }
         });
         SocketClient.getInstance().sendMsgToSocket(result);
@@ -303,7 +309,7 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(MainActivity.this, "response = " + result, Toast.LENGTH_LONG).show();
+//                Toast.makeText(MainActivity.this, "response = " + result, Toast.LENGTH_LONG).show();
             }
         });
         SocketClient.getInstance().sendMsgToSocket(result);
@@ -321,8 +327,8 @@ public class MainActivity extends BaseActivity implements ChatAdapter.OnItemClic
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(MainActivity.this, "onError = " + responseText
-                        + ", error = " + e, Toast.LENGTH_LONG).show();
+//                Toast.makeText(MainActivity.this, "onError = " + responseText
+//                        + ", error = " + e, Toast.LENGTH_LONG).show();
             }
         });
         e.printStackTrace();

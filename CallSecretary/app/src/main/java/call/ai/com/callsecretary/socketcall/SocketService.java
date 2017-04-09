@@ -95,7 +95,7 @@ public class SocketService extends Service {
                 mMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(SocketService.this, "socket listening", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(SocketService.this, "socket listening", Toast.LENGTH_SHORT).show();
                     }
                 });
                 while (true) {
@@ -204,7 +204,7 @@ public class SocketService extends Service {
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(SocketService.this, "call received, auto answering", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SocketService.this, "call received, auto answering", Toast.LENGTH_SHORT).show();
             }
         });
 

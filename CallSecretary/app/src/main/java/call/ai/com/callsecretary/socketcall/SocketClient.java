@@ -3,7 +3,6 @@ package call.ai.com.callsecretary.socketcall;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,10 +57,10 @@ public class SocketClient {
                     sendCallToSocket();
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
-                    showToast("bind UnknownHostException");
+//                    showToast("bind UnknownHostException");
                 } catch (IOException e) {
                     e.printStackTrace();
-                    showToast("bind IOException");
+//                    showToast("bind IOException");
                 }
             }
         }.start();
@@ -71,7 +70,7 @@ public class SocketClient {
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(CallSecretaryApplication.getContext(), text, Toast.LENGTH_LONG).show();
+//                Toast.makeText(CallSecretaryApplication.getContext(), text, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -90,7 +89,7 @@ public class SocketClient {
                         FloatingWindowsService.getServiceInstance().ringConnect();
                     }
                 });
-                showToast("call success");
+//                showToast("call success");
                 Log.d("liufan", "call success!");
 
                 while(true) {
@@ -119,7 +118,7 @@ public class SocketClient {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                showToast("call IOException : " + e);
+//                showToast("call IOException : " + e);
                 mMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
