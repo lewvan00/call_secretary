@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <CheckBox
+            android:checked="true"
             android:id="@+id/auto_pickup_phone"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -47,7 +48,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="80dp"
                 android:id="@+id/tv_mode"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="自动拦截"
