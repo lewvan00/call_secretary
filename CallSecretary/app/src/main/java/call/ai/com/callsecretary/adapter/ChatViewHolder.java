@@ -9,6 +9,7 @@ import android.widget.TextView;
 import call.ai.com.callsecretary.R;
 import call.ai.com.callsecretary.bean.Chat;
 import call.ai.com.callsecretary.utils.CallSecretaryApplication;
+import call.ai.com.callsecretary.utils.DateUtils;
 
 /**
  * Created by Administrator on 2017/4/8.
@@ -40,7 +41,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
 
     public void setData(Chat chat) {
         phone.setText(chat.getPhone());
-        time.setText(String.valueOf(chat.getTime()));
+        time.setText(DateUtils.covertTimeToText(chat.getTime()));
         data = chat;
     }
 

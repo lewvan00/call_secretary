@@ -67,6 +67,7 @@ public class SocketService extends Service {
                     public void run() {
                         callbackRingoff(clientSocket);
                         clientSocket = null;
+                        stopRingTone();
                     }
                 }.start();
             }
@@ -143,6 +144,7 @@ public class SocketService extends Service {
                         }
                     }
                 }
+
             }
         }.start();
     }
@@ -248,7 +250,7 @@ public class SocketService extends Service {
     }
 
     private void startRingTone() {
-        MediaPlayer mMediaPlayer = MediaPlayer.create(this, getSystemDefultRingtoneUri());
+        mMediaPlayer = MediaPlayer.create(this, getSystemDefultRingtoneUri());
         mMediaPlayer.setLooping(false);
         try {
             mMediaPlayer.prepare();

@@ -19,6 +19,8 @@ import call.ai.com.callsecretary.bean.Chat;
 import call.ai.com.callsecretary.utils.AvatarUtils;
 import call.ai.com.callsecretary.widget.DiffuseView;
 
+import static call.ai.com.callsecretary.floating.FloatingWindowsService.getServiceInstance;
+
 /**
  * Created by Administrator on 2017/4/7.
  */
@@ -99,13 +101,12 @@ public class FloatingWindow extends FrameLayout {
         mInteractiveVoiceView = (InteractiveVoiceView) findViewById(R.id.interactive_voice_view);
         mDiffuseView = (DiffuseView) findViewById(R.id.diffuse_view);
         mChatContentLyt = findViewById(R.id.chat_content_lyt);
-        mChatContentLyt.setVisibility(GONE);
 //        mDiffuseView.setVisibility(GONE);
         mDiffuseView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                FloatingWindowsService.getServiceInstance().callRingoff();
-                FloatingWindowsService.getServiceInstance().hideFloatingWindows();
+                getServiceInstance().callRingoff();
+                getServiceInstance().hideFloatingWindows();
             }
         });
     }
@@ -129,15 +130,13 @@ public class FloatingWindow extends FrameLayout {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
+        boolean isServer = FloatingWindowsService.getServiceInstance().getIsServer();
+        if (!isServer) {
+            mDiffuseView.start();
+            mChatContentLyt.setVisibility(GONE);
+        }
         setAlpha(0);
         animate().alpha(1).setDuration(1500).start();
-//        post(new Runnable() {
-//            @Override
-//            public void run() {
-//                mDiffuseView.start();
-//            }
-//        });
-        mDiffuseView.start();
     }
 
     public void ringConnect() {
