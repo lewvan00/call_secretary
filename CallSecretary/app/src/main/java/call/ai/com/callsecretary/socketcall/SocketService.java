@@ -226,10 +226,7 @@ public class SocketService extends Service {
     private void callbackAck(Socket socket) {
         try {
             OutputStream outputStream = socket.getOutputStream();
-            byte[] ackData = new byte[3];
-            ackData[0] = 'a' - 'a';
-            ackData[1] = 'c' - 'a';
-            ackData[2] = 'k' - 'a';
+            byte[] ackData = "ack".getBytes();
             outputStream.write(ackData);
 
         } catch (IOException e) {
@@ -240,10 +237,7 @@ public class SocketService extends Service {
     private void callbackRingoff(Socket socket) {
         try {
             OutputStream outputStream = socket.getOutputStream();
-            byte[] ackData = new byte[3];
-            ackData[0] = 'o' - 'a';
-            ackData[1] = 'f' - 'a';
-            ackData[2] = 'f' - 'a';
+            byte[] ackData = "off".getBytes();
             outputStream.write(ackData);
         } catch (IOException e) {
             e.printStackTrace();

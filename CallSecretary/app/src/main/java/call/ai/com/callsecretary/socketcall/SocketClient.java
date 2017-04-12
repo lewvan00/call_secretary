@@ -101,14 +101,16 @@ public class SocketClient {
                         } catch (InterruptedException e) {
                         }
                     } else if (count == 3) {
-                        if (bytes[0] == 'a' - 'a' &&
-                                bytes[1] == 'c' - 'a' &&
-                                bytes[2] == 'k' - 'a') {
+                        byte[] ackData = "ack".getBytes();
+                        byte[] offData = "off".getBytes();
+                        if (bytes[0] == ackData[0] &&
+                                bytes[1] == ackData[1] &&
+                                bytes[2] == ackData[2]) {
 
                             onPhoneReceived();
-                        } else if (bytes[0] == 'o' - 'a' &&
-                                bytes[1] == 'f' - 'a' &&
-                                bytes[2] == 'f' - 'a') {
+                        } else if (bytes[0] == offData[0] &&
+                                bytes[1] == offData[1] &&
+                                bytes[2] == offData[2]) {
                             onPhoneROff();
                             closeSocket();
                             break;
